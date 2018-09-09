@@ -4,12 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.itlbv.settl.enums.MapObjectType;
 
-import java.io.FileNotFoundException;
-
 public class MapParserFromTxt {
     private static Map map = Map.getInstance();
 
-    public static void createMap(){ //TODO awful code, need refactoring
+    public static void createMap(){ //TODO awful code, needs refactoring
         try {
             FileHandle fileHandler = Gdx.files.internal("levels/level01.txt");
             String line = fileHandler.readString();

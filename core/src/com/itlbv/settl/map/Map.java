@@ -27,12 +27,8 @@ public class Map {
         Texture texture = MapTextureHelper.getTileTexture(type);
         float x = TILE_SIZE_PXL * row;
         float y = TILE_SIZE_PXL * tiles.get(row).size();
-        Tile tile = new Tile(x, y, TILE_SIZE_PXL, TILE_SIZE_PXL, texture, type);
+        Tile tile = new Tile(x, y, texture, type);
         tiles.get(row).add(tile);
-    }
-
-    public void reset() {
-        tiles.clear();
     }
 
     //***Getters & setters***
