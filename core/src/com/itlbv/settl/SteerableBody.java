@@ -43,6 +43,9 @@ public class SteerableBody extends SteerableAdapter<Vector2> {
     }
 
     public void updateSteering() {
+        if (steeringBehavior == null) {
+            return; //TODO delete when steering behavior is ready
+        }
         steeringBehavior.calculateSteering(steeringOutput);
         applySteering(Gdx.app.getGraphics().getDeltaTime()); //TODO fix delta time usage
         owner.updatePosition();

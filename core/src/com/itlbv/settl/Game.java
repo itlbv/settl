@@ -18,7 +18,7 @@ public class Game extends ApplicationAdapter {
     private SpriteBatch batch;
     private OrthographicCamera camera;
     private Map map;
-    private ArrayList<Mob> mobs;
+    public static ArrayList<Mob> mobs; //TODO remove static&public when state machine is ready
 
     @Override
     public void create() {
@@ -45,7 +45,7 @@ public class Game extends ApplicationAdapter {
     private void createTestObjects() {
         Human human01 = MobFactory.createHuman(10, 10);
         Human human02 = MobFactory.createHuman(300, 300);
-        human01.setTarget(human02);
+        //human01.setTarget(human02);
 
         mobs.add(human01);
         mobs.add(human02);
@@ -73,7 +73,8 @@ public class Game extends ApplicationAdapter {
     }
 
     private void updateTestObjects() {
-        mobs.get(0).update();
+        mobs.get(0).updateSteering();
+        mobs.get(0).updateState();
     }
 
     private void drawMobs() {

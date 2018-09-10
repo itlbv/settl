@@ -45,6 +45,7 @@ public abstract class GameObject{
     }
 
     public void draw(SpriteBatch batch) {
+        //texture = TextureHelper.getTexture(type);
         batch.draw(texture, position.x, position.y);
     }
 

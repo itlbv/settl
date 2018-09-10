@@ -14,15 +14,7 @@ public class Human extends Mob {
     private static final float BODY_WIDTH = 6f;
     private static final float BODY_HEIGHT = 4f;
 
-
     public Human(float x, float y, Texture texture) {
         super(x, y, texture, MOB_TYPE, BODY_WIDTH, BODY_HEIGHT);
-    }
-
-    public void setTarget(GameObject target) {
-        Arrive<Vector2> behavior = new Arrive<Vector2>(this.getBody(), target.getBody());
-        behavior.setArrivalTolerance(50f);
-        behavior.setDecelerationRadius(10f);
-        super.createSteeringBehavior(SPEED, behavior);
     }
 }
