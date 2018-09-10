@@ -23,9 +23,7 @@ public class Game extends ApplicationAdapter {
     @Override
     public void create() {
         initializeClassVariables();
-
         MapParserFromTxt.createMap();
-
         createTestObjects();
     }
 
@@ -74,6 +72,24 @@ public class Game extends ApplicationAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); //this magic clears the screen
     }
 
+    private void updateTestObjects() {
+        mobs.get(0).update();
+    }
+
+    private void drawMobs() {
+        for (Mob mob : mobs) {
+            mob.draw(batch);
+        }
+    }
+
+    private void drawMap() {
+        for (ArrayList<Tile> row : map.getTiles()) {
+            for (Tile tile : row) {
+                tile.draw(batch);
+            }
+        }
+    }
+
     private void handleInput() {
         if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
             camera.zoom += 0.02;
@@ -101,24 +117,6 @@ public class Game extends ApplicationAdapter {
 
         //camera.position.x = MathUtils.clamp(camera.position.x, effectiveViewportWidth / 2f, 100 - effectiveViewportWidth / 2f);
         //camera.position.y = MathUtils.clamp(camera.position.y, effectiveViewportHeight / 2f, 100 - effectiveViewportHeight / 2f);
-    }
-
-    private void updateTestObjects() {
-        mobs.get(0).update();
-    }
-
-    private void drawMobs() {
-        for (Mob mob : mobs) {
-            mob.draw(batch);
-        }
-    }
-
-    private void drawMap() {
-        for (ArrayList<Tile> row : map.getTiles()) {
-            for (Tile tile : row) {
-                tile.draw(batch);
-            }
-        }
     }
 
     @Override
