@@ -22,14 +22,14 @@ public class Game extends ApplicationAdapter {
 
     @Override
     public void create() {
-        initializeValues();
+        initializeClassVariables();
 
         MapParserFromTxt.createMap();
 
         createTestObjects();
     }
 
-    private void initializeValues() {
+    private void initializeClassVariables() {
         batch = new SpriteBatch();
         map = Map.getInstance();
         mobs = new ArrayList<Mob>();
