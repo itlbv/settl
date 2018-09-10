@@ -15,51 +15,64 @@ import com.itlbv.settl.mobs.Mob;
 import java.util.ArrayList;
 
 public class Game extends ApplicationAdapter {
-    private static final int WORLD_WIDTH = 10;
-    private static final int WORLD_HEIGHT = 10;
     private SpriteBatch batch;
     private OrthographicCamera camera;
-    private float rotationSpeed;
     private Map map;
     private ArrayList<Mob> mobs;
 
-	@Override
-	public void create () {
-		batch = new SpriteBatch();
+    @Override
+    public void create() {
+        initializeValues();
+
+        MapParserFromTxt.createMap();
+
+        createTestObjects();
+    }
+
+    private void initializeValues() {
+        batch = new SpriteBatch();
         map = Map.getInstance();
         mobs = new ArrayList<Mob>();
+        initializeCamera();
+    }
 
-        rotationSpeed = .5f;
+    private void initializeCamera() {
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
         int viewport = 400;
-		camera = new OrthographicCamera(viewport, viewport * (h / w));
+        camera = new OrthographicCamera(viewport, viewport * (h / w));
         camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
-        camera.update(); //TODO is it necessary here?
+    }
 
-        MapParserFromTxt.createMap();
-        mobs.add(MobFactory.createHuman(10, 10));
-        mobs.add(MobFactory.createHuman(300, 300));
-	}
+    private void createTestObjects() {
+        Human human01 = MobFactory.createHuman(10, 10);
+        Human human02 = MobFactory.createHuman(300, 300);
+        human01.setTarget(human02);
 
-	@Override
-	public void render () {
-	    handleInput();
-	    camera.update();
-	    batch.setProjectionMatrix(camera.combined);
+        mobs.add(human01);
+        mobs.add(human02);
+    }
+
+    @Override
+    public void render() {
+        updateCamera();
+
+        updateTestObjects();
+
+        batch.begin();
+        drawMap();
+        drawMobs();
+        batch.end();
+
+        GameWorld.tick(camera);
+    }
+
+    private void updateCamera() {
+        handleInput();
+        camera.update();
+        batch.setProjectionMatrix(camera.combined);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); //this magic clears the screen
-
-       	batch.begin();
-		drawMap();
-		drawMobs();
-		batch.end();
-
-		Human human01 = (Human) mobs.get(0);
-		Human human02 = (Human) mobs.get(1);
-		human01.setTarget(human02);
-		human01.update();
-		GameWorld.tick(camera);
-	}
+    }
 
     private void handleInput() {
         if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
@@ -80,12 +93,6 @@ public class Game extends ApplicationAdapter {
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             camera.translate(0, 3, 0);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
-            camera.rotate(-rotationSpeed, 0, 0, 1);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.X)) {
-            camera.rotate(rotationSpeed, 0, 0, 1);
-        }
 
         //camera.zoom = MathUtils.clamp(camera.zoom, 0.1f, 100/camera.viewportWidth);
 
@@ -96,22 +103,26 @@ public class Game extends ApplicationAdapter {
         //camera.position.y = MathUtils.clamp(camera.position.y, effectiveViewportHeight / 2f, 100 - effectiveViewportHeight / 2f);
     }
 
+    private void updateTestObjects() {
+        mobs.get(0).update();
+    }
+
     private void drawMobs() {
         for (Mob mob : mobs) {
             mob.draw(batch);
         }
     }
 
-	private void drawMap() {
+    private void drawMap() {
         for (ArrayList<Tile> row : map.getTiles()) {
             for (Tile tile : row) {
                 tile.draw(batch);
             }
         }
     }
-	
-	@Override
-	public void dispose () {
-		batch.dispose();
-	}
+
+    @Override
+    public void dispose() {
+        batch.dispose();
+    }
 }
