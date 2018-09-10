@@ -3,7 +3,6 @@ package com.itlbv.settl;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -11,10 +10,9 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.itlbv.settl.enums.GameObjectType;
 
 public abstract class GameObject{
-    public Vector2 position;
+    public Vector2 position; //TODO make private
     private Texture texture;
-    private Body body;
-    private Body sensor;
+    private SteerableBody body;
     private GameObjectType type;
 
     public GameObject(float x, float y, Texture texture, GameObjectType type) {
@@ -31,7 +29,7 @@ public abstract class GameObject{
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = bodyType;
         bodyDef.position.set(this.position.x + bodyWidth/2, this.position.y + bodyHeight/2); //TODO change GameObject.position to Vector2?
-        body = GameWorld.world.createBody(bodyDef); //TODO Gameworld class refactoring?
+        body = new SteerableBody(bodyDef, this);
 
         FixtureDef fixtureDef = new FixtureDef();
         PolygonShape polygonShape = new PolygonShape();
@@ -43,5 +41,7 @@ public abstract class GameObject{
     }
 
     //***Getters & setters***
-    //TODO getters & setters
+    public SteerableBody getBody() {
+        return body;
+    }
 }
