@@ -8,8 +8,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.itlbv.settl.GameObject;
-import com.itlbv.settl.GameWorld;
 
 public class SteerableBody extends SteerableAdapter<Vector2> {
     private GameObject owner;
@@ -44,7 +42,7 @@ public class SteerableBody extends SteerableAdapter<Vector2> {
         this.steeringBehavior = steeringBehavior;
     }
 
-    public void update() {
+    public void updateSteering() {
         steeringBehavior.calculateSteering(steeringOutput);
         applySteering(Gdx.app.getGraphics().getDeltaTime()); //TODO fix delta time usage
         owner.updatePosition();
