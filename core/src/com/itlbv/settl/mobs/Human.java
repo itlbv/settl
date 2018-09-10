@@ -21,8 +21,8 @@ public class Human extends Mob {
 
     public void setTarget(GameObject target) {
         Arrive<Vector2> behavior = new Arrive<Vector2>(this.getBody(), target.getBody());
-        behavior.setArrivalTolerance(0.5f);
-        behavior.setDecelerationRadius(10);
+        behavior.setArrivalTolerance(50f);
+        behavior.setDecelerationRadius(10f);
         super.createSteeringBehavior(SPEED, behavior);
     }
 }

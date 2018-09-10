@@ -21,14 +21,10 @@ public abstract class GameObject{
         this.type = type;
     }
 
-    public void draw(SpriteBatch batch) {
-        batch.draw(texture, position.x, position.y);
-    }
-
     public void createBody(BodyType bodyType, float bodyWidth, float bodyHeight) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = bodyType;
-        bodyDef.position.set(this.position.x + bodyWidth/2, this.position.y + bodyHeight/2); //TODO change GameObject.position to Vector2?
+        bodyDef.position.set(this.position.x + texture.getWidth()/2, this.position.y + bodyHeight/2);
         body = new SteerableBody(bodyDef, this);
 
         FixtureDef fixtureDef = new FixtureDef();
@@ -37,7 +33,19 @@ public abstract class GameObject{
         fixtureDef.shape = polygonShape;
 
         body.createFixture(fixtureDef);
+        body.body.setUserData(bodyHeight); //TODO done for updatePosition method. should be deleted
         polygonShape.dispose();
+    }
+
+    public void updatePosition() { //TODO redo this mess
+        Vector2 bodyPosition = getBody().getPosition();
+        float x = bodyPosition.x - texture.getWidth()/2;
+        float y = bodyPosition.y - Float.parseFloat(getBody().body.getUserData().toString())/2;
+        position.set(x, y);
+    }
+
+    public void draw(SpriteBatch batch) {
+        batch.draw(texture, position.x, position.y);
     }
 
     //***Getters & setters***

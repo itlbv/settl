@@ -47,13 +47,12 @@ public class SteerableBody extends SteerableAdapter<Vector2> {
     public void update() {
         steeringBehavior.calculateSteering(steeringOutput);
         applySteering(Gdx.app.getGraphics().getDeltaTime()); //TODO fix delta time usage
+        owner.updatePosition();
     }
 
     private void applySteering (float time) {
-        body.setLinearVelocity(linearVelocity);
         linearVelocity.mulAdd(steeringOutput.linear, time).limit(this.getMaxLinearSpeed());
-
-        owner.position = this.getPosition();
+        body.setLinearVelocity(linearVelocity);
     }
 
     @Override
