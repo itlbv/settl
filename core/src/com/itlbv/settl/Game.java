@@ -15,7 +15,7 @@ import com.itlbv.settl.mobs.Mob;
 import java.util.ArrayList;
 
 public class Game extends ApplicationAdapter {
-    private SpriteBatch batch;
+    private static SpriteBatch batch;
     private OrthographicCamera camera;
     private Map map;
     public static ArrayList<Mob> mobs; //TODO remove static&public when state machine is ready
@@ -79,14 +79,14 @@ public class Game extends ApplicationAdapter {
 
     private void drawMobs() {
         for (Mob mob : mobs) {
-            mob.draw(batch);
+            mob.draw();
         }
     }
 
     private void drawMap() {
         for (ArrayList<Tile> row : map.getTiles()) {
             for (Tile tile : row) {
-                tile.draw(batch);
+                tile.draw();
             }
         }
     }
@@ -123,5 +123,9 @@ public class Game extends ApplicationAdapter {
     @Override
     public void dispose() {
         batch.dispose();
+    }
+
+    public static SpriteBatch getBatch() {
+        return batch;
     }
 }
