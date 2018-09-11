@@ -1,16 +1,17 @@
 package com.itlbv.settl.map;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.itlbv.settl.enums.MapObjectType;
 
 public class MapTextureHelper {
-    private static Texture grass01 = new Texture("textures/mapTiles/grass/grass01.png");
-    private static Texture grass02 = new Texture("textures/mapTiles/grass/grass02.png");
-    private static Texture grass03 = new Texture("textures/mapTiles/grass/grass03.png");
-    private static Texture grass04 = new Texture("textures/mapTiles/grass/grass04.png");
+    private static TextureRegion grass01 = new TextureRegion(new Texture("textures/mapTiles/grass/grass01.png"));
+    private static TextureRegion grass02 = new TextureRegion(new Texture("textures/mapTiles/grass/grass02.png"));
+    private static TextureRegion grass03 = new TextureRegion(new Texture("textures/mapTiles/grass/grass03.png"));
+    private static TextureRegion grass04 = new TextureRegion(new Texture("textures/mapTiles/grass/grass04.png"));
 
-    public static Texture getTileTexture(MapObjectType type) {
+    public static TextureRegion getTileTexture(MapObjectType type) {
         switch (type) {
             case GRASS:
                 return getGrassTexture();
@@ -21,7 +22,7 @@ public class MapTextureHelper {
         }
     }
 
-    private static Texture getGrassTexture() {
+    private static TextureRegion getGrassTexture() {
         //TODO explaining
         int rnd = MathUtils.random(20);
         switch (rnd) {
@@ -38,7 +39,7 @@ public class MapTextureHelper {
         }
     }
 
-    private static Texture getWaterTexture() {
+    private static TextureRegion getWaterTexture() {
         return null;
     }
 

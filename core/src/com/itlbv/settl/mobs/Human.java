@@ -1,20 +1,17 @@
 package com.itlbv.settl.mobs;
 
-import com.badlogic.gdx.ai.steer.behaviors.Arrive;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Vector2;
-import com.itlbv.settl.GameObject;
-import com.itlbv.settl.enums.MobType;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.itlbv.settl.enums.MobObjectType;
 
 public class Human extends Mob {
-    private static final MobType MOB_TYPE = MobType.HUMAN;
+    private static final MobObjectType MOB_TYPE = MobObjectType.HUMAN;
     private static final float SPEED = 50f;
 
     // size of collision box
     private static final float BODY_WIDTH = 6f;
     private static final float BODY_HEIGHT = 4f;
 
-    public Human(float x, float y, Texture texture) {
+    public Human(float x, float y, TextureRegion texture) {
         super(x, y, texture, MOB_TYPE, BODY_WIDTH, BODY_HEIGHT);
     }
 }

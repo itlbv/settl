@@ -82,4 +82,8 @@ public abstract class GameObject{
     public SteerableBody getBody() {
         return body;
     }
+
+    public void setAnimation(Animation<TextureRegion> animation) {
+        this.animation = animation;
+    }
 }

@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.itlbv.settl.Game;
+import com.itlbv.settl.MobTextureHelper;
 import com.itlbv.settl.mobs.Mob;
 
 public enum MobState implements State<Mob> {
@@ -14,6 +15,7 @@ public enum MobState implements State<Mob> {
             if (Gdx.input.isKeyPressed(Input.Keys.T)) {
                 mob.setTarget(Game.mobs.get(1));
                 mob.stateMachine.changeState(APPROACHING);
+                mob.setAnimation(MobTextureHelper.getAnimation(mob.getType(), APPROACHING));
             }
         }
     },

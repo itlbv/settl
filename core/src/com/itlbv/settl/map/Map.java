@@ -1,6 +1,6 @@
 package com.itlbv.settl.map;
 
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.itlbv.settl.enums.MapObjectType;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class Map {
 
     public void addTileToRow(MapObjectType type, int row) {
         //TODO refactoring
-        Texture texture = MapTextureHelper.getTileTexture(type);
+        TextureRegion texture = MapTextureHelper.getTileTexture(type);
         float x = TILE_SIZE_PXL * row;
         float y = TILE_SIZE_PXL * tiles.get(row).size();
         Tile tile = new Tile(x, y, texture, type);
