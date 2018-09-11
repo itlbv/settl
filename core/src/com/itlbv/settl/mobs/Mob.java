@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.itlbv.settl.GameObject;
 import com.itlbv.settl.SteerableBody;
-import com.itlbv.settl.enums.MobObjectType;
+import com.itlbv.settl.enumsObjectType.MobObjectType;
 import com.itlbv.settl.enumsStateMachine.MobState;
 
 public abstract class Mob extends GameObject {

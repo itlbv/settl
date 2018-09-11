@@ -5,7 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.itlbv.settl.Game;
-import com.itlbv.settl.MobTextureHelper;
+import com.itlbv.settl.mobs.MobTextureHelper;
 import com.itlbv.settl.mobs.Mob;
 
 public enum MobState implements State<Mob> {

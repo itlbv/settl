@@ -1,7 +1,7 @@
 package com.itlbv.settl.mobs;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.itlbv.settl.enums.MobObjectType;
+import com.itlbv.settl.enumsObjectType.MobObjectType;
 
 public class Human extends Mob {
     private static final MobObjectType MOB_TYPE = MobObjectType.HUMAN;

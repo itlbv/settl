@@ -11,6 +11,7 @@ import com.itlbv.settl.map.MapParserFromTxt;
 import com.itlbv.settl.map.Tile;
 import com.itlbv.settl.mobs.Human;
 import com.itlbv.settl.mobs.Mob;
+import com.itlbv.settl.mobs.MobFactory;
 
 import java.util.ArrayList;
 
@@ -37,7 +38,7 @@ public class Game extends ApplicationAdapter {
     private void initializeCamera() {
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
-        int viewport = 400;
+        int viewport = 300;
         camera = new OrthographicCamera(viewport, viewport * (h / w));
         camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
     }

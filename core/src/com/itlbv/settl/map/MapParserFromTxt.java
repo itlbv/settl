@@ -2,7 +2,7 @@ package com.itlbv.settl.map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.itlbv.settl.enums.MapObjectType;
+import com.itlbv.settl.enumsObjectType.MapObjectType;
 
 public class MapParserFromTxt {
     private static Map map = Map.getInstance();

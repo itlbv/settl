@@ -1,9 +1,9 @@
-package com.itlbv.settl;
+package com.itlbv.settl.mobs;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.itlbv.settl.enums.MobObjectType;
+import com.itlbv.settl.enumsObjectType.MobObjectType;
 import com.itlbv.settl.enumsStateMachine.MobState;
 
 public class MobTextureHelper {

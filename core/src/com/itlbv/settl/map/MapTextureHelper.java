@@ -3,7 +3,7 @@ package com.itlbv.settl.map;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
-import com.itlbv.settl.enums.MapObjectType;
+import com.itlbv.settl.enumsObjectType.MapObjectType;
 
 public class MapTextureHelper {
     private static TextureRegion grass01 = new TextureRegion(new Texture("textures/mapTiles/grass/grass01.png"));
@@ -40,7 +40,7 @@ public class MapTextureHelper {
     }
 
     private static TextureRegion getWaterTexture() {
-        return null;
+        return new TextureRegion(new Texture("water01.png"));
     }
 
 }
