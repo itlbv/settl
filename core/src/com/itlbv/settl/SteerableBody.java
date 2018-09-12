@@ -71,6 +71,8 @@ public class SteerableBody extends SteerableAdapter<Vector2> {
         return body.getPosition();
     }
 
+
+
     @Override
     public Vector2 getLinearVelocity() {
         return linearVelocity;

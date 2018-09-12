@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Array;
 import com.itlbv.settl.map.Map;
 import com.itlbv.settl.map.MapParserFromTxt;
 import com.itlbv.settl.map.Tile;
@@ -85,7 +86,7 @@ public class Game extends ApplicationAdapter {
     }
 
     private void drawMap() {
-        for (ArrayList<Tile> row : map.getTiles()) {
+        for (Array<Tile> row : map.getTiles()) {
             for (Tile tile : row) {
                 tile.draw();
             }
