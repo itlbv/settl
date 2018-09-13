@@ -1,23 +1,22 @@
 package com.itlbv.settl.map;
 
 import com.badlogic.gdx.ai.pfa.Connection;
-import com.badlogic.gdx.ai.pfa.Graph;
+import com.badlogic.gdx.ai.pfa.DefaultConnection;
+import com.badlogic.gdx.ai.pfa.indexed.IndexedGraph;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
 import com.itlbv.settl.enumsObjectType.MapObjectType;
-import com.itlbv.settl.pathfinding.NodeConnection;
 
 
-public class Map{
+public class Map implements IndexedGraph<Tile> {
     private static Map instance = new Map();
     public static Map getInstance() {return instance;}
     private Map(){initialize();}
 
     private Array<Tile> nodes;
     private Array<Array<Tile>> tiles;
-    private static final int TILE_SIZE_PXL = 8;
     private static final int MAP_SIZE = 60;
 
     private void initialize() {
@@ -29,14 +28,11 @@ public class Map{
     }
 
     public void addTileToRow(MapObjectType type, int row) {
-        //TODO refactoring
         TextureRegion texture = MapTextureHelper.getTileTexture(type);
-        float x = TILE_SIZE_PXL * row;
-        float y = TILE_SIZE_PXL * tiles.get(row).size;
-        Tile tile = new Tile(x, y, texture, type);
+        int x = row;
+        int y = tiles.get(row).size;
+        Tile tile = new Tile(x, y, type, texture);
         createBodyIfNotPassable(tile);
-        tile.setNodeX(row);
-        tile.setNodeY(tiles.get(row).size);
         tiles.get(row).add(tile);
         nodes.add(tile);
     }
@@ -45,7 +41,7 @@ public class Map{
         if (tile.getType().passable) {
             return;
         }
-        tile.createBody(BodyType.StaticBody, TILE_SIZE_PXL, TILE_SIZE_PXL);
+        tile.createBody(BodyType.StaticBody, 1, 1); //TODO magical numbers
         tile.setCollidable(true);
     }
 
@@ -73,33 +69,41 @@ public class Map{
     }
 
     private void addConnection (Tile node, int xOffset, int yOffset) {
-        Tile target = getNode(node.getNodeX() + xOffset, node.getNodeY() + yOffset);
+        Tile target = getNode(node.getX() + xOffset, node.getY() + yOffset);
         if (!target.isCollidable()) {
-            getConnections(node).add(new NodeConnection(node, target));
+            getConnections(node).add(new DefaultConnection<Tile>(node, target));
         }
     }
 
-    private Tile getNode(int x, int y) {
+    private Tile getNode(float xf, float yf) {
+        int x = (int)xf;
+        int y = (int)yf;
         return tiles.get(x).get(y);
     }
 
-    public Array<NodeConnection> getConnections(Tile node) {
+    public Array<Connection<Tile>> getConnections(Tile node) {
         return node.getConnections();
     }
 
-    public int getNodeIndex(Tile node) {
-        return node.getNodeX() * MAP_SIZE + node.getNodeY(); //TODO wtf this code is doing ?
+    @Override
+    public int getIndex(Tile node) {
+        return (int) (node.getX() * MAP_SIZE + node.getY());
     }
 
-    public Tile getTileFromPosition(Vector2 position) {
+    @Override
+    public int getNodeCount() {
+        return nodes.size;
+    }
+    public Tile getTileFromPosition(Vector2 position) { //TODO refactoring
         float posX = position.x;
         float posY = position.y;
-        int nodeX = (int)posX/TILE_SIZE_PXL + 1;
-        int nodeY = (int)posY/TILE_SIZE_PXL + 1;
+        int nodeX = (int)posX;
+        int nodeY = (int)posY;
         return tiles.get(nodeX).get(nodeY);
     }
 
     //***Getters & setters***
+
     public Array<Tile> getNodes() {
         return nodes;
     }

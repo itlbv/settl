@@ -11,22 +11,15 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 
 public class SteerableBody extends SteerableAdapter<Vector2> {
     private GameObject owner;
+    public Body body;//TODO for createBody method
     public SteerableBody(BodyDef bodyDef, GameObject owner) {
         body = GameWorld.world.createBody(bodyDef); //TODO Gameworld class refactoring?;
         this.owner = owner;
     }
-
-    /*
-    ** Wrapping around box2d.Body
-     */
-    Body body;
-    public void createFixture(FixtureDef fixtureDef) {
-        body.createFixture(fixtureDef);
-    }
-
     /*
     ** Steering behavior implementation
      */
+
     private Vector2 linearVelocity;
     private float maxLinearSpeed;
     private float maxLinearAcceleration;
@@ -34,11 +27,10 @@ public class SteerableBody extends SteerableAdapter<Vector2> {
     private static final SteeringAcceleration<Vector2> steeringOutput = //TODO why final?
             new SteeringAcceleration<Vector2>(new Vector2());
 
-
     public void initializeSteeringBehavior(float speed, SteeringBehavior<Vector2> steeringBehavior) {
         linearVelocity = new Vector2();
         maxLinearSpeed = speed;
-        maxLinearAcceleration = 100; //TODO magical number!
+        maxLinearAcceleration = 10; //TODO magical number!
         this.steeringBehavior = steeringBehavior;
     }
 
@@ -56,6 +48,16 @@ public class SteerableBody extends SteerableAdapter<Vector2> {
         body.setLinearVelocity(linearVelocity);
     }
 
+    /*
+     ** Wrapping around box2d.Body
+     */
+    public void createFixture(FixtureDef fixtureDef) {
+        body.createFixture(fixtureDef);
+    }
+    public void setLinearVelocity(Vector2 vector) {
+        body.setLinearVelocity(vector);
+    }
+
     @Override
     public float getMaxLinearSpeed() {
         return maxLinearSpeed;
@@ -71,10 +73,14 @@ public class SteerableBody extends SteerableAdapter<Vector2> {
         return body.getPosition();
     }
 
-
-
     @Override
     public Vector2 getLinearVelocity() {
-        return linearVelocity;
+        return body.getLinearVelocity();
     }
+
+    /*
+    public void addToLinearVelocity(Vector2 vectorToAdd) {
+        body.getLinearVelocity().mulAdd(vectorToAdd, Gdx.graphics.getDeltaTime()).limit(getMaxLinearSpeed());
+    }
+    */
 }

@@ -14,39 +14,44 @@ import com.itlbv.settl.mobs.Human;
 import com.itlbv.settl.mobs.Mob;
 import com.itlbv.settl.mobs.MobFactory;
 
-import java.util.ArrayList;
-
 public class Game extends ApplicationAdapter {
     private static SpriteBatch batch;
     private OrthographicCamera camera;
     private Map map;
-    public static ArrayList<Mob> mobs; //TODO remove static&public when state machine is ready
+    public static Array<Mob> mobs; //TODO remove static&public when state machine is ready
+    public static Array<GameObject> testObjects = new Array<>(); //TODO test objects
+
+    private static final int VIEWPORT = 40;
 
     @Override
     public void create() {
-        initializeClassVariables();
-        MapParserFromTxt.createMap();
+        initializeClassFields();
+        createMap();
         createTestObjects();
     }
 
-    private void initializeClassVariables() {
+    private void initializeClassFields() {
         batch = new SpriteBatch();
         map = Map.getInstance();
-        mobs = new ArrayList<Mob>();
+        mobs = new Array<Mob>();
         initializeCamera();
+    }
+
+    private void createMap() {
+        MapParserFromTxt.createMap();
+        map.initGraph();
     }
 
     private void initializeCamera() {
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
-        int viewport = 300;
-        camera = new OrthographicCamera(viewport, viewport * (h / w));
+        camera = new OrthographicCamera(VIEWPORT, VIEWPORT * (h / w));
         camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
     }
 
     private void createTestObjects() {
-        Human human01 = MobFactory.createHuman(10, 10);
-        Human human02 = MobFactory.createHuman(300, 300);
+        Human human01 = MobFactory.createHuman(3, 3);
+        Human human02 = MobFactory.createHuman(50, 50);
         //human01.setTarget(human02);
 
         mobs.add(human01);
@@ -62,9 +67,20 @@ public class Game extends ApplicationAdapter {
         batch.begin();
         drawMap();
         drawMobs();
+        drawTestObjects(); //TODO test objects
         batch.end();
 
         GameWorld.tick(camera);
+    }
+
+    private void updateTestObjects() {
+        mobs.get(0).update();
+    }
+
+    private void drawTestObjects() {
+        for (GameObject o : testObjects) {
+            o.draw();
+        }
     }
 
     private void updateCamera() {
@@ -72,11 +88,6 @@ public class Game extends ApplicationAdapter {
         camera.update();
         batch.setProjectionMatrix(camera.combined);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); //this magic clears the screen
-    }
-
-    private void updateTestObjects() {
-        mobs.get(0).updateSteering();
-        mobs.get(0).updateState();
     }
 
     private void drawMobs() {
@@ -101,16 +112,16 @@ public class Game extends ApplicationAdapter {
             camera.zoom -= 0.02;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            camera.translate(-3, 0, 0);
+            camera.translate(-.5f, 0, 0);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            camera.translate(3, 0, 0);
+            camera.translate(.5f, 0, 0);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            camera.translate(0, -3, 0);
+            camera.translate(0, -.5f, 0);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            camera.translate(0, 3, 0);
+            camera.translate(0, .5f, 0);
         }
 
         //camera.zoom = MathUtils.clamp(camera.zoom, 0.1f, 100/camera.viewportWidth);

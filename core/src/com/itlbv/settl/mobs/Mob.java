@@ -1,107 +1,114 @@
 package com.itlbv.settl.mobs;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
 import com.badlogic.gdx.ai.fsm.StateMachine;
-import com.badlogic.gdx.ai.pfa.DefaultGraphPath;
 import com.badlogic.gdx.ai.steer.SteeringBehavior;
-import com.badlogic.gdx.ai.steer.behaviors.Arrive;
-import com.badlogic.gdx.ai.steer.behaviors.FollowPath;
-import com.badlogic.gdx.ai.steer.utils.paths.LinePath;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.utils.Array;
+import com.itlbv.settl.Game;
 import com.itlbv.settl.GameObject;
 import com.itlbv.settl.SteerableBody;
+import com.itlbv.settl.TestObject;
+import com.itlbv.settl.enumsObjectType.MapObjectType;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
 import com.itlbv.settl.enumsStateMachine.MobState;
 import com.itlbv.settl.map.Tile;
+import com.itlbv.settl.pathfinding.Path;
 import com.itlbv.settl.pathfinding.PathHelper;
 
 public abstract class Mob extends GameObject {
+    private StateMachine<Mob, MobState> stateMachine;
     private MobObjectType type;
+    private float speed;
+    private Path path;
 
-    public Mob(float x, float y, TextureRegion texture, MobObjectType type,
-               float bodyWidth, float bodyHeight) {
-        super(x, y, texture, type);
+    public Mob(float x, float y, MobObjectType type, TextureRegion texture, float width, float height,
+               float bodyWidth, float bodyHeight, float speed) {
+        super(x, y, type, texture, width, height);
         super.createBody(BodyDef.BodyType.DynamicBody, bodyWidth, bodyHeight);
+        this.stateMachine = new DefaultStateMachine<Mob, MobState>(this, MobState.IDLE);
         this.type = type;
+        this.speed = speed;
+        this.path = new Path();
+    }
+
+    public void update() {
+        updateState();
+        updateSteering();
+        updatePathMovement();
+        updatePosition();
+    }
+
+    private void updateState() {
+        stateMachine.update();
+    }
+
+    private void updateSteering() {
+        SteerableBody body = getBody(); //TODO make a class variable?
+        body.updateSteering();
+    }
+
+    private void updatePathMovement() {
+        if (path.size() == 0) {
+            return;
+        }
+        followPath();
+    }
+
+    private void followPath() {
+        Vector2 nextWaypoint = getNextWaypoint();
+        Vector2 vectorToWaypoint = getVectorToWaypoint(nextWaypoint);
+        getBody().setLinearVelocity(vectorToWaypoint);
+    }
+
+    private Vector2 getNextWaypoint() {
+        Vector2 nextPosition = path.getFirstPosition();
+        Vector2 currentPosition = getBodyPosition();
+        if(nextPosition.cpy().sub(currentPosition).len() < .2f) {
+            Game.testObjects.removeIndex(0); //TODO path drawing
+            path.nodes.removeIndex(0);
+            if (path.size() == 0) {
+                return currentPosition;
+            }
+            nextPosition = path.getFirstPosition();
+        }
+        return nextPosition;
+    }
+
+    private Vector2 getVectorToWaypoint(Vector2 nextWaypoint) {
+        return nextWaypoint.cpy().sub(getBodyPosition()).nor().scl(speed);
+    }
+
+    public void setTarget(GameObject target) { //TODO delete when state machine is ready
+        Vector2 startPosition = getBodyPosition();
+        Vector2 targetPosition = target.getBodyPosition();
+        path = PathHelper.getPath(startPosition, targetPosition);
+        drawPath();
+        followPath();
     }
 
 
-    /*
-    **Pathfinding
-     */
 
-
+    private void drawPath() {
+        for (Tile node : path.nodes) {
+            TextureRegion texture = new TextureRegion(new Texture("white_dot.png"));
+            TestObject o = new TestObject(node.getX() + .5f,node.getY() + .5f, MapObjectType.TESTOBJECT, texture);
+            Game.testObjects.add(o);
+        }
+    }
 
     /*
     **Steering behavior
      */
-    public void createSteeringBehavior(float speed, SteeringBehavior<Vector2> steeringBehavior) {
-        SteerableBody body = super.getBody(); //TODO make a class variable?
+    private void createSteeringBehavior(float speed, SteeringBehavior<Vector2> steeringBehavior) {
+        SteerableBody body = getBody(); //TODO make a class variable?
         if (body == null) {
             return; //TODO make it work smhw
         }
         body.initializeSteeringBehavior(speed, steeringBehavior);
-    }
-
-    public void updateSteering() {
-        SteerableBody body = super.getBody(); //TODO make a class variable?
-        body.updateSteering();
-    }
-
-    /*
-    **State machine implementation
-     */
-    public StateMachine<Mob, MobState> stateMachine = new DefaultStateMachine<Mob, MobState>(this, MobState.IDLE);
-
-    public void updateState() {
-        stateMachine.update();
-    }
-
-    public void setTarget(GameObject target) { //TODO delete when state machine is ready
-
-        DefaultGraphPath<Tile> path = calculatePath(target);
-        LinePath<Vector2> linePath = parsePath(path);
-        FollowPath<Vector2, LinePath.LinePathParam> behavior = new FollowPath<>(this.getBody(), linePath, 5)
-                .setArrivalTolerance(0.001f)
-                .setDecelerationRadius(10)
-                .setPredictionTime(0.0f)
-                .setArrivalTolerance(1);
-
-
-
-
-                /*
-        Arrive<Vector2> behavior = new Arrive<Vector2>(this.getBody(), target.getBody());
-        behavior.setArrivalTolerance(50f);
-        behavior.setDecelerationRadius(10f);
-        createSteeringBehavior(50f, behavior);
-        */
-    }
-
-    private LinePath<Vector2> parsePath (DefaultGraphPath path) {
-        Array<Vector2> wayPoints = new Array<>();
-
-        for(int x = 0; x < path.nodes.size; x++)
-        {
-            Tile node = (Tile)path.nodes.get(x);
-
-            float posx = node.getNodeX() * 8;
-            float posy = node.getNodeY() * 8;
-
-            wayPoints.add(new Vector2(posx, posy));
-        }
-
-        getBody().getPosition().set(new Vector2(wayPoints.first().x, wayPoints.first().y));
-        LinePath<Vector2> linePath = new LinePath<>(wayPoints, true);
-
-        return linePath;
-    }
-
-    private DefaultGraphPath<Tile> calculatePath(GameObject target) {
-        return PathHelper.getPath(this.position, target.position);
     }
 
     /*
@@ -109,5 +116,14 @@ public abstract class Mob extends GameObject {
      */
     public MobObjectType getType() {
         return this.type;
+    }
+
+    public StateMachine<Mob, MobState> getStateMachine() {
+        return stateMachine;
+    }
+
+    @Override
+    public SteerableBody getBody() {
+        return super.getBody();
     }
 }
