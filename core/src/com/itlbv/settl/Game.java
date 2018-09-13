@@ -39,6 +39,7 @@ public class Game extends ApplicationAdapter {
 
     private void createMap() {
         MapParserFromTxt.createMap();
+        map.assignCodes();
         map.initGraph();
     }
 

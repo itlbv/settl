@@ -1,6 +1,7 @@
 package com.itlbv.settl.pathfinding;
 
 import com.badlogic.gdx.ai.pfa.PathSmoother;
+import com.badlogic.gdx.ai.pfa.PathSmootherRequest;
 import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
 import com.badlogic.gdx.math.Vector2;
 import com.itlbv.settl.map.Map;
@@ -17,7 +18,7 @@ public class PathHelper {
         Tile targetNode = Map.getInstance().getTileFromPosition(targetPosition);
 
         calculatePath(startNode, targetNode);
-        //path = smoothPath(path); //TODO path smoothing
+        smoothPath();
         return path;
     }
 
@@ -28,6 +29,11 @@ public class PathHelper {
     }
 
     private static void smoothPath() {
-        //PathSmoother<Tile, Vector2> smoother = new PathSmoother<>();
+        CollisionDetector collisionDetector = new CollisionDetector();
+        PathSmoother<Tile, Vector2> smoother = new PathSmoother<>(collisionDetector);
+        smoother.smoothPath(path);
+        //PathSmootherRequest<Tile, Vector2> request = new PathSmootherRequest<>();
+        //request.refresh(path);
+        //smoother.smoothPath(request, Long.MAX_VALUE);
     }
 }

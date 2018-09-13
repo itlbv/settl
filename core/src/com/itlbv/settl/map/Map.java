@@ -27,6 +27,46 @@ public class Map implements IndexedGraph<Tile> {
         }
     }
 
+    public void assignCodes() {
+        for (int row = 0; row < MAP_SIZE; row++) {
+            for (int column = 0; column < MAP_SIZE; column++) {
+                Tile tile = tiles.get(row).get(column);
+                if (tile.isCollidable()) {
+                    continue;
+                }
+                String code = calculateCode(row, column);
+                tile.setCode(code);
+            }
+        }
+    }
+
+    private String calculateCode(int row, int column) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getCharFromTile(row, column, -1, -1));
+        sb.append(getCharFromTile(row, column, -1, 0));
+        sb.append(getCharFromTile(row, column, -1, +1));
+        sb.append(getCharFromTile(row, column, 0, +1));
+        sb.append(getCharFromTile(row, column, +1, +1));
+        sb.append(getCharFromTile(row, column, +1, 0));
+        sb.append(getCharFromTile(row, column, +1, -1));
+        sb.append(getCharFromTile(row, column, 0, -1));
+        return sb.toString();
+    }
+
+    private char getCharFromTile(int row, int column, int xOffset, int yOffset) {
+        row += xOffset;
+        column += yOffset;
+        if (row < 0 || column < 0 || row == MAP_SIZE || column == MAP_SIZE) {
+            return '0';
+        }
+
+        if (tiles.get(row).get(column).isCollidable()) {
+            return '1';
+        } else {
+            return '0';
+        }
+    }
+
     public void addTileToRow(MapObjectType type, int row) {
         TextureRegion texture = MapTextureHelper.getTileTexture(type);
         int x = row;
@@ -52,14 +92,10 @@ public class Map implements IndexedGraph<Tile> {
         //TODO wtf is going on here?
         int width = MAP_SIZE;
         int height = MAP_SIZE;
-        for (int x = 0; x < width; x++)
-        {
+        for (int x = 0; x < width; x++) {
             int idx = x * height;
-
-            for (int y = 0; y < height; y++)
-            {
+            for (int y = 0; y < height; y++) {
                 Tile node = nodes.get(idx + y);
-
                 if (x > 0) addConnection(node, -1, 0);
                 if (y > 0) addConnection(node, 0, -1);
                 if (x < width - 1) addConnection(node, 1, 0);
@@ -94,6 +130,7 @@ public class Map implements IndexedGraph<Tile> {
     public int getNodeCount() {
         return nodes.size;
     }
+
     public Tile getTileFromPosition(Vector2 position) { //TODO refactoring
         float posX = position.x;
         float posY = position.y;
@@ -103,11 +140,6 @@ public class Map implements IndexedGraph<Tile> {
     }
 
     //***Getters & setters***
-
-    public Array<Tile> getNodes() {
-        return nodes;
-    }
-
     public Array<Array<Tile>> getTiles() {
         return tiles;
     }

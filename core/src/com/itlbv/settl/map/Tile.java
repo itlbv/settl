@@ -14,6 +14,7 @@ public class Tile extends GameObject {
     private static final float HEIGHT = 1f;
     private boolean collidable;
     private Array<Connection<Tile>> connections;
+    private String code;
 
     public Tile(float x, float y, MapObjectType type, TextureRegion texture) {
         super(x, y, type, texture, WIDTH, HEIGHT);
@@ -21,14 +22,18 @@ public class Tile extends GameObject {
         connections = new Array<Connection<Tile>>();
     }
 
-    TextureRegion texture; //TODO delete after testing path drawing
-    public void setTexture(TextureRegion texture) {
-        super.texture = texture;
-    }
-
     /*
     **Getters & setters
      */
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
     public Array<Connection<Tile>> getConnections() {
         return connections;
     }

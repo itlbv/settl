@@ -1,6 +1,5 @@
 package com.itlbv.settl.mobs;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
 import com.badlogic.gdx.ai.fsm.StateMachine;
 import com.badlogic.gdx.ai.steer.SteeringBehavior;
@@ -29,7 +28,7 @@ public abstract class Mob extends GameObject {
                float bodyWidth, float bodyHeight, float speed) {
         super(x, y, type, texture, width, height);
         super.createBody(BodyDef.BodyType.DynamicBody, bodyWidth, bodyHeight);
-        this.stateMachine = new DefaultStateMachine<Mob, MobState>(this, MobState.IDLE);
+        this.stateMachine = new DefaultStateMachine<>(this, MobState.IDLE);
         this.type = type;
         this.speed = speed;
         this.path = new Path();
@@ -47,8 +46,7 @@ public abstract class Mob extends GameObject {
     }
 
     private void updateSteering() {
-        SteerableBody body = getBody(); //TODO make a class variable?
-        body.updateSteering();
+        getBody().updateSteering();
     }
 
     private void updatePathMovement() {
