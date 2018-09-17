@@ -15,6 +15,7 @@ public enum MobState implements State<Mob> {
             if (Gdx.input.isKeyPressed(Input.Keys.T)) {
                 mob.setTarget(Game.mobs.get(1));
                 mob.getStateMachine().changeState(APPROACHING);
+                mob.setAnimationDurationToZero();
                 mob.setAnimation(MobTextureHelper.getAnimation(mob.getType(), APPROACHING));
             }
         }

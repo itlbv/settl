@@ -36,14 +36,14 @@ public abstract class GameObject{
         bodyDef.position.set(bodyX, bodyY);
         body = new SteerableBody(bodyDef, this);
 
-        FixtureDef fixtureDef = new FixtureDef();
         PolygonShape polygonShape = new PolygonShape();
         polygonShape.setAsBox(bodyWidth/2, bodyHeight/2);
+        FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = polygonShape;
-
         body.createFixture(fixtureDef);
-        getBody().body.setUserData(bodyHeight); //TODO done for updatePosition method. should be deleted
         polygonShape.dispose();
+
+        getBody().body.setUserData(bodyHeight); //TODO done for updatePosition method. should be deleted
     }
 
     public void updatePosition() { //TODO redo this mess
@@ -79,7 +79,16 @@ public abstract class GameObject{
     }
 
     private void drawTexture() {
-        Game.getBatch().draw(texture, position.x, position.y, width, height);
+        //TODO needs better solution with mirroring the animation
+        float textureWidth = width;
+        float posX = position.x;
+        if (animation != null) {
+            if (getBody().getLinearVelocity().x < 0) {
+                textureWidth *= -1;
+                posX += width;
+            }
+        }
+        Game.getBatch().draw(texture, posX, position.y, textureWidth, height);
     }
 
     //***Getters & setters***

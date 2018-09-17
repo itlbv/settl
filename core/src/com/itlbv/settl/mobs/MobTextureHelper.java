@@ -8,8 +8,14 @@ import com.itlbv.settl.enumsStateMachine.MobState;
 
 public class MobTextureHelper {
     private static final float ANIMATION_SPEED = 0.1f;
+    private static final int TEXTURE_SIZE = 24;
 
-    private static Texture man01 = new Texture("textures/mobs/human/man01.png");
+    private static Texture man01 = new Texture("textures/mobs/man01.png");
+    private static Texture knight01 = new Texture("textures/mobs/knight01.png");
+    private static Texture knight02 = new Texture("textures/mobs/knight02.png");
+    private static Texture orcShaman01 = new Texture("textures/mobs/orcShaman01.png");
+    private static Texture orcShaman02 = new Texture("textures/mobs/orcShaman02.png");
+
 
     public static TextureRegion getTexture(MobObjectType type, MobState state) {
         Texture textureOfType = getTextureOfType(type);
@@ -18,10 +24,12 @@ public class MobTextureHelper {
 
     private static Texture getTextureOfType(MobObjectType type) {
         switch (type) {
-            case HUMAN:
+            case HUMAN_PEASANT:
                 return man01;
-            case ORC:
-                return man01;
+            case HUMAN_KNIGHT:
+                return knight01;
+            case ORC_SHAMAN:
+                return orcShaman01;
             default:
                 return man01;
         }
@@ -37,7 +45,7 @@ public class MobTextureHelper {
     }
 
     private static TextureRegion getIdle(Texture textureOfType) {
-        return new TextureRegion(textureOfType,20, 20);
+        return new TextureRegion(textureOfType,TEXTURE_SIZE, TEXTURE_SIZE);
     }
 
     /*
@@ -58,7 +66,7 @@ public class MobTextureHelper {
     }
 
     private static Animation<TextureRegion> getWalking(Texture textureOfType) {
-        TextureRegion[] allFrames = TextureRegion.split(textureOfType, 20,20)[0];
+        TextureRegion[] allFrames = TextureRegion.split(textureOfType, TEXTURE_SIZE,TEXTURE_SIZE)[0];
         TextureRegion[] walkFrames = {allFrames[0],
                 allFrames[1],
                 allFrames[0],

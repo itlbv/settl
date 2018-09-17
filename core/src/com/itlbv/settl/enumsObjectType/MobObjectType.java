@@ -1,6 +1,7 @@
 package com.itlbv.settl.enumsObjectType;
 
 public enum MobObjectType implements GameObjectType {
-    HUMAN,
-    ORC
+    HUMAN_PEASANT,
+    HUMAN_KNIGHT,
+    ORC_SHAMAN
 }

@@ -7,10 +7,10 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
+import com.itlbv.settl.enumsObjectType.MobObjectType;
 import com.itlbv.settl.map.Map;
 import com.itlbv.settl.map.MapParserFromTxt;
 import com.itlbv.settl.map.Tile;
-import com.itlbv.settl.mobs.Human;
 import com.itlbv.settl.mobs.Mob;
 import com.itlbv.settl.mobs.MobFactory;
 
@@ -51,12 +51,16 @@ public class Game extends ApplicationAdapter {
     }
 
     private void createTestObjects() {
-        Human human01 = MobFactory.createHuman(3, 3);
-        Human human02 = MobFactory.createHuman(50, 50);
-        //human01.setTarget(human02);
+        //create ORCS
+        for (int i = 0; i < 5; i++) {
+            Mob mob = MobFactory.createMobAtRandomPosition(true, MobObjectType.ORC_SHAMAN);
+            mobs.add(mob);
+        }
 
-        mobs.add(human01);
-        mobs.add(human02);
+        for (int i = 0; i < 5; i++) {
+            Mob mob = MobFactory.createMobAtRandomPosition(false, MobObjectType.HUMAN_KNIGHT);
+            mobs.add(mob);
+        }
     }
 
     @Override
