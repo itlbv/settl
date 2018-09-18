@@ -16,9 +16,9 @@ import com.itlbv.settl.mobs.MobFactory;
 
 public class Game extends ApplicationAdapter {
     private static SpriteBatch batch;
-    private OrthographicCamera camera;
-    private Map map;
-    public static Array<Mob> mobs; //TODO remove static&public when state machine is ready
+    private static OrthographicCamera camera;
+    private static Map map;
+    private static Array<Mob> mobs;
     public static Array<GameObject> testObjects = new Array<>(); //TODO test objects
 
     private static final int VIEWPORT = 40;
@@ -51,16 +51,15 @@ public class Game extends ApplicationAdapter {
     }
 
     private void createTestObjects() {
-        //create ORCS
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 1; i++) {
+            Mob mob = MobFactory.createMobAtRandomPosition(false, MobObjectType.HUMAN_KNIGHT);
+            mobs.add(mob);
+        }
+        for (int i = 0; i < 1; i++) {
             Mob mob = MobFactory.createMobAtRandomPosition(true, MobObjectType.ORC_SHAMAN);
             mobs.add(mob);
         }
 
-        for (int i = 0; i < 5; i++) {
-            Mob mob = MobFactory.createMobAtRandomPosition(false, MobObjectType.HUMAN_KNIGHT);
-            mobs.add(mob);
-        }
     }
 
     @Override

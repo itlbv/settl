@@ -1,7 +1,6 @@
 package com.itlbv.settl.map;
 
 import com.badlogic.gdx.ai.pfa.Connection;
-import com.badlogic.gdx.ai.pfa.DefaultConnection;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -51,6 +50,6 @@ public class Tile extends GameObject {
     }
 
     public Vector2 getCenterPosition() {
-        return new Vector2(getPosition().x + .5f, getPosition().y + .5f);
+        return new Vector2(getPosition().x + WIDTH/2, getPosition().y + HEIGHT/2);
     }
 }

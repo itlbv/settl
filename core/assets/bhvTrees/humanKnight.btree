@@ -1,0 +1,22 @@
+import isEnemyAround?:"com.itlbv.settl.behaviorTreeTasks.IsEnemyAroundCondition"
+import calculatePathToEnemy:"com.itlbv.settl.behaviorTreeTasks.CalculatePathToEnemyTask"
+import followPath:"com.itlbv.settl.behaviorTreeTasks.FollowPathTask"
+import fightEnemy:"com.itlbv.settl.behaviorTreeTasks.FightEnemyTask"
+import doNothing:"com.itlbv.settl.behaviorTreeTasks.DoNothingTask"
+
+subtree name: "enemyAround?"
+    isEnemyAround?
+
+subtree name: "killEnemy"
+    sequence
+        calculatePathToEnemy
+        followPath
+        fightEnemy
+
+subtree name: "todoNothing"
+    doNothing
+
+root
+     dynamicGuardSelector
+      ($enemyAround?) $killEnemy
+      () $todoNothing

@@ -12,7 +12,7 @@ public abstract class Human extends Mob {
     private static final float BODY_WIDTH = .6f;
     private static final float BODY_HEIGHT = .4f;
 
-    public Human(float x, float y, MobObjectType type, TextureRegion texture) {
-        super(x, y, type, texture, WIDTH, HEIGHT, BODY_WIDTH, BODY_HEIGHT, SPEED);
+    public Human(float x, float y, MobObjectType type, TextureRegion texture, String bhvTree) {
+        super(x, y, type, texture, WIDTH, HEIGHT, BODY_WIDTH, BODY_HEIGHT, SPEED, bhvTree);
     }
 }

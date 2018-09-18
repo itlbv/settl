@@ -4,11 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.itlbv.settl.enumsObjectType.GameObjectType;
 
 public abstract class GameObject{
@@ -29,21 +25,7 @@ public abstract class GameObject{
     }
 
     public void createBody(BodyType bodyType, float bodyWidth, float bodyHeight) {
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = bodyType;
-        float bodyX = this.position.x + width/2;
-        float bodyY = this.position.y + bodyHeight/2;
-        bodyDef.position.set(bodyX, bodyY);
-        body = new SteerableBody(bodyDef, this);
-
-        PolygonShape polygonShape = new PolygonShape();
-        polygonShape.setAsBox(bodyWidth/2, bodyHeight/2);
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = polygonShape;
-        body.createFixture(fixtureDef);
-        polygonShape.dispose();
-
-        getBody().body.setUserData(bodyHeight); //TODO done for updatePosition method. should be deleted
+        body = new SteerableBody(bodyType, bodyWidth, bodyHeight, this);
     }
 
     public void updatePosition() { //TODO redo this mess
@@ -114,5 +96,13 @@ public abstract class GameObject{
 
     public Vector2 getBodyPosition() {
         return getBody().getPosition();
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public float getHeight() {
+        return height;
     }
 }

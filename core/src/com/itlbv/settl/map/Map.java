@@ -13,11 +13,12 @@ import com.itlbv.settl.enumsObjectType.MapObjectType;
 public class Map implements IndexedGraph<Tile> {
     private static Map instance = new Map();
     public static Map getInstance() {return instance;}
-    private Map(){initialize();}
-
     private Array<Tile> nodes;
     private Array<Array<Tile>> tiles;
+
     private static final int MAP_SIZE = 60;
+
+    private Map(){initialize();}
 
     private void initialize() {
         nodes = new Array<Tile>();

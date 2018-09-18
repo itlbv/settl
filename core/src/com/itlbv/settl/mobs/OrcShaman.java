@@ -8,6 +8,6 @@ public class OrcShaman extends Orc {
 
 
     public OrcShaman(float x, float y, TextureRegion texture) {
-        super(x, y, MOB_TYPE, texture);
+        super(x, y, MOB_TYPE, texture, "bhvTrees/humanPeasant.btree");
     }
 }

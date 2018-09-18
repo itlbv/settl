@@ -1,5 +1,7 @@
 package com.itlbv.settl.mobs;
 
+import com.badlogic.gdx.ai.btree.BehaviorTree;
+import com.badlogic.gdx.ai.btree.utils.BehaviorTreeLibraryManager;
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
 import com.badlogic.gdx.ai.fsm.StateMachine;
 import com.badlogic.gdx.ai.steer.SteeringBehavior;
@@ -13,36 +15,39 @@ import com.itlbv.settl.SteerableBody;
 import com.itlbv.settl.TestObject;
 import com.itlbv.settl.enumsObjectType.MapObjectType;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
-import com.itlbv.settl.enumsStateMachine.MobState;
 import com.itlbv.settl.map.Tile;
 import com.itlbv.settl.pathfinding.Path;
 import com.itlbv.settl.pathfinding.PathHelper;
 
 public abstract class Mob extends GameObject {
-    private StateMachine<Mob, MobState> stateMachine;
     private MobObjectType type;
     private float speed;
-    private Path path;
+    public Path path;
 
     public Mob(float x, float y, MobObjectType type, TextureRegion texture, float width, float height,
-               float bodyWidth, float bodyHeight, float speed) {
+               float bodyWidth, float bodyHeight, float speed, String bhvTree) {
         super(x, y, type, texture, width, height);
         super.createBody(BodyDef.BodyType.DynamicBody, bodyWidth, bodyHeight);
-        this.stateMachine = new DefaultStateMachine<>(this, MobState.IDLE);
         this.type = type;
         this.speed = speed;
         this.path = new Path();
+        this.bhvTree = BehaviorTreeLibraryManager.getInstance().createBehaviorTree(bhvTree, this);
     }
 
+    /*
+     **Behavior tree implementation
+     */
+    public BehaviorTree<Mob> bhvTree;
+    public Mob target;
+    /*
+    ******************
+     */
+
     public void update() {
-        updateState();
+        bhvTree.step();
         updateSteering();
         updatePathMovement();
         updatePosition();
-    }
-
-    private void updateState() {
-        stateMachine.update();
     }
 
     private void updateSteering() {
@@ -56,7 +61,7 @@ public abstract class Mob extends GameObject {
         followPath();
     }
 
-    private void followPath() {
+    public void followPath() {
         Vector2 nextWaypoint = getNextWaypoint();
         Vector2 vectorToWaypoint = getVectorToWaypoint(nextWaypoint);
         getBody().setLinearVelocity(vectorToWaypoint);
@@ -88,8 +93,6 @@ public abstract class Mob extends GameObject {
         followPath();
     }
 
-
-
     private void drawPath() {
         for (Tile node : path.nodes) {
             TextureRegion texture = new TextureRegion(new Texture("white_dot.png"));
@@ -114,10 +117,6 @@ public abstract class Mob extends GameObject {
      */
     public MobObjectType getType() {
         return this.type;
-    }
-
-    public StateMachine<Mob, MobState> getStateMachine() {
-        return stateMachine;
     }
 
     @Override
