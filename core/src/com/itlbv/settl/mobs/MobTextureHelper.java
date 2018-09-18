@@ -3,8 +3,8 @@ package com.itlbv.settl.mobs;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.itlbv.settl.MobState;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
-import com.itlbv.settl.enumsStateMachine.MobState;
 
 public class MobTextureHelper {
     private static final float ANIMATION_SPEED = 0.1f;
@@ -58,7 +58,7 @@ public class MobTextureHelper {
 
     private static Animation<TextureRegion> getAnimationOfState(Texture textureOfType, MobState state) {
         switch (state) {
-            case APPROACHING:
+            case WALKING:
                 return getWalking(textureOfType);
             default:
                 return getWalking(textureOfType);

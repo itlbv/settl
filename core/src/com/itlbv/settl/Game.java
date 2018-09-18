@@ -15,13 +15,14 @@ import com.itlbv.settl.mobs.Mob;
 import com.itlbv.settl.mobs.MobFactory;
 
 public class Game extends ApplicationAdapter {
-    private static SpriteBatch batch;
+    public static SpriteBatch batch;
     private static OrthographicCamera camera;
-    private static Map map;
-    private static Array<Mob> mobs;
+    public static Map map;
+    public static Array<Mob> mobs;
     public static Array<GameObject> testObjects = new Array<>(); //TODO test objects
 
     private static final int VIEWPORT = 40;
+    public static float DELTA_TIME = 0;
 
     @Override
     public void create() {
@@ -64,6 +65,7 @@ public class Game extends ApplicationAdapter {
 
     @Override
     public void render() {
+        updateDeltaTime();
         updateCamera();
 
         updateTestObjects();
@@ -75,6 +77,10 @@ public class Game extends ApplicationAdapter {
         batch.end();
 
         GameWorld.tick(camera);
+    }
+
+    private void updateDeltaTime() {
+        DELTA_TIME = Gdx.graphics.getDeltaTime();
     }
 
     private void updateTestObjects() {
@@ -140,9 +146,5 @@ public class Game extends ApplicationAdapter {
     @Override
     public void dispose() {
         batch.dispose();
-    }
-
-    public static SpriteBatch getBatch() {
-        return batch;
     }
 }

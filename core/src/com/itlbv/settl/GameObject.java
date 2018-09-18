@@ -28,11 +28,8 @@ public abstract class GameObject{
         body = new SteerableBody(bodyType, bodyWidth, bodyHeight, this);
     }
 
-    public void updatePosition() { //TODO redo this mess
-        Vector2 bodyPosition = getBody().getPosition();
-        float x = bodyPosition.x - width/2;
-        float y = bodyPosition.y - Float.parseFloat(getBody().body.getUserData().toString())/2;
-        position.set(x, y);
+    public void updatePosition() {
+        getBody().updateOwnersPosition();
     }
 
     /*
@@ -51,7 +48,7 @@ public abstract class GameObject{
     }
 
     private void updateAnimationDuration() {
-        animationDuration += Gdx.graphics.getDeltaTime(); //TODO refactoring of delta time
+        animationDuration += Game.DELTA_TIME;
     }
 
     private void drawAnimation() {
@@ -70,7 +67,7 @@ public abstract class GameObject{
                 posX += width;
             }
         }
-        Game.getBatch().draw(texture, posX, position.y, textureWidth, height);
+        Game.batch.draw(texture, posX, position.y, textureWidth, height);
     }
 
     //***Getters & setters***

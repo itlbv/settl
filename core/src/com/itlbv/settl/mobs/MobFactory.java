@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
-import com.itlbv.settl.enumsStateMachine.MobState;
+import com.itlbv.settl.MobState;
 import com.itlbv.settl.map.Map;
 
 public class MobFactory {

@@ -12,26 +12,34 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 public class SteerableBody extends SteerableAdapter<Vector2> {
     private GameObject owner;
-    public Body body; //TODO make private after changing update() method in GameObject
+    private float bodyWidth, bodyHeight;
+    private Body body;
 
     public SteerableBody(BodyDef.BodyType bodyType, float bodyWidth, float bodyHeight, GameObject owner) {
+        this.bodyWidth = bodyWidth;
+        this.bodyHeight = bodyHeight;
+        this.owner = owner;
+
+        body = GameWorld.world.createBody(getBodyDefinition(bodyType));
+        createPolygonShapeAndFixtureDef();
+    }
+
+    private BodyDef getBodyDefinition(BodyDef.BodyType bodyType) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = bodyType;
         float bodyX = owner.getPosition().x + owner.getWidth()/2;
         float bodyY = owner.getPosition().y + bodyHeight/2;
         bodyDef.position.set(bodyX, bodyY);
-        body = GameWorld.world.createBody(bodyDef);
+        return bodyDef;
+    }
 
+    private void createPolygonShapeAndFixtureDef() {
         PolygonShape polygonShape = new PolygonShape();
         polygonShape.setAsBox(bodyWidth/2, bodyHeight/2);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = polygonShape;
         body.createFixture(fixtureDef);
         polygonShape.dispose();
-
-        body.setUserData(bodyHeight);
-
-        this.owner = owner;
     }
 
 
@@ -58,7 +66,13 @@ public class SteerableBody extends SteerableAdapter<Vector2> {
         }
         steeringBehavior.calculateSteering(steeringOutput);
         applySteering(Gdx.app.getGraphics().getDeltaTime()); //TODO fix delta time usage
-        owner.updatePosition();
+        updateOwnersPosition();
+    }
+
+    public void updateOwnersPosition() {
+        float x = getPosition().x - owner.getWidth()/2;
+        float y = getPosition().y - bodyHeight/2;
+        owner.getPosition().set(x, y);
     }
 
     private void applySteering (float time) {

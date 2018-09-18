@@ -23,6 +23,7 @@ public abstract class Mob extends GameObject {
     private MobObjectType type;
     private float speed;
     public Path path;
+    private MoveManager moveManager;
 
     public Mob(float x, float y, MobObjectType type, TextureRegion texture, float width, float height,
                float bodyWidth, float bodyHeight, float speed, String bhvTree) {
@@ -31,6 +32,7 @@ public abstract class Mob extends GameObject {
         this.type = type;
         this.speed = speed;
         this.path = new Path();
+        this.moveManager = new MoveManager();
         this.bhvTree = BehaviorTreeLibraryManager.getInstance().createBehaviorTree(bhvTree, this);
     }
 
