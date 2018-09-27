@@ -12,24 +12,22 @@ public class IsEnemyAroundCondition extends LeafTask<Mob> {
     public Status execute() {
         System.out.println("Checking for enemies");
         Mob owner = getObject();
-        if (owner instanceof Orc) {
-            for (Mob mob : Game.mobs) {
-                if (mob instanceof Human) {
-                    owner.target = mob;
-                    return Status.SUCCEEDED;
-                }
-            }
-        }
-
         if (owner instanceof Human) {
             for (Mob mob : Game.mobs) {
                 if (mob instanceof Orc) {
-                    owner.target = mob;
+                    owner.setTarget(mob);
                     return Status.SUCCEEDED;
                 }
             }
         }
-
+        if (owner instanceof Orc) {
+            for (Mob mob : Game.mobs) {
+                if (mob instanceof Human) {
+                    owner.setTarget(mob);
+                    return Status.SUCCEEDED;
+                }
+            }
+        }
         return Status.FAILED;
     }
 

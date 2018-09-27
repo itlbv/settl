@@ -1,47 +1,23 @@
 package com.itlbv.settl;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.steer.SteerableAdapter;
 import com.badlogic.gdx.ai.steer.SteeringAcceleration;
 import com.badlogic.gdx.ai.steer.SteeringBehavior;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 public class SteerableBody extends SteerableAdapter<Vector2> {
     private GameObject owner;
     private float bodyWidth, bodyHeight;
     private Body body;
 
-    public SteerableBody(BodyDef.BodyType bodyType, float bodyWidth, float bodyHeight, GameObject owner) {
+    public SteerableBody(BodyType bodyType, float bodyWidth, float bodyHeight, GameObject owner) {
         this.bodyWidth = bodyWidth;
         this.bodyHeight = bodyHeight;
         this.owner = owner;
-
-        body = GameWorld.world.createBody(getBodyDefinition(bodyType));
-        createPolygonShapeAndFixtureDef();
+        body = BodyFabric.createBody(bodyWidth, bodyHeight, bodyType, owner, false);
     }
-
-    private BodyDef getBodyDefinition(BodyDef.BodyType bodyType) {
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = bodyType;
-        float bodyX = owner.getPosition().x + owner.getWidth()/2;
-        float bodyY = owner.getPosition().y + bodyHeight/2;
-        bodyDef.position.set(bodyX, bodyY);
-        return bodyDef;
-    }
-
-    private void createPolygonShapeAndFixtureDef() {
-        PolygonShape polygonShape = new PolygonShape();
-        polygonShape.setAsBox(bodyWidth/2, bodyHeight/2);
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = polygonShape;
-        body.createFixture(fixtureDef);
-        polygonShape.dispose();
-    }
-
 
     /*
     ** Steering behavior implementation
@@ -65,20 +41,29 @@ public class SteerableBody extends SteerableAdapter<Vector2> {
             return; //TODO delete when steering behavior is ready
         }
         steeringBehavior.calculateSteering(steeringOutput);
-        applySteering(Gdx.app.getGraphics().getDeltaTime()); //TODO fix delta time usage
+        applySteering(Game.DELTA_TIME);
         updateOwnersPosition();
-    }
-
-    public void updateOwnersPosition() {
-        float x = getPosition().x - owner.getWidth()/2;
-        float y = getPosition().y - bodyHeight/2;
-        owner.getPosition().set(x, y);
     }
 
     private void applySteering (float time) {
         linearVelocity.mulAdd(steeringOutput.linear, time).limit(this.getMaxLinearSpeed());
         body.setLinearVelocity(linearVelocity);
     }
+
+    public void updateOwnersPosition() {
+        float x = getPosition().x - owner.getWidth()/2;
+        float y = getPosition().y - bodyHeight/2;
+        owner.getPosition().set(x, y);
+        updateSensorPosition();
+    }
+
+    private void updateSensorPosition() {
+        if (owner.getSensor() == null) {
+            return;
+        }
+        owner.getSensor().getPosition().set(getPosition().x, getPosition().y);
+    }
+
 
     /*
      ** Wrapping around box2d.Body
@@ -105,5 +90,9 @@ public class SteerableBody extends SteerableAdapter<Vector2> {
     @Override
     public Vector2 getLinearVelocity() {
         return body.getLinearVelocity();
+    }
+
+    public BodyType getType() {
+        return body.getType();
     }
 }

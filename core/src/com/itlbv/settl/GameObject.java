@@ -1,9 +1,10 @@
 package com.itlbv.settl;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.itlbv.settl.enumsObjectType.GameObjectType;
 
@@ -12,6 +13,7 @@ public abstract class GameObject{
     public TextureRegion texture; //TODO remove public after testing drawing path
     private float width, height;
     private SteerableBody body;
+    private Body sensor;
     private GameObjectType type;
     private Animation<TextureRegion> animation;
     private float animationDuration;
@@ -26,6 +28,13 @@ public abstract class GameObject{
 
     public void createBody(BodyType bodyType, float bodyWidth, float bodyHeight) {
         body = new SteerableBody(bodyType, bodyWidth, bodyHeight, this);
+    }
+
+    public void createSensor(float sensorWidth, float sensorHeight) {
+        if (body == null) {
+            return; //TODO do smth with it
+        }
+        sensor = BodyFabric.createBody(sensorWidth, sensorHeight, body.getType(), this, true);
     }
 
     public void updatePosition() {
@@ -101,5 +110,9 @@ public abstract class GameObject{
 
     public float getHeight() {
         return height;
+    }
+
+    public Body getSensor() {
+        return sensor;
     }
 }

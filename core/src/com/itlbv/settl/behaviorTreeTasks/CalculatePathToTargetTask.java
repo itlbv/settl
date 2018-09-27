@@ -4,17 +4,15 @@ import com.badlogic.gdx.ai.btree.LeafTask;
 import com.badlogic.gdx.ai.btree.Task;
 import com.itlbv.settl.mobs.Mob;
 
-public class FollowPathTask extends LeafTask<Mob> {
+public class CalculatePathToTargetTask extends LeafTask<Mob> {
     @Override
     public Status execute() {
-        System.out.println("Following path");
+        System.out.println("Calculating path to target");
         Mob owner = getObject();
-        if (owner.path.size() > 0) {
-            owner.followPath();
-            return Status.RUNNING;
-        }
-        return Status.SUCCEEDED;
-    }
+        boolean result = owner.getMoveManager().calculatePathToTarget();
+        return result ? Status.SUCCEEDED : Status.FAILED;
+
+}
 
     @Override
     protected Task<Mob> copyTo(Task<Mob> task) {

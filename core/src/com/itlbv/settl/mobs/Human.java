@@ -8,7 +8,7 @@ public abstract class Human extends Mob {
     private static final float HEIGHT = 2.5f;
     private static final float SPEED = 4f;
 
-    // size of collision box
+    // size of physical body
     private static final float BODY_WIDTH = .6f;
     private static final float BODY_HEIGHT = .4f;
 

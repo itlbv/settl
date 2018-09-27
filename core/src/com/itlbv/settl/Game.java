@@ -67,7 +67,6 @@ public class Game extends ApplicationAdapter {
     public void render() {
         updateDeltaTime();
         updateCamera();
-
         updateTestObjects();
 
         batch.begin();

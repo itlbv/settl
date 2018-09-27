@@ -7,6 +7,7 @@ import com.itlbv.settl.mobs.Mob;
 public class FightEnemyTask extends LeafTask<Mob> {
     @Override
     public Status execute() {
+        System.out.println("Fighting enemy");
         return Status.SUCCEEDED;
     }
 
