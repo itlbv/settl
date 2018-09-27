@@ -12,13 +12,13 @@ import com.itlbv.settl.map.Tile;
 import com.itlbv.settl.pathfinding.Path;
 import com.itlbv.settl.pathfinding.PathHelper;
 
-public class MoveManager {
+public class MovementManager {
     private Mob owner;
     private Path path;
     private SteerableBody body;
     private float speed;
 
-    public MoveManager(float speed, Mob owner) {
+    public MovementManager(float speed, Mob owner) {
         this.owner = owner;
         this.body = owner.getBody();
 
@@ -83,5 +83,9 @@ public class MoveManager {
             TestObject o = new TestObject(node.getX() + .5f,node.getY() + .5f, MapObjectType.TESTOBJECT, texture);
             Game.testObjects.add(o);
         }
+    }
+
+    public int getPathSize() {
+        return path.size();
     }
 }

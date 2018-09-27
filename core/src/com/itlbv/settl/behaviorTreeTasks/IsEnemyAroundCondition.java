@@ -10,8 +10,13 @@ import com.itlbv.settl.mobs.Orc;
 public class IsEnemyAroundCondition extends LeafTask<Mob> {
     @Override
     public Status execute() {
-        System.out.println("Checking for enemies");
+        //System.out.println("Checking for enemies");
         Mob owner = getObject();
+
+        if (owner.getTarget() != null) {
+            return Status.SUCCEEDED;
+        }
+
         if (owner instanceof Human) {
             for (Mob mob : Game.mobs) {
                 if (mob instanceof Orc) {

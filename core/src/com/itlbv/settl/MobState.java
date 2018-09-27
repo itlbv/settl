@@ -2,5 +2,8 @@ package com.itlbv.settl;
 
 public enum MobState {
     IDLE,
-    WALKING
+    WALKING,
+    FIGHTING,
+    GOT_HIT,
+    DEAD
 }

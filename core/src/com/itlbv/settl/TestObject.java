@@ -9,7 +9,8 @@ public class TestObject extends GameObject {
     private static final float HEIGHT = .1f;
 
     public TestObject(float x, float y, MapObjectType type, TextureRegion texture) {
-        super(x, y, type, texture, WIDTH, HEIGHT);
+        super(x, y, type, WIDTH, HEIGHT);
+        super.setTexture(texture);
         this.type = type;
     }
 

@@ -16,7 +16,8 @@ public class Tile extends GameObject {
     private String code;
 
     public Tile(float x, float y, MapObjectType type, TextureRegion texture) {
-        super(x, y, type, texture, WIDTH, HEIGHT);
+        super(x, y, type, WIDTH, HEIGHT);
+        super.setTexture(texture);
         this.type = type;
         connections = new Array<Connection<Tile>>();
     }

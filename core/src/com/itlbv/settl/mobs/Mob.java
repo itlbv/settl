@@ -2,46 +2,49 @@ package com.itlbv.settl.mobs;
 
 import com.badlogic.gdx.ai.btree.BehaviorTree;
 import com.badlogic.gdx.ai.btree.utils.BehaviorTreeLibraryManager;
-import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
-import com.badlogic.gdx.ai.fsm.StateMachine;
-import com.badlogic.gdx.ai.steer.SteeringBehavior;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.itlbv.settl.Game;
 import com.itlbv.settl.GameObject;
+import com.itlbv.settl.MobState;
 import com.itlbv.settl.SteerableBody;
-import com.itlbv.settl.TestObject;
-import com.itlbv.settl.enumsObjectType.MapObjectType;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
-import com.itlbv.settl.map.Tile;
-import com.itlbv.settl.pathfinding.Path;
-import com.itlbv.settl.pathfinding.PathHelper;
 
 public abstract class Mob extends GameObject {
     private MobObjectType type;
-    private MoveManager moveManager;
+    private MovementManager movementHandler;
     private BehaviorTree<Mob> bhvTree;
-    private GameObject target;
+    private Mob target;
+    private boolean alive;
     private float speed;
+    private MobState state;
+    private AnimationManager animationManager;
 
-    public Mob(float x, float y, MobObjectType type, TextureRegion texture, float width, float height,
+    private boolean targetWithinReach = false;
+
+    public Mob(float x, float y, MobObjectType type,float width, float height,
                float bodyWidth, float bodyHeight, float speed, String bhvTree) {
-        super(x, y, type, texture, width, height);
+        super(x, y, type, width, height);
         super.createBody(BodyDef.BodyType.DynamicBody, bodyWidth, bodyHeight);
         this.type = type;
         this.speed = speed;
-        this.moveManager = new MoveManager(speed, this);
+        this.movementHandler = new MovementManager(speed, this);
+        this.animationManager = new AnimationManager(this);
         this.bhvTree = BehaviorTreeLibraryManager.getInstance().createBehaviorTree(bhvTree, this);
+        this.alive = true;
+        this.state = MobState.IDLE;
     }
 
 
     public void update() {
         bhvTree.step();
-        moveManager.update();
-        //updateSteering();
+        movementHandler.update();
         updatePosition();
+        animationManager.updateAnimation();
+    }
+
+    public void fight() {
+        target.setAlive(false);
+        System.out.println("target defeated!");
     }
 
     /*
@@ -55,21 +58,45 @@ public abstract class Mob extends GameObject {
         return super.getBody();
     }
 
-    public MoveManager getMoveManager() {
-        return moveManager;
+    public MovementManager getMovementHandler() {
+        return movementHandler;
     }
 
-    public GameObject getTarget() {
+    public Mob getTarget() {
         return target;
     }
 
-    public void setTarget(GameObject target) {
+    public void setTarget(Mob target) {
         this.target = target;
+    }
+
+    public boolean isTargetWithinReach() {
+        return targetWithinReach;
+    }
+
+    public void setTargetWithinReach(boolean targetWithinReach) {
+        this.targetWithinReach = targetWithinReach;
+    }
+
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
+
+    public MobState getState() {
+        return state;
+    }
+
+    public void setState(MobState state) {
+        this.state = state;
     }
 
     /*
      **Steering behavior
-     */
+
     private void updateSteering() {
         getBody().updateSteering();
     }
@@ -81,4 +108,5 @@ public abstract class Mob extends GameObject {
         }
         body.initializeSteeringBehavior(speed, steeringBehavior);
     }
+    */
 }

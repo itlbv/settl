@@ -12,7 +12,7 @@ public abstract class Orc extends Mob{
     private static final float BODY_WIDTH = .8f;
     private static final float BODY_HEIGHT = .6f;
 
-    public Orc(float x, float y, MobObjectType type, TextureRegion texture, String bhvTree) {
-        super(x, y, type, texture, WIDTH, HEIGHT, BODY_WIDTH, BODY_HEIGHT, SPEED, bhvTree);
+    public Orc(float x, float y, MobObjectType type, String bhvTree) {
+        super(x, y, type, WIDTH, HEIGHT, BODY_WIDTH, BODY_HEIGHT, SPEED, bhvTree);
     }
 }

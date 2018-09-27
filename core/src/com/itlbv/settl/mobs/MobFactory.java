@@ -9,16 +9,15 @@ import com.itlbv.settl.map.Map;
 
 public class MobFactory {
     public static Mob createMob(float x, float y, MobObjectType type) {
-        TextureRegion texture = MobTextureHelper.getTexture(type, MobState.IDLE);
         switch (type) {
             case HUMAN_PEASANT:
-                return new HumanPeasant(x, y, texture);
+                return new HumanPeasant(x, y);
             case HUMAN_KNIGHT:
-                return new HumanKnight(x, y, texture);
+                return new HumanKnight(x, y);
             case ORC_SHAMAN:
-                return new OrcShaman(x, y, texture);
+                return new OrcShaman(x, y);
             default:
-                return new HumanPeasant(x, y, texture);
+                return new HumanPeasant(x, y);
         }
     }
 

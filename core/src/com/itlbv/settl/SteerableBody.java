@@ -16,7 +16,7 @@ public class SteerableBody extends SteerableAdapter<Vector2> {
         this.bodyWidth = bodyWidth;
         this.bodyHeight = bodyHeight;
         this.owner = owner;
-        body = BodyFabric.createBody(bodyWidth, bodyHeight, bodyType, owner, false);
+        body = BodyFactory.createBody(bodyWidth, bodyHeight, bodyType, owner, false);
     }
 
     /*
@@ -54,22 +54,14 @@ public class SteerableBody extends SteerableAdapter<Vector2> {
         float x = getPosition().x - owner.getWidth()/2;
         float y = getPosition().y - bodyHeight/2;
         owner.getPosition().set(x, y);
-        updateSensorPosition();
     }
-
-    private void updateSensorPosition() {
-        if (owner.getSensor() == null) {
-            return;
-        }
-        owner.getSensor().getPosition().set(getPosition().x, getPosition().y);
-    }
-
 
     /*
      ** Wrapping around box2d.Body
      */
     public void setLinearVelocity(Vector2 vector) {
         body.setLinearVelocity(vector);
+        owner.getSensor().setLinearVelocity(vector);
     }
 
     @Override

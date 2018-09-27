@@ -17,10 +17,12 @@ public class MobTextureHelper {
     private static Texture orcShaman02 = new Texture("textures/mobs/orcShaman02.png");
 
 
+    /*
     public static TextureRegion getTexture(MobObjectType type, MobState state) {
         Texture textureOfType = getTextureOfType(type);
         return getTextureOfState(textureOfType, state);
     }
+    */
 
     private static Texture getTextureOfType(MobObjectType type) {
         switch (type) {
@@ -35,18 +37,18 @@ public class MobTextureHelper {
         }
     }
 
+    /*
     private static TextureRegion getTextureOfState(Texture textureOfType, MobState state) {
         switch (state) {
             case IDLE:
                 return getIdle(textureOfType);
+            case DEAD:
+                return getDead(textureOfType);
             default:
                 return getIdle(textureOfType);
         }
     }
-
-    private static TextureRegion getIdle(Texture textureOfType) {
-        return new TextureRegion(textureOfType,TEXTURE_SIZE, TEXTURE_SIZE);
-    }
+    */
 
     /*
     **Animation section
@@ -58,11 +60,25 @@ public class MobTextureHelper {
 
     private static Animation<TextureRegion> getAnimationOfState(Texture textureOfType, MobState state) {
         switch (state) {
+            case IDLE:
+                return getIdle(textureOfType);
             case WALKING:
                 return getWalking(textureOfType);
+            case FIGHTING:
+                return getFighting(textureOfType);
+            case GOT_HIT:
+                return getGotHit(textureOfType);
+            case DEAD:
+                return getDead(textureOfType);
             default:
                 return getWalking(textureOfType);
         }
+    }
+
+    private static Animation<TextureRegion> getIdle(Texture textureOfType) {
+        TextureRegion[] allFrames = TextureRegion.split(textureOfType, TEXTURE_SIZE,TEXTURE_SIZE)[0];
+        TextureRegion[] idleFrames = {allFrames[0]};
+        return new Animation<>(ANIMATION_SPEED, idleFrames);
     }
 
     private static Animation<TextureRegion> getWalking(Texture textureOfType) {
@@ -71,14 +87,27 @@ public class MobTextureHelper {
                 allFrames[1],
                 allFrames[0],
                 allFrames[2]};
-        return new Animation<TextureRegion>(ANIMATION_SPEED, walkFrames);
-        /*
+        return new Animation<>(ANIMATION_SPEED, walkFrames);
+    }
+
+    private static Animation<TextureRegion> getFighting(Texture textureOfType) {
+        TextureRegion[] allFrames = TextureRegion.split(textureOfType, TEXTURE_SIZE,TEXTURE_SIZE)[0];
         TextureRegion[] attackFrames = {allFrames[3],
                 allFrames[4],
                 allFrames[5]};
+        return new Animation<>(ANIMATION_SPEED, attackFrames);
+    }
+
+    private static Animation<TextureRegion> getGotHit(Texture textureOfType) {
+        TextureRegion[] allFrames = TextureRegion.split(textureOfType, TEXTURE_SIZE,TEXTURE_SIZE)[0];
         TextureRegion[] gotHit = {allFrames[6],
                 allFrames[7]};
-        TextureRegion deadFrame = allFrames[8];
-         */
+        return new Animation<>(ANIMATION_SPEED, gotHit);
+    }
+
+    private static Animation<TextureRegion> getDead(Texture textureOfType) {
+        TextureRegion[] allFrames = TextureRegion.split(textureOfType, TEXTURE_SIZE, TEXTURE_SIZE)[0];
+        TextureRegion[] deadFrames = {allFrames[8]};
+        return new Animation<>(ANIMATION_SPEED, deadFrames);
     }
 }
