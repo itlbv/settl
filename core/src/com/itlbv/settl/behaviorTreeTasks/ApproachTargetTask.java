@@ -9,17 +9,19 @@ import com.itlbv.settl.mobs.MovementManager;
 public class ApproachTargetTask extends LeafTask<Mob> {
     @Override
     public Status execute() {
-        System.out.println("Approaching target");
+        //System.out.println("Approaching target");
         Mob owner = getObject();
-        MovementManager movementHandler = owner.getMovementHandler();
+        MovementManager movementHandler = owner.getMovementManager();
         if (owner.isTargetWithinReach()) {
             movementHandler.stop();
+            owner.setState(MobState.IDLE);
             return Status.SUCCEEDED;
         }
         movementHandler.update();
         owner.setState(MobState.WALKING);
         if (owner.isTargetWithinReach()) {
             movementHandler.stop();
+            owner.setState(MobState.IDLE);
             return Status.SUCCEEDED;
         } else {
             return Status.RUNNING;

@@ -9,7 +9,7 @@ public class CalculatePathToTargetTask extends LeafTask<Mob> {
     public Status execute() {
         System.out.println("Calculating path to target");
         Mob owner = getObject();
-        boolean result = owner.getMovementHandler().calculatePathToTarget();
+        boolean result = owner.getMovementManager().calculatePathToTarget();
         return result ? Status.SUCCEEDED : Status.FAILED;
 
 }

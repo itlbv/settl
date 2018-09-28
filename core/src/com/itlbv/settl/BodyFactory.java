@@ -71,7 +71,7 @@ public class BodyFactory {
                 fixtureDef.filter.maskBits = CollisionBits.MOB_BODY;
             } else {
                 fixtureDef.filter.categoryBits = CollisionBits.MOB_BODY;
-                fixtureDef.filter.maskBits = CollisionBits.MOB_SENSOR;
+                fixtureDef.filter.maskBits = CollisionBits.MAP_TILE;
             }
         } else {
             fixtureDef.filter.categoryBits = CollisionBits.MAP_TILE;

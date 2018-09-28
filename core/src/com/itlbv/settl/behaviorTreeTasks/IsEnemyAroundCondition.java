@@ -13,13 +13,14 @@ public class IsEnemyAroundCondition extends LeafTask<Mob> {
         //System.out.println("Checking for enemies");
         Mob owner = getObject();
 
-        if (owner.getTarget() != null) {
+        if (owner.getEnemy() != null) {
             return Status.SUCCEEDED;
         }
 
         if (owner instanceof Human) {
             for (Mob mob : Game.mobs) {
                 if (mob instanceof Orc) {
+                    owner.setEnemy(mob);
                     owner.setTarget(mob);
                     return Status.SUCCEEDED;
                 }
@@ -28,6 +29,7 @@ public class IsEnemyAroundCondition extends LeafTask<Mob> {
         if (owner instanceof Orc) {
             for (Mob mob : Game.mobs) {
                 if (mob instanceof Human) {
+                    owner.setEnemy(mob);
                     owner.setTarget(mob);
                     return Status.SUCCEEDED;
                 }

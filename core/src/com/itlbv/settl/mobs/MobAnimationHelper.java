@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.itlbv.settl.MobState;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
 
-public class MobTextureHelper {
+public class MobAnimationHelper {
     private static final float ANIMATION_SPEED = 0.1f;
     private static final int TEXTURE_SIZE = 24;
 
@@ -16,13 +16,10 @@ public class MobTextureHelper {
     private static Texture orcShaman01 = new Texture("textures/mobs/orcShaman01.png");
     private static Texture orcShaman02 = new Texture("textures/mobs/orcShaman02.png");
 
-
-    /*
-    public static TextureRegion getTexture(MobObjectType type, MobState state) {
+    public static Animation<TextureRegion> getAnimation(MobObjectType type, MobState state) {
         Texture textureOfType = getTextureOfType(type);
-        return getTextureOfState(textureOfType, state);
+        return getAnimationOfState(textureOfType, state);
     }
-    */
 
     private static Texture getTextureOfType(MobObjectType type) {
         switch (type) {
@@ -35,27 +32,6 @@ public class MobTextureHelper {
             default:
                 return man01;
         }
-    }
-
-    /*
-    private static TextureRegion getTextureOfState(Texture textureOfType, MobState state) {
-        switch (state) {
-            case IDLE:
-                return getIdle(textureOfType);
-            case DEAD:
-                return getDead(textureOfType);
-            default:
-                return getIdle(textureOfType);
-        }
-    }
-    */
-
-    /*
-    **Animation section
-     */
-    public static Animation<TextureRegion> getAnimation(MobObjectType type, MobState state) {
-        Texture textureOfType = getTextureOfType(type);
-        return getAnimationOfState(textureOfType, state);
     }
 
     private static Animation<TextureRegion> getAnimationOfState(Texture textureOfType, MobState state) {

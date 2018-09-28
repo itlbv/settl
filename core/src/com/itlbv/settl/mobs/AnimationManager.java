@@ -8,8 +8,8 @@ import com.itlbv.settl.MobState;
 public class AnimationManager {
     private Mob owner;
     private MobState currentState;
-    private float animationDuration;
-    private Animation<TextureRegion> animationToDraw;
+    private float animationDurationTime;
+    private Animation<TextureRegion> currentAnimation;
 
     private Animation<TextureRegion> idle;
     private Animation<TextureRegion> walking;
@@ -19,60 +19,72 @@ public class AnimationManager {
 
     public AnimationManager(Mob owner) {
         this.owner = owner;
-        this.currentState = MobState.IDLE;
         initializeTextures();
-        setAnimationToDraw();
-        TextureRegion texture = animationToDraw.getKeyFrame(animationDuration, true);
-        setTextureToDraw(texture);
+        this.currentState = owner.getState();
+        this.currentAnimation = idle;
+        update();
     }
 
-    public void updateAnimation(){
-        updateAnimationDuration();
+    public void update(){
+        updateAnimationDurationTime();
+        setNewAnimationIfStateChanged();
+        TextureRegion texture = currentAnimation.getKeyFrame(animationDurationTime, true);
+
+        if (currentState != MobState.WALKING) {
+            if (currentAnimation.isAnimationFinished(animationDurationTime)) {
+                owner.setState(MobState.IDLE);
+                //System.out.println("****ANIMATION RESET*********");
+
+            }
+        }
+
+        setFrameToDraw(texture);
+    }
+
+    private void setNewAnimationIfStateChanged() {
         if (currentState != owner.getState()) {
             currentState = owner.getState();
-            animationDuration = 0;
-            setAnimationToDraw();
+            animationDurationTime = 0;
+            setNewAnimation();
         }
-        TextureRegion texture = animationToDraw.getKeyFrame(animationDuration, true);
-        setTextureToDraw(texture);
     }
 
-    private void updateAnimationDuration() {
-        animationDuration += Game.DELTA_TIME;
-    }
-
-    private void setAnimationToDraw() {
+    private void setNewAnimation() {
         switch (currentState) {
             case IDLE:
-                animationToDraw = idle;
+                currentAnimation = idle;
                 break;
             case WALKING:
-                animationToDraw = walking;
+                currentAnimation = walking;
                 break;
             case FIGHTING:
-                animationToDraw = fighting;
+                currentAnimation = fighting;
                 break;
             case GOT_HIT:
-                animationToDraw = gotHit;
+                currentAnimation = gotHit;
                 break;
             case DEAD:
-                animationToDraw = dead;
+                currentAnimation = dead;
                 break;
         default:
-            animationToDraw = idle;
+            currentAnimation = idle;
             break;
         }
     }
 
-    private void setTextureToDraw(TextureRegion texture) {
+    private void updateAnimationDurationTime() {
+        animationDurationTime += Game.DELTA_TIME;
+    }
+
+    private void setFrameToDraw(TextureRegion texture) {
         owner.setTexture(texture);
     }
 
     private void initializeTextures() {
-        idle = MobTextureHelper.getAnimation(owner.getType(), MobState.IDLE);
-        walking = MobTextureHelper.getAnimation(owner.getType(), MobState.WALKING);
-        fighting = MobTextureHelper.getAnimation(owner.getType(), MobState.FIGHTING);
-        gotHit = MobTextureHelper.getAnimation(owner.getType(), MobState.GOT_HIT);
-        dead = MobTextureHelper.getAnimation(owner.getType(), MobState.DEAD);
+        idle = MobAnimationHelper.getAnimation(owner.getType(), MobState.IDLE);
+        walking = MobAnimationHelper.getAnimation(owner.getType(), MobState.WALKING);
+        fighting = MobAnimationHelper.getAnimation(owner.getType(), MobState.FIGHTING);
+        gotHit = MobAnimationHelper.getAnimation(owner.getType(), MobState.GOT_HIT);
+        dead = MobAnimationHelper.getAnimation(owner.getType(), MobState.DEAD);
     }
 }

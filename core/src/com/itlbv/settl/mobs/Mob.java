@@ -2,8 +2,9 @@ package com.itlbv.settl.mobs;
 
 import com.badlogic.gdx.ai.btree.BehaviorTree;
 import com.badlogic.gdx.ai.btree.utils.BehaviorTreeLibraryManager;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.itlbv.settl.Game;
 import com.itlbv.settl.GameObject;
 import com.itlbv.settl.MobState;
 import com.itlbv.settl.SteerableBody;
@@ -11,14 +12,14 @@ import com.itlbv.settl.enumsObjectType.MobObjectType;
 
 public abstract class Mob extends GameObject {
     private MobObjectType type;
-    private MovementManager movementHandler;
+    private final MovementManager movementManager;
+    private final AnimationManager animationManager;
     private BehaviorTree<Mob> bhvTree;
-    private Mob target;
-    private boolean alive;
-    private float speed;
     private MobState state;
-    private AnimationManager animationManager;
 
+    private GameObject target;
+    private Mob enemy;
+    private boolean alive;
     private boolean targetWithinReach = false;
 
     public Mob(float x, float y, MobObjectType type,float width, float height,
@@ -26,25 +27,53 @@ public abstract class Mob extends GameObject {
         super(x, y, type, width, height);
         super.createBody(BodyDef.BodyType.DynamicBody, bodyWidth, bodyHeight);
         this.type = type;
-        this.speed = speed;
-        this.movementHandler = new MovementManager(speed, this);
+        this.state = MobState.IDLE;
+        this.movementManager = new MovementManager(speed, this);
         this.animationManager = new AnimationManager(this);
         this.bhvTree = BehaviorTreeLibraryManager.getInstance().createBehaviorTree(bhvTree, this);
         this.alive = true;
-        this.state = MobState.IDLE;
     }
 
 
     public void update() {
         bhvTree.step();
-        movementHandler.update();
+        movementManager.update();
+        animationManager.update();
         updatePosition();
-        animationManager.updateAnimation();
     }
 
+    /*
+    **Combat
+     */
+    float combatPhaseTime = 0;
     public void fight() {
-        target.setAlive(false);
-        System.out.println("target defeated!");
+        combatPhaseTime += Game.DELTA_TIME;
+        if (combatPhaseTime > 1f) {
+            if (MathUtils.randomBoolean(.3f)) {
+                attackEnemy();
+                state = MobState.FIGHTING;
+                combatPhaseTime = 0f;
+            }
+        }
+    }
+
+    private void attackEnemy() {
+        System.out.println("*********************ATTACK***************************");
+        enemy.defend();
+    }
+
+    public void defend() {
+        if (MathUtils.randomBoolean(.5f)) {
+            state = MobState.GOT_HIT;
+        }
+    }
+
+    public Mob getEnemy() {
+        return enemy;
+    }
+
+    public void setEnemy(Mob enemy) {
+        this.enemy = enemy;
     }
 
     /*
@@ -58,15 +87,15 @@ public abstract class Mob extends GameObject {
         return super.getBody();
     }
 
-    public MovementManager getMovementHandler() {
-        return movementHandler;
+    public MovementManager getMovementManager() {
+        return movementManager;
     }
 
-    public Mob getTarget() {
+    public GameObject getTarget() {
         return target;
     }
 
-    public void setTarget(Mob target) {
+    public void setTarget(GameObject target) {
         this.target = target;
     }
 
@@ -80,10 +109,6 @@ public abstract class Mob extends GameObject {
 
     public boolean isAlive() {
         return alive;
-    }
-
-    public void setAlive(boolean alive) {
-        this.alive = alive;
     }
 
     public MobState getState() {

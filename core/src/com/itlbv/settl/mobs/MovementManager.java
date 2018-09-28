@@ -21,7 +21,6 @@ public class MovementManager {
     public MovementManager(float speed, Mob owner) {
         this.owner = owner;
         this.body = owner.getBody();
-
         this.path = new Path();
         this.speed = speed;
     }
@@ -39,6 +38,7 @@ public class MovementManager {
 
     public void stop() {
         body.setLinearVelocity(new Vector2(0f, 0f));
+        path = new Path();
     }
 
     public void update() {

@@ -84,6 +84,7 @@ public class Game extends ApplicationAdapter {
 
     private void updateTestObjects() {
         mobs.get(0).update();
+        mobs.get(1).update();
     }
 
     private void drawTestObjects() {
