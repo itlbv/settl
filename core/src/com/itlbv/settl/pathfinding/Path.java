@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.itlbv.settl.map.Tile;
 
 public class Path extends DefaultGraphPath<Tile> implements SmoothableGraphPath<Tile, Vector2> {
+
     @Override
     public Vector2 getNodePosition(int index) {
         return nodes.get(index).getCenterPosition();

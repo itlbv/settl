@@ -1,18 +1,15 @@
 import isEnemyAround?:"com.itlbv.settl.behaviorTreeTasks.IsEnemyAroundCondition"
-import calculatePathToTarget:"com.itlbv.settl.behaviorTreeTasks.CalculatePathToTargetTask"
+import initializeMovingToTarget:"com.itlbv.settl.behaviorTreeTasks.InitializeMovingToTargetTask"
 import approachTarget:"com.itlbv.settl.behaviorTreeTasks.ApproachTargetTask"
 import fightEnemy:"com.itlbv.settl.behaviorTreeTasks.FightEnemyTask"
 import doNothing:"com.itlbv.settl.behaviorTreeTasks.DoNothingTask"
-import withoutTarget: "com.itlbv.settl.behaviorTreeTasks.IsWithoutTargetCondition"
 
 subtree name: "enemyAround?"
     isEnemyAround?
 
-subtree name: "withoutTarget?"
-
 subtree name: "killEnemy"
     sequence
-        calculatePathToTarget
+        initializeMovingToTarget
         approachTarget
         fightEnemy
 

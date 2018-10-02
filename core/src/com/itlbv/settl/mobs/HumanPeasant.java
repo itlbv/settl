@@ -1,6 +1,5 @@
 package com.itlbv.settl.mobs;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
 
 public class HumanPeasant extends Human {

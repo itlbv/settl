@@ -14,11 +14,13 @@ import com.itlbv.settl.map.Tile;
 import com.itlbv.settl.mobs.Mob;
 import com.itlbv.settl.mobs.MobFactory;
 
+import java.util.ArrayList;
+
 public class Game extends ApplicationAdapter {
     public static SpriteBatch batch;
     private static OrthographicCamera camera;
     public static Map map;
-    public static Array<Mob> mobs;
+    public static ArrayList<Mob> mobs;
     public static Array<GameObject> testObjects = new Array<>(); //TODO test objects
 
     private static final int VIEWPORT = 40;
@@ -28,13 +30,13 @@ public class Game extends ApplicationAdapter {
     public void create() {
         initializeClassFields();
         createMap();
-        createTestObjects();
+        createMobs();
     }
 
     private void initializeClassFields() {
         batch = new SpriteBatch();
         map = Map.getInstance();
-        mobs = new Array<Mob>();
+        mobs = new ArrayList<Mob>();
         initializeCamera();
     }
 
@@ -51,7 +53,7 @@ public class Game extends ApplicationAdapter {
         camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
     }
 
-    private void createTestObjects() {
+    private void createMobs() {
         for (int i = 0; i < 1; i++) {
             Mob mob = MobFactory.createMobAtRandomPosition(false, MobObjectType.HUMAN_KNIGHT);
             mobs.add(mob);
@@ -60,14 +62,13 @@ public class Game extends ApplicationAdapter {
             Mob mob = MobFactory.createMobAtRandomPosition(true, MobObjectType.ORC_SHAMAN);
             mobs.add(mob);
         }
-
     }
 
     @Override
     public void render() {
         updateDeltaTime();
         updateCamera();
-        updateTestObjects();
+        updateMobs();
 
         batch.begin();
         drawMap();
@@ -82,9 +83,14 @@ public class Game extends ApplicationAdapter {
         DELTA_TIME = Gdx.graphics.getDeltaTime();
     }
 
-    private void updateTestObjects() {
-        mobs.get(0).update();
-        mobs.get(1).update();
+    private void updateMobs() {
+
+        for (Mob mob : mobs) {
+            mob.update();
+        }
+
+        //mobs.get(0).update();
+        //mobs.get(1).update();
     }
 
     private void drawTestObjects() {

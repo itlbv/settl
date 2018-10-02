@@ -1,6 +1,5 @@
 package com.itlbv.settl.pathfinding;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.utils.Collision;
 import com.badlogic.gdx.ai.utils.Ray;
 import com.badlogic.gdx.ai.utils.RaycastCollisionDetector;
@@ -10,7 +9,6 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
 import com.itlbv.settl.GameWorld;
-import com.itlbv.settl.enumsObjectType.MapObjectType;
 import com.itlbv.settl.map.Map;
 import com.itlbv.settl.map.Tile;
 

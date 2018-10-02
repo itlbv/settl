@@ -1,6 +1,5 @@
 package com.itlbv.settl.mobs;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
 
 public class OrcShaman extends Orc {
@@ -9,7 +8,7 @@ public class OrcShaman extends Orc {
     private static final float SENSOR_HEIGHT = 2f;
 
     public OrcShaman(float x, float y) {
-        super(x, y, MOB_TYPE, "bhvTrees/humanPeasant.btree");
+        super(x, y, MOB_TYPE, "bhvTrees/humanKnight.btree");
         createSensor(SENSOR_WIDTH, SENSOR_HEIGHT);
     }
 }

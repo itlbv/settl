@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.itlbv.settl.enumsObjectType.GameObjectType;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
+import com.itlbv.settl.mobs.HumanKnight;
 
 public abstract class GameObject{
     private Vector2 position;
@@ -25,6 +26,11 @@ public abstract class GameObject{
 
     public void createBody(BodyType bodyType, float bodyWidth, float bodyHeight) {
         body = new SteerableBody(bodyType, bodyWidth, bodyHeight, this);
+    }
+
+    public void replaceSensor() {
+        GameWorld.world.destroyBody(sensor);
+        createSensor(2f,2f); //TODO take it from constants class
     }
 
     public void createSensor(float sensorWidth, float sensorHeight) {

@@ -16,6 +16,13 @@ public class BodyFactory {
     private static BodyDef bodyDef;
     private static Body body;
 
+    private static void setClassFields(float widthSrc, float heightSrc, BodyType bodyTypeSrc, GameObject ownerSrc, boolean isSensorSrc) {
+        width = widthSrc;
+        height = heightSrc;
+        bodyType = bodyTypeSrc;
+        owner = ownerSrc;
+        isSensor = isSensorSrc;
+    }
     public static Body createBody(float widthSrc, float heightSrc, BodyType bodyTypeSrc,
                                   GameObject ownerSrc, boolean isSensorSrc) {
         setClassFields(widthSrc, heightSrc, bodyTypeSrc, ownerSrc, isSensorSrc);
@@ -24,13 +31,6 @@ public class BodyFactory {
         createPolygonShapeAndFixtureDef();
         body.setUserData(owner);
         return body;
-    }
-    private static void setClassFields(float widthSrc, float heightSrc, BodyType bodyTypeSrc, GameObject ownerSrc, boolean isSensorSrc) {
-        width = widthSrc;
-        height = heightSrc;
-        bodyType = bodyTypeSrc;
-        owner = ownerSrc;
-        isSensor = isSensorSrc;
     }
 
     private static void createBodyDefinition() {
@@ -44,7 +44,7 @@ public class BodyFactory {
     }
 
     private static void setSensorPositionToCenterOfBody() {
-        bodyDef.position.set(owner.getBodyPosition().x, owner.getBodyPosition().y);
+        bodyDef.position.set(owner.getBodyPosition());
     }
 
     private static void calculateBodyPosition() {
@@ -71,7 +71,7 @@ public class BodyFactory {
                 fixtureDef.filter.maskBits = CollisionBits.MOB_BODY;
             } else {
                 fixtureDef.filter.categoryBits = CollisionBits.MOB_BODY;
-                fixtureDef.filter.maskBits = CollisionBits.MAP_TILE;
+                fixtureDef.filter.maskBits = CollisionBits.MAP_TILE | CollisionBits.MOB_BODY | CollisionBits.MOB_SENSOR;
             }
         } else {
             fixtureDef.filter.categoryBits = CollisionBits.MAP_TILE;

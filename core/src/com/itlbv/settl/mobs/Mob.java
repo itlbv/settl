@@ -36,16 +36,34 @@ public abstract class Mob extends GameObject {
 
 
     public void update() {
+
+        checkSensorPosition();
+
         bhvTree.step();
         movementManager.update();
         animationManager.update();
         updatePosition();
     }
 
+    private void checkSensorPosition() {
+        if (!getSensor().getPosition().epsilonEquals(getBodyPosition(), MathUtils.FLOAT_ROUNDING_ERROR)) {
+            System.out.println("Sensor replaced");
+            super.replaceSensor();
+        }
+    }
+
+    public void initializeMovingToTarget() {
+        movementManager.initializeMovingToTarget();
+    }
+
+    public void stopMoving() {
+        movementManager.stopMoving();
+    }
+
     /*
     **Combat
      */
-    float combatPhaseTime = 0;
+    private float combatPhaseTime = 0;
     public void fight() {
         combatPhaseTime += Game.DELTA_TIME;
         if (combatPhaseTime > 1f) {
@@ -68,6 +86,9 @@ public abstract class Mob extends GameObject {
         }
     }
 
+    /*
+    **Getters & setters
+     */
     public Mob getEnemy() {
         return enemy;
     }
@@ -76,9 +97,6 @@ public abstract class Mob extends GameObject {
         this.enemy = enemy;
     }
 
-    /*
-    **Getters & setters
-     */
     public MobObjectType getType() {
         return this.type;
     }
@@ -118,20 +136,4 @@ public abstract class Mob extends GameObject {
     public void setState(MobState state) {
         this.state = state;
     }
-
-    /*
-     **Steering behavior
-
-    private void updateSteering() {
-        getBody().updateSteering();
-    }
-
-    private void createSteeringBehavior(float speed, SteeringBehavior<Vector2> steeringBehavior) {
-        SteerableBody body = getBody(); //TODO make a class variable?
-        if (body == null) {
-            return; //TODO make it work smhw
-        }
-        body.initializeSteeringBehavior(speed, steeringBehavior);
-    }
-    */
 }

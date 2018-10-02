@@ -2,15 +2,17 @@ package com.itlbv.settl.behaviorTreeTasks;
 
 import com.badlogic.gdx.ai.btree.LeafTask;
 import com.badlogic.gdx.ai.btree.Task;
+import com.itlbv.settl.MobState;
 import com.itlbv.settl.mobs.Mob;
 
-public class CalculatePathToTargetTask extends LeafTask<Mob> {
+public class InitializeMovingToTargetTask extends LeafTask<Mob> {
     @Override
     public Status execute() {
-        System.out.println("Calculating path to target");
+        System.out.println("Initializing moving to target");
         Mob owner = getObject();
-        boolean result = owner.getMovementManager().calculatePathToTarget();
-        return result ? Status.SUCCEEDED : Status.FAILED;
+        owner.initializeMovingToTarget();
+        owner.setState(MobState.WALKING);
+        return Status.SUCCEEDED;
 
 }
 

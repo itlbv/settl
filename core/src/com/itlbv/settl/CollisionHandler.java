@@ -22,24 +22,21 @@ public class CollisionHandler implements ContactListener {
             m1.setTargetWithinReach(true);
             System.out.println("Target in reach");
         }
-    }
-
-    @Override
-    public void endContact(Contact contact) {
-
-    }
-
-    @Override
-    public void preSolve(Contact contact, Manifold oldManifold) {
-        GameObject o1 = (GameObject) contact.getFixtureA().getBody().getUserData();
-        GameObject o2 = (GameObject) contact.getFixtureB().getBody().getUserData();
-        if (o1 == o2) {
-            //contact.setEnabled(false);
+        if (m2.getTarget() == m1) {
+            m2.setTargetWithinReach(true);
+            System.out.println("Target in reach");
         }
     }
 
     @Override
-    public void postSolve(Contact contact, ContactImpulse impulse) {
+    public void endContact(Contact contact) {
+    }
 
+    @Override
+    public void preSolve(Contact contact, Manifold oldManifold) {
+    }
+
+    @Override
+    public void postSolve(Contact contact, ContactImpulse impulse) {
     }
 }

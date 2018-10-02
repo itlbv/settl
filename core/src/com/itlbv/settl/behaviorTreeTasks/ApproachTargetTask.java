@@ -11,16 +11,9 @@ public class ApproachTargetTask extends LeafTask<Mob> {
     public Status execute() {
         //System.out.println("Approaching target");
         Mob owner = getObject();
-        MovementManager movementHandler = owner.getMovementManager();
         if (owner.isTargetWithinReach()) {
-            movementHandler.stop();
-            owner.setState(MobState.IDLE);
-            return Status.SUCCEEDED;
-        }
-        movementHandler.update();
-        owner.setState(MobState.WALKING);
-        if (owner.isTargetWithinReach()) {
-            movementHandler.stop();
+            System.out.println("Stop moving");
+            owner.stopMoving();
             owner.setState(MobState.IDLE);
             return Status.SUCCEEDED;
         } else {
