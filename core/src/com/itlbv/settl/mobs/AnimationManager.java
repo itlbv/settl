@@ -6,7 +6,7 @@ import com.itlbv.settl.Game;
 import com.itlbv.settl.MobState;
 
 public class AnimationManager {
-    private Mob owner;
+    private final Mob owner;
     private MobState currentState;
     private float animationDurationTime;
     private Animation<TextureRegion> currentAnimation;

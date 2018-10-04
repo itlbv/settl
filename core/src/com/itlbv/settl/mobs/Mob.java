@@ -11,10 +11,11 @@ import com.itlbv.settl.SteerableBody;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
 
 public abstract class Mob extends GameObject {
-    private MobObjectType type;
     private final MovementManager movementManager;
     private final AnimationManager animationManager;
+    private final FightingManager fightingManager;
     private BehaviorTree<Mob> bhvTree;
+    private MobObjectType type;
     private MobState state;
 
     private GameObject target;
@@ -30,6 +31,7 @@ public abstract class Mob extends GameObject {
         this.state = MobState.IDLE;
         this.movementManager = new MovementManager(speed, this);
         this.animationManager = new AnimationManager(this);
+        this.fightingManager = new FightingManager(this);
         this.bhvTree = BehaviorTreeLibraryManager.getInstance().createBehaviorTree(bhvTree, this);
         this.alive = true;
     }

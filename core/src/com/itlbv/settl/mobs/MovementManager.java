@@ -16,7 +16,7 @@ import com.itlbv.settl.pathfinding.Path;
 import com.itlbv.settl.pathfinding.PathHelper;
 
 public class MovementManager {
-    private Mob owner;
+    private final Mob owner;
     private GameObject target;
     private Path path;
     private SteerableBody body;
