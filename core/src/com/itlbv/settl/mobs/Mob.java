@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.itlbv.settl.GameObject;
 import com.itlbv.settl.mobs.utils.MobState;
-import com.itlbv.settl.SteerableBody;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
 import com.itlbv.settl.mobs.managers.AnimationManager;
 import com.itlbv.settl.mobs.managers.FightingManager;
@@ -48,7 +47,7 @@ public abstract class Mob extends GameObject {
     }
 
     private void checkSensorPosition() {
-        if (!getSensor().getPosition().epsilonEquals(getBodyPosition(), MathUtils.FLOAT_ROUNDING_ERROR)) {
+        if (!getSensor().getPosition().epsilonEquals(getPosition(), MathUtils.FLOAT_ROUNDING_ERROR)) {
             //System.out.println("Sensor replaced");
             // TODO sensor replacement
             super.replaceSensor();
@@ -68,10 +67,6 @@ public abstract class Mob extends GameObject {
      */
     public MobObjectType getType() {
         return this.type;
-    }
-    @Override
-    public SteerableBody getBody() {
-        return super.getBody();
     }
 
     public GameObject getTarget() {

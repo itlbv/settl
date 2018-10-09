@@ -86,7 +86,7 @@ public class Game extends ApplicationAdapter {
     private void updateMobs() {
         //mobs.forEach(Mob::update);
         mobs.get(0).update();
-        mobs.get(1).update();
+        //mobs.get(1).update();
     }
 
     private void drawTestObjects() {

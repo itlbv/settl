@@ -1,17 +1,19 @@
 package com.itlbv.settl;
 
+import com.badlogic.gdx.ai.steer.SteerableAdapter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.itlbv.settl.enumsObjectType.GameObjectType;
 
-public abstract class GameObject{
+public abstract class GameObject extends SteerableAdapter<Vector2> {
     private Vector2 renderPosition;
     private GameObjectType type;
     public TextureRegion texture; //TODO remove public after testing drawing path
     private float renderWidth, renderHeight;
-    private SteerableBody body;
+    private float bodyWidth, bodyHeight;
+    private Body body;
     private Body sensor;
 
     public GameObject(float x, float y, GameObjectType type, float renderWidth, float renderHeight) {
@@ -22,7 +24,16 @@ public abstract class GameObject{
     }
 
     public void createBody(BodyType bodyType, float bodyWidth, float bodyHeight) {
-        body = new SteerableBody(bodyType, bodyWidth, bodyHeight, this);
+        this.bodyWidth = bodyWidth;
+        this.bodyHeight = bodyHeight;
+        body = BodyFactory.createBody(bodyType, bodyWidth, bodyHeight,this, false);
+    }
+
+    public void createSensor(float sensorWidth, float sensorHeight) {
+        if (body == null) {
+            return; //TODO do smth with it
+        }
+        sensor = BodyFactory.createBody(body.getType(), sensorWidth, sensorHeight, this, true);
     }
 
     public void replaceSensor() {
@@ -30,15 +41,19 @@ public abstract class GameObject{
         createSensor(2f,2f); //TODO take it from constants class
     }
 
-    public void createSensor(float sensorWidth, float sensorHeight) {
-        if (body == null) {
-            return; //TODO do smth with it
-        }
-        sensor = BodyFactory.createBody(sensorWidth, sensorHeight, body.getType(), this, true);
+    public void updateRenderPosition() {
+        float x = body.getPosition().x - renderWidth/2;
+        float y = body.getPosition().y - bodyHeight/2;
+        renderPosition.set(x, y);
     }
 
-    public void updateRenderPosition() {
-        getBody().updateOwnersPosition();
+    public void setLinearVelocity(Vector2 vector) {
+        body.setLinearVelocity(vector);
+        sensor.setLinearVelocity(vector);
+    }
+
+    public float getMaxLinearAcceleration() {
+        return 100; //TODO magical number! move to MovingManager?
     }
 
     public void draw() {
@@ -46,7 +61,7 @@ public abstract class GameObject{
     }
 
     //***Getters & setters***
-    public SteerableBody getBody() {
+    public Body getBody() {
         return body;
     }
 
@@ -62,16 +77,16 @@ public abstract class GameObject{
         return renderPosition;
     }
 
-    public Vector2 getBodyPosition() {
-        return getBody().getPosition();
-    }
-
     public float getRenderWidth() {
         return renderWidth;
     }
 
     public float getRenderHeight() {
         return renderHeight;
+    }
+
+    public Vector2 getPosition() {
+        return body.getPosition();
     }
 
     public Body getSensor() {

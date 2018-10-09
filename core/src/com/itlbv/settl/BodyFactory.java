@@ -23,7 +23,7 @@ public class BodyFactory {
         owner = ownerSrc;
         isSensor = isSensorSrc;
     }
-    public static Body createBody(float widthSrc, float heightSrc, BodyType bodyTypeSrc,
+    public static Body createBody(BodyType bodyTypeSrc, float widthSrc, float heightSrc,
                                   GameObject ownerSrc, boolean isSensorSrc) {
         setClassFields(widthSrc, heightSrc, bodyTypeSrc, ownerSrc, isSensorSrc);
         createBodyDefinition();
@@ -44,7 +44,7 @@ public class BodyFactory {
     }
 
     private static void setSensorPositionToCenterOfBody() {
-        bodyDef.position.set(owner.getBodyPosition());
+        bodyDef.position.set(owner.getPosition());
     }
 
     private static void calculateBodyPosition() {

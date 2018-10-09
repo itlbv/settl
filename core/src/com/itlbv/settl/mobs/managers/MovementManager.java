@@ -19,7 +19,6 @@ public class MovementManager {
     private final Mob owner;
     private GameObject target;
     private Path path;
-    private SteerableBody body;
     private Vector2 linearVelocity;
     private float maxLinearSpeed;
     private Seek<Vector2> steeringBehavior;
@@ -30,12 +29,11 @@ public class MovementManager {
     public MovementManager(float speed, Mob owner) {
         this.owner = owner;
         this.target = owner.getTarget();
-        this.body = owner.getBody();
         this.path = new Path();
         this.linearVelocity = new Vector2();
         this.maxLinearSpeed = speed;
         this.steeringOutput = new SteeringAcceleration<>(new Vector2());
-        this.steeringBehavior = new Seek<>(owner.getBody());
+        this.steeringBehavior = new Seek<>(owner);
     }
 
     public void update() {
@@ -82,12 +80,12 @@ public class MovementManager {
 
         //System.out.println("Checking if target is close and visible");
 
-        if (owner.getBodyPosition().dst(target.getBodyPosition()) > 1000) {
+        if (owner.getPosition().dst(target.getPosition()) > 1000) {
             return false;
         }
         RayCastHelper collisionCallback = new RayCastHelper();
         collisionCallback.collided = false;
-        Ray<Vector2> rayToTarget = new Ray<>(owner.getBodyPosition(), target.getBodyPosition());
+        Ray<Vector2> rayToTarget = new Ray<>(owner.getPosition(), target.getPosition());
         GameWorld.world.rayCast(collisionCallback, rayToTarget.start, rayToTarget.end);
         if (collisionCallback.collided) {
             return false;
@@ -99,7 +97,7 @@ public class MovementManager {
 
         //System.out.println("Setting steering");
 
-        steeringBehavior.setTarget(target.getBody());
+        steeringBehavior.setTarget(target);
         steeringBehavior.setEnabled(true);
     }
 
@@ -120,8 +118,8 @@ public class MovementManager {
 
         //System.out.println("Calculating path");
 
-        Vector2 startPosition = body.getPosition();
-        Vector2 targetPosition = target.getBodyPosition(); //TODO what if target doesn't have a body
+        Vector2 startPosition = owner.getPosition();
+        Vector2 targetPosition = target.getPosition(); //TODO what if target doesn't have a body
         path = PathHelper.getPath(startPosition, targetPosition);
     }
 
@@ -133,12 +131,12 @@ public class MovementManager {
     private void followPath() {
         Vector2 nextWaypoint = getNextWaypoint();
         Vector2 vectorToWaypoint = getVectorToWaypoint(nextWaypoint);
-        body.setLinearVelocity(vectorToWaypoint);
+        owner.setLinearVelocity(vectorToWaypoint);
     }
 
     private Vector2 getNextWaypoint() {
         Vector2 nextPosition = path.getFirstPosition();
-        Vector2 currentPosition = body.getPosition();
+        Vector2 currentPosition = owner.getPosition();
         if(nextPosition.cpy().sub(currentPosition).len() < .2f) {
             Game.testObjects.removeIndex(0); //TODO path drawing
             path.nodes.removeIndex(0);
@@ -151,7 +149,7 @@ public class MovementManager {
     }
 
     private Vector2 getVectorToWaypoint(Vector2 nextWaypoint) {
-        return nextWaypoint.cpy().sub(body.getPosition()).nor().scl(maxLinearSpeed);
+        return nextWaypoint.cpy().sub(owner.getPosition()).nor().scl(maxLinearSpeed);
     }
 
     private void drawPath() {
@@ -163,7 +161,7 @@ public class MovementManager {
     }
 
     public void stopMoving() {
-        body.setLinearVelocity(new Vector2(0f, 0f));
+        owner.setLinearVelocity(new Vector2(0f, 0f));
         path.clear();
         steeringBehavior.setEnabled(false);
     }

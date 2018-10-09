@@ -23,9 +23,9 @@ public class CollisionHandler implements ContactListener {
             return;
         }
         if (contact.getFixtureA().isSensor()) {
-            solveCollisionForSensor(o1, o2);
+            beginContactForSensor(o1, o2);
         } else if (contact.getFixtureB().isSensor()) {
-            solveCollisionForSensor(o2, o1);
+            beginContactForSensor(o2, o1);
         }
     }
 
@@ -33,7 +33,7 @@ public class CollisionHandler implements ContactListener {
         return (o1 instanceof Mob) || (o2 instanceof Mob);
     }
 
-    private void solveCollisionForSensor(Object sensorOwnerObj, Object mobOfCollisionObj) {
+    private void beginContactForSensor(Object sensorOwnerObj, Object mobOfCollisionObj) {
         Mob sensorOwner = (Mob) sensorOwnerObj;
         Mob mobOfCollision = (Mob) mobOfCollisionObj;
         if (sensorOwner.getTarget() == mobOfCollision) {
@@ -55,6 +55,30 @@ public class CollisionHandler implements ContactListener {
 
     @Override
     public void endContact(Contact contact) {
+        o1 = contact.getFixtureA().getBody().getUserData();
+        o2 = contact.getFixtureB().getBody().getUserData();
+        if (o1 == o2) {
+            return;
+        }
+        if (!collisionOfMobs()){
+            return;
+        }
+        if (contact.getFixtureA().isSensor()) {
+            endContactForSensor(o1, o2);
+        } else if (contact.getFixtureB().isSensor()) {
+            endContactForSensor(o2, o1);
+        }
+    }
+
+    private void endContactForSensor(Object sensorOwnerObj, Object mobOfCollisionObj) {
+        Mob sensorOwner = (Mob) sensorOwnerObj;
+        Mob mobOfCollision = (Mob) mobOfCollisionObj;
+        if (sensorOwner.getTarget() == mobOfCollision) {
+            //sensorOwner.setTargetWithinReach(false);
+            System.out.println(sensorOwner.getClass().getSimpleName()
+                    + " lost target "
+                    + mobOfCollision.getClass().getSimpleName());
+        }
     }
 
     @Override
