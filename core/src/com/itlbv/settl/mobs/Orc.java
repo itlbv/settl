@@ -1,7 +1,7 @@
 package com.itlbv.settl.mobs;
 
-import com.itlbv.settl.MobConstants;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
+import com.itlbv.settl.mobs.utils.MobConstants;
 
 public abstract class Orc extends Mob{
     public Orc(float x, float y, MobObjectType type, String bhvTree) {

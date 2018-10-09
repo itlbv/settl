@@ -48,8 +48,8 @@ public class BodyFactory {
     }
 
     private static void calculateBodyPosition() {
-        float bodyX = owner.getPosition().x + owner.getWidth()/2;
-        float bodyY = owner.getPosition().y + height / 2;
+        float bodyX = owner.getRenderPosition().x + owner.getRenderWidth()/2;
+        float bodyY = owner.getRenderPosition().y + height / 2;
         bodyDef.position.set(bodyX, bodyY);
     }
 

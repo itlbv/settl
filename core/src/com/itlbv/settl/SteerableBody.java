@@ -18,9 +18,9 @@ public class SteerableBody extends SteerableAdapter<Vector2> {
     }
 
     public void updateOwnersPosition() {
-        float x = getPosition().x - owner.getWidth()/2;
+        float x = getPosition().x - owner.getRenderWidth()/2;
         float y = getPosition().y - bodyHeight/2;
-        owner.getPosition().set(x, y);
+        owner.getRenderPosition().set(x, y);
     }
 
     /*

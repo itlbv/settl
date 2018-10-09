@@ -1,4 +1,4 @@
-package com.itlbv.settl;
+package com.itlbv.settl.mobs.utils;
 
 public class MobConstants {
     public static final float HUMAN_SPEED = 4f;

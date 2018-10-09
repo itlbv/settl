@@ -1,27 +1,24 @@
 package com.itlbv.settl;
 
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.itlbv.settl.enumsObjectType.GameObjectType;
-import com.itlbv.settl.enumsObjectType.MobObjectType;
-import com.itlbv.settl.mobs.HumanKnight;
 
 public abstract class GameObject{
-    private Vector2 position;
+    private Vector2 renderPosition;
     private GameObjectType type;
     public TextureRegion texture; //TODO remove public after testing drawing path
-    private float width, height;
+    private float renderWidth, renderHeight;
     private SteerableBody body;
     private Body sensor;
 
-    public GameObject(float x, float y, GameObjectType type, float width, float height) {
-        this.position = new Vector2(x, y);
+    public GameObject(float x, float y, GameObjectType type, float renderWidth, float renderHeight) {
+        this.renderPosition = new Vector2(x, y);
         this.type = type;
-        this.width = width;
-        this.height = height;
+        this.renderWidth = renderWidth;
+        this.renderHeight = renderHeight;
     }
 
     public void createBody(BodyType bodyType, float bodyWidth, float bodyHeight) {
@@ -40,12 +37,12 @@ public abstract class GameObject{
         sensor = BodyFactory.createBody(sensorWidth, sensorHeight, body.getType(), this, true);
     }
 
-    public void updatePosition() {
+    public void updateRenderPosition() {
         getBody().updateOwnersPosition();
     }
 
     public void draw() {
-        Game.batch.draw(texture, position.x, position.y, width, height);
+        Game.batch.draw(texture, renderPosition.x, renderPosition.y, renderWidth, renderHeight);
     }
 
     //***Getters & setters***
@@ -53,28 +50,28 @@ public abstract class GameObject{
         return body;
     }
 
-    public float getX() {
-        return position.x;
+    public float getRenderX() {
+        return renderPosition.x;
     }
 
-    public float getY() {
-        return position.y;
+    public float getRenderY() {
+        return renderPosition.y;
     }
 
-    public Vector2 getPosition() {
-        return position;
+    public Vector2 getRenderPosition() {
+        return renderPosition;
     }
 
     public Vector2 getBodyPosition() {
         return getBody().getPosition();
     }
 
-    public float getWidth() {
-        return width;
+    public float getRenderWidth() {
+        return renderWidth;
     }
 
-    public float getHeight() {
-        return height;
+    public float getRenderHeight() {
+        return renderHeight;
     }
 
     public Body getSensor() {

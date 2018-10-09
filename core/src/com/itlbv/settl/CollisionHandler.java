@@ -11,12 +11,23 @@ public class CollisionHandler implements ContactListener {
     public void beginContact(Contact contact) {
         Object o1 = contact.getFixtureA().getBody().getUserData();
         Object o2 = contact.getFixtureB().getBody().getUserData();
+
+        System.out.println(o1.getClass().getSimpleName()
+                + (contact.getFixtureA().isSensor() ? "SENSOR" : "BODY")
+                + "  ---contacting--- "
+                + o2.getClass().getSimpleName()
+                + ((contact.getFixtureB().isSensor() ? "SENSOR" : "BODY"))
+        );
+
+        if (o1 == o2) {
+            return;
+        }
         if (!(o1 instanceof Mob) || !(o2 instanceof Mob)){
+            System.out.println("Contact with non-Mob object");
             return;
         }
         Mob m1 = (Mob) o1;
         Mob m2 = (Mob) o2;
-        System.out.println(m1 + " CONTACTING " + m2);
 
         if (m1.getTarget() == m2) {
             m1.setTargetWithinReach(true);

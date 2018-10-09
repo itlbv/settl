@@ -1,9 +1,11 @@
-package com.itlbv.settl.mobs;
+package com.itlbv.settl.mobs.managers;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.itlbv.settl.Game;
-import com.itlbv.settl.MobState;
+import com.itlbv.settl.mobs.utils.MobState;
+import com.itlbv.settl.mobs.Mob;
+import com.itlbv.settl.mobs.utils.MobAnimationHelper;
 
 public class AnimationManager {
     private final Mob owner;
@@ -30,7 +32,7 @@ public class AnimationManager {
         setNewAnimationIfStateChanged();
         TextureRegion texture = currentAnimation.getKeyFrame(animationDurationTime, true);
 
-        if (currentState != MobState.WALKING) {
+        if (currentState != MobState.WALK) {
             if (currentAnimation.isAnimationFinished(animationDurationTime)) {
                 owner.setState(MobState.IDLE);
                 //System.out.println("****ANIMATION RESET*********");
@@ -54,10 +56,10 @@ public class AnimationManager {
             case IDLE:
                 currentAnimation = idle;
                 break;
-            case WALKING:
+            case WALK:
                 currentAnimation = walking;
                 break;
-            case FIGHTING:
+            case FIGHT:
                 currentAnimation = fighting;
                 break;
             case GOT_HIT:
@@ -82,8 +84,8 @@ public class AnimationManager {
 
     private void initializeTextures() {
         idle = MobAnimationHelper.getAnimation(owner.getType(), MobState.IDLE);
-        walking = MobAnimationHelper.getAnimation(owner.getType(), MobState.WALKING);
-        fighting = MobAnimationHelper.getAnimation(owner.getType(), MobState.FIGHTING);
+        walking = MobAnimationHelper.getAnimation(owner.getType(), MobState.WALK);
+        fighting = MobAnimationHelper.getAnimation(owner.getType(), MobState.FIGHT);
         gotHit = MobAnimationHelper.getAnimation(owner.getType(), MobState.GOT_HIT);
         dead = MobAnimationHelper.getAnimation(owner.getType(), MobState.DEAD);
     }

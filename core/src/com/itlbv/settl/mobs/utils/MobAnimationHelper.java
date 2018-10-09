@@ -1,9 +1,8 @@
-package com.itlbv.settl.mobs;
+package com.itlbv.settl.mobs.utils;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.itlbv.settl.MobState;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
 
 public class MobAnimationHelper {
@@ -38,9 +37,9 @@ public class MobAnimationHelper {
         switch (state) {
             case IDLE:
                 return getIdle(textureOfType);
-            case WALKING:
+            case WALK:
                 return getWalking(textureOfType);
-            case FIGHTING:
+            case FIGHT:
                 return getFighting(textureOfType);
             case GOT_HIT:
                 return getGotHit(textureOfType);

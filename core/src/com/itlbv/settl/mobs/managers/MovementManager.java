@@ -1,7 +1,6 @@
-package com.itlbv.settl.mobs;
+package com.itlbv.settl.mobs.managers;
 
 import com.badlogic.gdx.ai.steer.SteeringAcceleration;
-import com.badlogic.gdx.ai.steer.SteeringBehavior;
 import com.badlogic.gdx.ai.steer.behaviors.Seek;
 import com.badlogic.gdx.ai.utils.Ray;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.itlbv.settl.*;
 import com.itlbv.settl.enumsObjectType.MapObjectType;
 import com.itlbv.settl.map.Tile;
+import com.itlbv.settl.mobs.Mob;
 import com.itlbv.settl.pathfinding.Path;
 import com.itlbv.settl.pathfinding.PathHelper;
 
@@ -48,7 +48,7 @@ public class MovementManager {
         }
     }
 
-    void initializeMovingToTarget() {
+    public void initializeMovingToTarget() {
         target = owner.getTarget();
         if (target == null) {
             return; //TODO throw an exception
@@ -71,7 +71,7 @@ public class MovementManager {
         TIME_TRESHOLD = 0f;
         if (targetIsCloseAndVisible()) {
 
-            System.out.println("close and visible");
+            //System.out.println("close and visible");
 
             path.clear();
             setTargetForSteering();
@@ -80,7 +80,7 @@ public class MovementManager {
 
     private boolean targetIsCloseAndVisible() {
 
-        System.out.println("Checking if target is close and visible");
+        //System.out.println("Checking if target is close and visible");
 
         if (owner.getBodyPosition().dst(target.getBodyPosition()) > 1000) {
             return false;
@@ -97,7 +97,7 @@ public class MovementManager {
 
     private void setTargetForSteering() {
 
-        System.out.println("Setting steering");
+        //System.out.println("Setting steering");
 
         steeringBehavior.setTarget(target.getBody());
         steeringBehavior.setEnabled(true);
@@ -118,7 +118,7 @@ public class MovementManager {
             return; //TODO throw an exception
         }
 
-        System.out.println("Calculating path");
+        //System.out.println("Calculating path");
 
         Vector2 startPosition = body.getPosition();
         Vector2 targetPosition = target.getBodyPosition(); //TODO what if target doesn't have a body
@@ -157,12 +157,12 @@ public class MovementManager {
     private void drawPath() {
         for (Tile node : path.nodes) {
             TextureRegion texture = new TextureRegion(new Texture("white_dot.png"));
-            TestObject o = new TestObject(node.getX() + .5f,node.getY() + .5f, MapObjectType.TESTOBJECT, texture);
+            TestObject o = new TestObject(node.getRenderX() + .5f,node.getRenderY() + .5f, MapObjectType.TESTOBJECT, texture);
             Game.testObjects.add(o);
         }
     }
 
-    void stopMoving() {
+    public void stopMoving() {
         body.setLinearVelocity(new Vector2(0f, 0f));
         path.clear();
         steeringBehavior.setEnabled(false);

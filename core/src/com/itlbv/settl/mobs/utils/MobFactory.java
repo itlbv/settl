@@ -1,11 +1,13 @@
-package com.itlbv.settl.mobs;
+package com.itlbv.settl.mobs.utils;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
-import com.itlbv.settl.MobState;
 import com.itlbv.settl.map.Map;
+import com.itlbv.settl.mobs.HumanKnight;
+import com.itlbv.settl.mobs.HumanPeasant;
+import com.itlbv.settl.mobs.Mob;
+import com.itlbv.settl.mobs.OrcShaman;
 
 public class MobFactory {
     public static Mob createMob(float x, float y, MobObjectType type) {

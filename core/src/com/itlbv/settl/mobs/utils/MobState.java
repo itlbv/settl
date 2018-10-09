@@ -1,9 +1,9 @@
-package com.itlbv.settl;
+package com.itlbv.settl.mobs.utils;
 
 public enum MobState {
     IDLE,
-    WALKING,
-    FIGHTING,
+    WALK,
+    FIGHT,
     GOT_HIT,
     DEAD
 }

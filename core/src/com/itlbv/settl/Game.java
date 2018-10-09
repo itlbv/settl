@@ -12,7 +12,7 @@ import com.itlbv.settl.map.Map;
 import com.itlbv.settl.map.MapParserFromTxt;
 import com.itlbv.settl.map.Tile;
 import com.itlbv.settl.mobs.Mob;
-import com.itlbv.settl.mobs.MobFactory;
+import com.itlbv.settl.mobs.utils.MobFactory;
 
 import java.util.ArrayList;
 
@@ -84,19 +84,13 @@ public class Game extends ApplicationAdapter {
     }
 
     private void updateMobs() {
-
-        for (Mob mob : mobs) {
-            mob.update();
-        }
-
-        //mobs.get(0).update();
-        //mobs.get(1).update();
+        //mobs.forEach(Mob::update);
+        mobs.get(0).update();
+        mobs.get(1).update();
     }
 
     private void drawTestObjects() {
-        for (GameObject o : testObjects) {
-            o.draw();
-        }
+        testObjects.forEach(GameObject::draw);
     }
 
     private void updateCamera() {
@@ -107,9 +101,7 @@ public class Game extends ApplicationAdapter {
     }
 
     private void drawMobs() {
-        for (Mob mob : mobs) {
-            mob.draw();
-        }
+        mobs.forEach(Mob::draw);
     }
 
     private void drawMap() {

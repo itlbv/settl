@@ -51,6 +51,6 @@ public class Tile extends GameObject {
     }
 
     public Vector2 getCenterPosition() {
-        return new Vector2(getPosition().x + WIDTH/2, getPosition().y + HEIGHT/2);
+        return new Vector2(getRenderPosition().x + WIDTH/2, getRenderPosition().y + HEIGHT/2);
     }
 }

@@ -2,9 +2,8 @@ package com.itlbv.settl.behaviorTreeTasks;
 
 import com.badlogic.gdx.ai.btree.LeafTask;
 import com.badlogic.gdx.ai.btree.Task;
-import com.itlbv.settl.MobState;
+import com.itlbv.settl.mobs.utils.MobState;
 import com.itlbv.settl.mobs.Mob;
-import com.itlbv.settl.mobs.MovementManager;
 
 public class ApproachTargetTask extends LeafTask<Mob> {
     @Override

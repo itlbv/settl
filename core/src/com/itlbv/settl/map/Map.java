@@ -106,7 +106,7 @@ public class Map implements IndexedGraph<Tile> {
     }
 
     private void addConnection (Tile node, int xOffset, int yOffset) {
-        Tile target = getNode(node.getX() + xOffset, node.getY() + yOffset);
+        Tile target = getNode(node.getRenderX() + xOffset, node.getRenderY() + yOffset);
         if (!target.isCollidable()) {
             getConnections(node).add(new DefaultConnection<Tile>(node, target));
         }
@@ -124,7 +124,7 @@ public class Map implements IndexedGraph<Tile> {
 
     @Override
     public int getIndex(Tile node) {
-        return (int) (node.getX() * MAP_SIZE + node.getY());
+        return (int) (node.getRenderX() * MAP_SIZE + node.getRenderY());
     }
 
     @Override
