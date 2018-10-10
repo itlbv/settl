@@ -25,12 +25,17 @@ public class Game extends ApplicationAdapter {
 
     private static final int VIEWPORT = 40;
     public static float DELTA_TIME = 0;
+    public static long RENDER_ITERATION = 0;
+
+    public Player player;
 
     @Override
     public void create() {
         initializeClassFields();
         createMap();
         createMobs();
+
+        player = new Player();
     }
 
     private void initializeClassFields() {
@@ -54,11 +59,11 @@ public class Game extends ApplicationAdapter {
     }
 
     private void createMobs() {
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 5; i++) {
             Mob mob = MobFactory.createMobAtRandomPosition(false, MobObjectType.HUMAN_KNIGHT);
             mobs.add(mob);
         }
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 5; i++) {
             Mob mob = MobFactory.createMobAtRandomPosition(true, MobObjectType.ORC_SHAMAN);
             mobs.add(mob);
         }
@@ -66,14 +71,18 @@ public class Game extends ApplicationAdapter {
 
     @Override
     public void render() {
+        RENDER_ITERATION++;
         updateDeltaTime();
         updateCamera();
         updateMobs();
+
+        player.update();
 
         batch.begin();
         drawMap();
         drawMobs();
         drawTestObjects(); //TODO test objects
+        player.draw();
         batch.end();
 
         GameWorld.tick(camera);
@@ -85,7 +94,7 @@ public class Game extends ApplicationAdapter {
 
     private void updateMobs() {
         //mobs.forEach(Mob::update);
-        mobs.get(0).update();
+        //mobs.get(0).update();
         //mobs.get(1).update();
     }
 

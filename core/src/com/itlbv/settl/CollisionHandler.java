@@ -1,5 +1,6 @@
 package com.itlbv.settl;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
@@ -15,7 +16,7 @@ public class CollisionHandler implements ContactListener {
     public void beginContact(Contact contact) {
         o1 = contact.getFixtureA().getBody().getUserData();
         o2 = contact.getFixtureB().getBody().getUserData();
-        //printCollision(contact);
+        printCollision(contact, true);
         if (o1 == o2) {
             return;
         }
@@ -38,25 +39,28 @@ public class CollisionHandler implements ContactListener {
         Mob mobOfCollision = (Mob) mobOfCollisionObj;
         if (sensorOwner.getTarget() == mobOfCollision) {
             sensorOwner.setTargetWithinReach(true);
-            System.out.println(sensorOwner.getClass().getSimpleName()
+            String logStr = sensorOwner.getClass().getSimpleName()
                     + " reached target "
-                    + mobOfCollision.getClass().getSimpleName());
+                    + mobOfCollision.getClass().getSimpleName();
+            Gdx.app.log(sensorOwner.toString(), logStr);
         }
     }
 
-    private void printCollision(Contact contact) {
-        System.out.println(o1.getClass().getSimpleName()
+    private void printCollision(Contact contact, boolean begin) {
+        String logStr = o1.getClass().getSimpleName()
                 + (contact.getFixtureA().isSensor() ? "SENSOR" : "BODY")
-                + "  ---contacting--- "
+                + (begin ? "  ---begin--- " : "  ---end--- ")
                 + o2.getClass().getSimpleName()
                 + ((contact.getFixtureB().isSensor() ? "SENSOR" : "BODY"))
-        );
+                + " " + Game.RENDER_ITERATION;
+        Gdx.app.log("Contact", logStr);
     }
 
     @Override
     public void endContact(Contact contact) {
         o1 = contact.getFixtureA().getBody().getUserData();
         o2 = contact.getFixtureB().getBody().getUserData();
+        printCollision(contact, false);
         if (o1 == o2) {
             return;
         }
@@ -74,10 +78,11 @@ public class CollisionHandler implements ContactListener {
         Mob sensorOwner = (Mob) sensorOwnerObj;
         Mob mobOfCollision = (Mob) mobOfCollisionObj;
         if (sensorOwner.getTarget() == mobOfCollision) {
-            //sensorOwner.setTargetWithinReach(false);
-            System.out.println(sensorOwner.getClass().getSimpleName()
+            sensorOwner.setTargetWithinReach(false);
+            String logStr = sensorOwner.getClass().getSimpleName()
                     + " lost target "
-                    + mobOfCollision.getClass().getSimpleName());
+                    + mobOfCollision.getClass().getSimpleName();
+            Gdx.app.log(sensorOwner.toString(), logStr);
         }
     }
 

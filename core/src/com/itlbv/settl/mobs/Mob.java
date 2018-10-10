@@ -38,7 +38,7 @@ public abstract class Mob extends GameObject {
 
 
     public void update() {
-        checkSensorPosition();
+        //checkSensorPosition();
         bhvTree.step();
         movementManager.update();
         animationManager.update();
@@ -55,7 +55,7 @@ public abstract class Mob extends GameObject {
     }
 
     public void initializeMovingToTarget() {
-        movementManager.initializeMovingToTarget();
+        movementManager.initMovingToTarget();
     }
 
     public void stopMoving() {

@@ -12,6 +12,7 @@ import com.itlbv.settl.*;
 import com.itlbv.settl.enumsObjectType.MapObjectType;
 import com.itlbv.settl.map.Tile;
 import com.itlbv.settl.mobs.Mob;
+import com.itlbv.settl.mobs.utils.MobState;
 import com.itlbv.settl.pathfinding.Path;
 import com.itlbv.settl.pathfinding.PathHelper;
 
@@ -46,7 +47,7 @@ public class MovementManager {
         }
     }
 
-    public void initializeMovingToTarget() {
+    public void initMovingToTarget() {
         target = owner.getTarget();
         if (target == null) {
             return; //TODO throw an exception
@@ -68,18 +69,12 @@ public class MovementManager {
         }
         TIME_TRESHOLD = 0f;
         if (targetIsCloseAndVisible()) {
-
-            //System.out.println("close and visible");
-
             path.clear();
             setTargetForSteering();
         }
     }
 
     private boolean targetIsCloseAndVisible() {
-
-        //System.out.println("Checking if target is close and visible");
-
         if (owner.getPosition().dst(target.getPosition()) > 1000) {
             return false;
         }
@@ -94,9 +89,6 @@ public class MovementManager {
     }
 
     private void setTargetForSteering() {
-
-        //System.out.println("Setting steering");
-
         steeringBehavior.setTarget(target);
         steeringBehavior.setEnabled(true);
     }
@@ -105,9 +97,19 @@ public class MovementManager {
         if (!steeringBehavior.isEnabled()) {
             return;
         }
+        if (steeringBehavior.getTarget() == null) {
+            return;
+        }
         steeringBehavior.calculateSteering(steeringOutput);
         linearVelocity.mulAdd(steeringOutput.linear, Game.DELTA_TIME).limit(maxLinearSpeed);
-        owner.getBody().setLinearVelocity(linearVelocity);
+        setLinearVelocityToOwner();
+    }
+
+    private void setLinearVelocityToOwner() {
+        if (owner.getState() != MobState.WALK) {
+            owner.setState(MobState.WALK);
+        }
+        owner.setLinearVelocity(linearVelocity);
     }
 
     public void calculatePathToTarget() {
@@ -130,8 +132,8 @@ public class MovementManager {
 
     private void followPath() {
         Vector2 nextWaypoint = getNextWaypoint();
-        Vector2 vectorToWaypoint = getVectorToWaypoint(nextWaypoint);
-        owner.setLinearVelocity(vectorToWaypoint);
+        linearVelocity = getVectorToWaypoint(nextWaypoint);
+        setLinearVelocityToOwner();
     }
 
     private Vector2 getNextWaypoint() {
@@ -164,6 +166,7 @@ public class MovementManager {
         owner.setLinearVelocity(new Vector2(0f, 0f));
         path.clear();
         steeringBehavior.setEnabled(false);
+        owner.setState(MobState.IDLE);
     }
 
     private class RayCastHelper implements RayCastCallback {
