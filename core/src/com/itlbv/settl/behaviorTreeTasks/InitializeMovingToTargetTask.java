@@ -9,7 +9,7 @@ public class InitializeMovingToTargetTask extends LeafTask<Mob> {
     @Override
     public Status execute() {
         Mob owner = getObject();
-        owner.initializeMovingToTarget();
+        owner.initMovingToTarget();
         owner.setState(MobState.WALK);
         return Status.SUCCEEDED;
 }

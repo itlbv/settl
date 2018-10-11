@@ -50,7 +50,7 @@ public class Player extends HumanKnight {
         }
         float x = UP.x + DOWN.x + LEFT.x + RIGHT.x;
         float y = UP.y + DOWN.y + LEFT.y + RIGHT.y;
-        setLinearVelocity(new Vector2(x, y));
+        getBody().setLinearVelocity(new Vector2(x, y));
         updateRenderPosition();
     }
 }

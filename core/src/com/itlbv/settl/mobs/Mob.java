@@ -3,6 +3,7 @@ package com.itlbv.settl.mobs;
 import com.badlogic.gdx.ai.btree.BehaviorTree;
 import com.badlogic.gdx.ai.btree.utils.BehaviorTreeLibraryManager;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.itlbv.settl.GameObject;
 import com.itlbv.settl.mobs.utils.MobState;
@@ -36,9 +37,7 @@ public abstract class Mob extends GameObject {
         this.bhvTree = BehaviorTreeLibraryManager.getInstance().createBehaviorTree(bhvTree, this);
     }
 
-
     public void update() {
-        //checkSensorPosition();
         bhvTree.step();
         movementManager.update();
         animationManager.update();
@@ -46,15 +45,10 @@ public abstract class Mob extends GameObject {
         updateRenderPosition();
     }
 
-    private void checkSensorPosition() {
-        if (!getSensor().getPosition().epsilonEquals(getPosition(), MathUtils.FLOAT_ROUNDING_ERROR)) {
-            //System.out.println("Sensor replaced");
-            // TODO sensor replacement
-            super.replaceSensor();
+    public void initMovingToTarget() {
+        if (target == null) {
+            return;
         }
-    }
-
-    public void initializeMovingToTarget() {
         movementManager.initMovingToTarget();
     }
 

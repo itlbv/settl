@@ -11,7 +11,7 @@ import com.itlbv.settl.enumsObjectType.GameObjectType;
 public abstract class GameObject extends SteerableAdapter<Vector2> {
     private Vector2 renderPosition;
     private GameObjectType type;
-    public TextureRegion texture; //TODO remove public after testing drawing path
+    private TextureRegion texture;
     private float renderWidth, renderHeight;
     private float bodyWidth, bodyHeight;
     private Body body;
@@ -22,7 +22,6 @@ public abstract class GameObject extends SteerableAdapter<Vector2> {
         this.type = type;
         this.renderWidth = renderWidth;
         this.renderHeight = renderHeight;
-
         //Gdx.app.log(this.toString(), "created");
     }
 
@@ -30,7 +29,6 @@ public abstract class GameObject extends SteerableAdapter<Vector2> {
         this.bodyWidth = bodyWidth;
         this.bodyHeight = bodyHeight;
         body = BodyFactory.createBody(bodyType, bodyWidth, bodyHeight,this, false);
-
         //Gdx.app.log(this.toString(), "body created");
     }
 
@@ -39,38 +37,13 @@ public abstract class GameObject extends SteerableAdapter<Vector2> {
             return; //TODO do smth with it
         }
         sensor = BodyFactory.createBody(body.getType(), sensorWidth, sensorHeight, this, true);
-
         Gdx.app.log(this.toString(), "sensor created " + Game.RENDER_ITERATION);
-    }
-
-    public void replaceSensor() {
-        GameWorld.world.destroyBody(sensor);
-        createSensor(2f,2f); //TODO take it from constants class
-        sensor.setLinearVelocity(body.getLinearVelocity());
     }
 
     public void updateRenderPosition() {
         float x = body.getPosition().x - renderWidth/2;
         float y = body.getPosition().y - bodyHeight/2;
         renderPosition.set(x, y);
-
-
-        Vector2 bdyPos = body.getPosition();
-        Vector2 snsPos = sensor.getPosition();
-        Vector2 vectorToBody = bdyPos.sub(snsPos);
-
-
-
-        sensor.setLinearVelocity(body.getLinearVelocity().cpy().mulAdd(vectorToBody,10));
-    }
-
-    public void setLinearVelocity(Vector2 vector) {
-        body.setLinearVelocity(vector);
-        sensor.setLinearVelocity(vector);
-    }
-
-    public float getMaxLinearAcceleration() {
-        return 100; //TODO magical number! move to MovingManager?
     }
 
     public void draw() {
@@ -78,10 +51,10 @@ public abstract class GameObject extends SteerableAdapter<Vector2> {
     }
 
     //***Getters & setters***
+
     public Body getBody() {
         return body;
     }
-
     public float getRenderX() {
         return renderPosition.x;
     }
@@ -112,5 +85,9 @@ public abstract class GameObject extends SteerableAdapter<Vector2> {
 
     public void setTexture(TextureRegion texture) {
         this.texture = texture;
+    }
+
+    public float getMaxLinearAcceleration() {
+        return 100; //TODO magical number!
     }
 }
