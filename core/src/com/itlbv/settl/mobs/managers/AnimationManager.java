@@ -10,12 +10,12 @@ import com.itlbv.settl.mobs.utils.MobAnimationHelper;
 public class AnimationManager {
     private final Mob owner;
     private MobState currentState;
-    private float animationDurationTime;
+    private float animationTime;
     private Animation<TextureRegion> currentAnimation;
 
     private Animation<TextureRegion> idle;
     private Animation<TextureRegion> walking;
-    private Animation<TextureRegion> fighting;
+    private Animation<TextureRegion> attack;
     private Animation<TextureRegion> gotHit;
     private Animation<TextureRegion> dead;
 
@@ -28,25 +28,21 @@ public class AnimationManager {
     }
 
     public void update(){
-        updateAnimationDurationTime();
+        updateAnimationTime();
         setNewAnimationIfStateChanged();
-        TextureRegion texture = currentAnimation.getKeyFrame(animationDurationTime, true);
-
-        if (currentState != MobState.WALK) {
-            if (currentAnimation.isAnimationFinished(animationDurationTime)) {
-                owner.setState(MobState.IDLE);
-                //System.out.println("****ANIMATION RESET*********");
-
-            }
-        }
-
+        TextureRegion texture = currentAnimation.getKeyFrame(animationTime, currentState.isLooping());
         setFrameToDraw(texture);
+        resetAnimationIfFinished();
+    }
+
+    private void updateAnimationTime() {
+        animationTime += Game.DELTA_TIME;
     }
 
     private void setNewAnimationIfStateChanged() {
         if (currentState != owner.getState()) {
             currentState = owner.getState();
-            animationDurationTime = 0;
+            animationTime = 0;
             setNewAnimation();
         }
     }
@@ -59,8 +55,8 @@ public class AnimationManager {
             case WALK:
                 currentAnimation = walking;
                 break;
-            case FIGHT:
-                currentAnimation = fighting;
+            case ATTACK:
+                currentAnimation = attack;
                 break;
             case GOT_HIT:
                 currentAnimation = gotHit;
@@ -74,18 +70,20 @@ public class AnimationManager {
         }
     }
 
-    private void updateAnimationDurationTime() {
-        animationDurationTime += Game.DELTA_TIME;
-    }
-
     private void setFrameToDraw(TextureRegion texture) {
         owner.setTexture(texture);
+    }
+
+    private void resetAnimationIfFinished() {
+        if (currentAnimation.isAnimationFinished(animationTime)) {
+            owner.setState(MobState.IDLE);
+        }
     }
 
     private void initializeTextures() {
         idle = MobAnimationHelper.getAnimation(owner.getType(), MobState.IDLE);
         walking = MobAnimationHelper.getAnimation(owner.getType(), MobState.WALK);
-        fighting = MobAnimationHelper.getAnimation(owner.getType(), MobState.FIGHT);
+        attack = MobAnimationHelper.getAnimation(owner.getType(), MobState.ATTACK);
         gotHit = MobAnimationHelper.getAnimation(owner.getType(), MobState.GOT_HIT);
         dead = MobAnimationHelper.getAnimation(owner.getType(), MobState.DEAD);
     }

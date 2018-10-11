@@ -53,6 +53,14 @@ public abstract class Mob extends GameObject {
         movementManager.stopMoving();
     }
 
+    public void fight() {
+        actionManager.fight();
+    }
+
+    public void defend() {
+        actionManager.defend();
+    }
+
     /*
     **Getters & setters
      */

@@ -39,8 +39,8 @@ public class MobAnimationHelper {
                 return getIdle(textureOfType);
             case WALK:
                 return getWalking(textureOfType);
-            case FIGHT:
-                return getFighting(textureOfType);
+            case ATTACK:
+                return getAttack(textureOfType);
             case GOT_HIT:
                 return getGotHit(textureOfType);
             case DEAD:
@@ -65,7 +65,7 @@ public class MobAnimationHelper {
         return new Animation<>(ANIMATION_SPEED, walkFrames);
     }
 
-    private static Animation<TextureRegion> getFighting(Texture textureOfType) {
+    private static Animation<TextureRegion> getAttack(Texture textureOfType) {
         TextureRegion[] allFrames = TextureRegion.split(textureOfType, TEXTURE_SIZE,TEXTURE_SIZE)[0];
         TextureRegion[] attackFrames = {allFrames[3],
                 allFrames[4],
