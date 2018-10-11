@@ -2,20 +2,18 @@ package com.itlbv.settl.mobs;
 
 import com.badlogic.gdx.ai.btree.BehaviorTree;
 import com.badlogic.gdx.ai.btree.utils.BehaviorTreeLibraryManager;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.itlbv.settl.GameObject;
 import com.itlbv.settl.mobs.utils.MobState;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
 import com.itlbv.settl.mobs.managers.AnimationManager;
-import com.itlbv.settl.mobs.managers.FightingManager;
+import com.itlbv.settl.mobs.managers.ActionManager;
 import com.itlbv.settl.mobs.managers.MovementManager;
 
 public abstract class Mob extends GameObject {
     private final MovementManager movementManager;
     private final AnimationManager animationManager;
-    private final FightingManager fightingManager;
+    private final ActionManager actionManager;
     private BehaviorTree<Mob> bhvTree;
     private MobObjectType type;
     private MobState state;
@@ -33,7 +31,7 @@ public abstract class Mob extends GameObject {
         this.state = MobState.IDLE;
         this.movementManager = new MovementManager(speed, this);
         this.animationManager = new AnimationManager(this);
-        this.fightingManager = new FightingManager(this);
+        this.actionManager = new ActionManager(this);
         this.bhvTree = BehaviorTreeLibraryManager.getInstance().createBehaviorTree(bhvTree, this);
     }
 
@@ -41,7 +39,6 @@ public abstract class Mob extends GameObject {
         bhvTree.step();
         movementManager.update();
         animationManager.update();
-        fightingManager.fight();
         updateRenderPosition();
     }
 
