@@ -44,29 +44,6 @@ public class MovementManager {
             updateSteeringMovement();
         }
         checkSensorAlignment();
-        //checkUnwantedMovement();
-    }
-
-    /*
-    private Vector2 oldPosition;
-    private void checkUnwantedMovement() {
-        if (owner.getState() != MobState.WALK) {
-            if (!oldPosition.equals(owner.getPosition())) {
-                System.out.println("UNWANTED MOVEMENT");
-            }
-        }
-        oldPosition = owner.getPosition();
-    }
-    */
-
-    private void checkSensorAlignment() {
-        Vector2 bodyPosition = owner.getBody().getPosition();
-        Vector2 sensorPosition = owner.getSensor().getPosition();
-        if (bodyPosition.equals(sensorPosition)) {
-            return;
-        }
-        Vector2 vectorToBody = bodyPosition.sub(sensorPosition);
-        owner.getSensor().setLinearVelocity(owner.getBody().getLinearVelocity().cpy().mulAdd(vectorToBody,10));
     }
 
     public void initMovingToTarget() {
@@ -78,6 +55,7 @@ public class MovementManager {
     }
 
     private float TIME_TRESHOLD = 0f;
+
     private void checkTargetDistanceAndVisibility() {
         TIME_TRESHOLD += Game.DELTA_TIME;
         if (TIME_TRESHOLD < 2f) {
@@ -89,7 +67,6 @@ public class MovementManager {
             setSteeringMovement();
         }
     }
-
     private boolean isTargetCloseAndVisible() {
         if (getDistanceToTarget() > 1000) {
             return false;
@@ -122,13 +99,23 @@ public class MovementManager {
         setLinearVelocity();
     }
 
+    private void checkSensorAlignment() {
+        Vector2 bodyPosition = owner.getBody().getPosition();
+        Vector2 sensorPosition = owner.getSensor().getPosition();
+        if (bodyPosition.equals(sensorPosition)) {
+            return;
+        }
+        Vector2 vectorToBody = bodyPosition.sub(sensorPosition);
+        owner.getSensor().setLinearVelocity(owner.getBody().getLinearVelocity().cpy().mulAdd(vectorToBody,10));
+    }
+
     private void setLinearVelocity() {
         setWalkingState();
         owner.getBody().setLinearVelocity(linearVelocity);
         owner.getSensor().setLinearVelocity(linearVelocity);
     }
 
-    private void setWalkingState() {
+    private void setWalkingState() { //TODO refactor
         if (owner.getState() != MobState.WALK) {
             owner.setState(MobState.WALK);
         }
