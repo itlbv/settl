@@ -30,7 +30,7 @@ public class AnimationManager {
     public void update(){
         updateAnimationTime();
         setNewAnimationIfStateChanged();
-        TextureRegion texture = currentAnimation.getKeyFrame(animationTime, currentState.isLooping());
+        TextureRegion texture = currentAnimation.getKeyFrame(animationTime, true);
         setFrameToDraw(texture);
         resetAnimationIfFinished();
     }
@@ -75,7 +75,8 @@ public class AnimationManager {
     }
 
     private void resetAnimationIfFinished() {
-        if (currentAnimation.isAnimationFinished(animationTime)) {
+        if (currentState.isOneTime() &&
+                currentAnimation.isAnimationFinished(animationTime)) {
             owner.setState(MobState.IDLE);
         }
     }

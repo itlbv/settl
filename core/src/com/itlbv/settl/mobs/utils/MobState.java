@@ -2,18 +2,18 @@ package com.itlbv.settl.mobs.utils;
 
 public enum MobState {
     IDLE(false),
-    WALK(true),
-    ATTACK(false),
-    GOT_HIT(false),
+    WALK(false),
+    ATTACK(true),
+    GOT_HIT(true),
     DEAD(false);
 
-    private boolean looping;
+    private boolean oneTime;
 
-    MobState(boolean looping) {
-        this.looping = looping;
+    MobState(boolean oneTime) {
+        this.oneTime = oneTime;
     }
 
-    public boolean isLooping() {
-        return looping;
+    public boolean isOneTime() {
+        return oneTime;
     }
 }
