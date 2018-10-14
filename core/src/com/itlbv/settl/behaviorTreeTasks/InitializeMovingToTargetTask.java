@@ -11,7 +11,6 @@ public class InitializeMovingToTargetTask extends LeafTask<Mob> {
         Mob owner = getObject();
         owner.initMovingToTarget();
         System.out.println(owner.getClass().getSimpleName() + " initializing movement to target");
-        owner.setState(MobState.WALK); //TODO remove and test immediately
         return Status.SUCCEEDED;
 }
 
