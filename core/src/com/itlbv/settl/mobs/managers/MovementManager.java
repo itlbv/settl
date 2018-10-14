@@ -47,6 +47,7 @@ public class MovementManager {
     }
 
     public void initMovingToTarget() {
+        owner.setState(MobState.WALK);
         if (isTargetCloseAndVisible()) {
             setSteeringMovement();
         } else {
@@ -110,15 +111,8 @@ public class MovementManager {
     }
 
     private void setLinearVelocity() {
-        setWalkingState();
         owner.getBody().setLinearVelocity(linearVelocity);
         owner.getSensor().setLinearVelocity(linearVelocity);
-    }
-
-    private void setWalkingState() { //TODO refactor
-        if (owner.getState() != MobState.WALK) {
-            owner.setState(MobState.WALK);
-        }
     }
 
     private void setPathMovement() {
@@ -164,11 +158,11 @@ public class MovementManager {
     }
 
     public void stopMoving() {
+        owner.setState(MobState.IDLE);
+        steeringBehavior.setEnabled(false);
+        path.clear();
         linearVelocity.set(0f, 0f);
         setLinearVelocity();
-        path.clear();
-        steeringBehavior.setEnabled(false);
-        owner.setState(MobState.IDLE);
     }
 
     private class RayCastHelper implements RayCastCallback {

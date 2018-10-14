@@ -1,37 +1,70 @@
 package com.itlbv.settl.mobs.managers;
 
 import com.itlbv.settl.Game;
-import com.itlbv.settl.GameObject;
+import com.itlbv.settl.mobs.utils.ActionState;
 import com.itlbv.settl.mobs.utils.MobState;
 import com.itlbv.settl.mobs.Mob;
 
 public class ActionManager {
     private final Mob owner;
-    private final float ATTACK_FREQ = 1f;
-    private float timeCount = 2f;
-
+    private ActionState actionState;
     public ActionManager(Mob owner) {
         this.owner = owner;
+        this.actionState = ActionState.IDLE;
+    }
+    public void update() {
+        switch (actionState) {
+            case IN_FIGHT:
+                fight();
+                break;
+            case ON_HOLD:
+                hold();
+                break;
+        }
     }
 
-    public void fight() {
-        if (owner.getState() == MobState.ATTACK) {
-            return;
-        }
-        Mob target = (Mob) owner.getTarget();
-        timeCount += Game.DELTA_TIME;
-        if (timeCount > ATTACK_FREQ) {
-            attack(target);
-            timeCount = 0;
+    public void startFighting() {
+        actionState = ActionState.IN_FIGHT;
+        fight();
+    }
+
+
+    private float fightingTimeCount = 0f;
+    private final float ATTACK_FREQ = 5f;
+    private void fight() {
+        fightingTimeCount += Game.DELTA_TIME;
+        if (fightingTimeCount > ATTACK_FREQ) {
+            fightingTimeCount = 0;
+            attack();
         }
     }
 
-    private void attack(Mob target) {
+    private void attack() {
         owner.setState(MobState.ATTACK);
-        //target.defend();
+        System.out.println(owner.getClass().getSimpleName() + " ATTACK " + Game.RENDER_ITERATION);
+        getTarget().defend();
     }
 
+    private float onHoldTimeCount;
+    private final float HOLD_TIME = 1f;
     public void defend() {
-        owner.setState(MobState.GOT_HIT);
+        actionState = ActionState.ON_HOLD;
+        onHoldTimeCount = 0;
+        hold();
+    }
+
+    private void hold() {
+        onHoldTimeCount += Game.DELTA_TIME;
+        System.out.println(owner.getClass().getSimpleName() + " ON HOLD " + Game.RENDER_ITERATION);
+        if (onHoldTimeCount > HOLD_TIME) {
+            owner.setState(MobState.GOT_HIT);
+            System.out.println(owner.getClass().getSimpleName() + " GOT HIT " + Game.RENDER_ITERATION);
+            actionState = ActionState.IN_FIGHT;
+            fightingTimeCount = 0;
+        }
+    }
+
+    private Mob getTarget() {
+        return (Mob) owner.getTarget();
     }
 }

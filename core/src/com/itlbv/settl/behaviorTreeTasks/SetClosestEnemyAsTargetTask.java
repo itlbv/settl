@@ -11,15 +11,12 @@ public class SetClosestEnemyAsTargetTask extends LeafTask<Mob>{
     @Override
     public Status execute() {
         Mob owner = getObject();
-        if (owner.getTarget() != null) {
-            return Status.SUCCEEDED;
-        }
-
         Mob target = Game.mobs.stream()
                 .filter(mob -> !mob.getClass().isInstance(owner))
                 .min(Comparator.comparing(mob -> mob.getPosition().dst(owner.getPosition())))
                 .get();
         owner.setTarget(target);
+        System.out.println(owner.getClass().getSimpleName() + " setting closest enemy as a target");
         return Status.SUCCEEDED;
     }
 

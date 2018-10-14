@@ -4,6 +4,7 @@ import isTargetWithinReach?:"com.itlbv.settl.behaviorTreeTasks.IsTargetWithinRea
 import isEnemyAround?:"com.itlbv.settl.behaviorTreeTasks.IsEnemyAroundCondition"
 import approachTarget:"com.itlbv.settl.behaviorTreeTasks.ApproachTargetTask"
 import fightEnemy:"com.itlbv.settl.behaviorTreeTasks.FightEnemyTask"
+import startFighting:"com.itlbv.settl.behaviorTreeTasks.StartFightingTask"
 import doNothing:"com.itlbv.settl.behaviorTreeTasks.DoNothingTask"
 
 subtree name: "enemyAround?"
@@ -17,7 +18,8 @@ subtree name: "killEnemy"
         setClosestEnemyAsTarget
         initializeMovingToTarget
         approachTarget
-        ($targetWithinReach?)fightEnemy
+        ($targetWithinReach?) startFighting
+        fightEnemy
 
 subtree name: "todoNothing"
     doNothing
