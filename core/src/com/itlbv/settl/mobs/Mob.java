@@ -37,9 +37,6 @@ public abstract class Mob extends GameObject {
 
     public void update() {
         bhvTree.step();
-
-        actionManager.update();
-
         movementManager.update();
         animationManager.update();
         updateRenderPosition();
@@ -60,8 +57,16 @@ public abstract class Mob extends GameObject {
         actionManager.startFighting();
     }
 
+    public void fight() {
+        actionManager.update();
+    }
+
     public void defend() {
         actionManager.defend();
+    }
+
+    public void setFightingTimeCountToZero() {
+        actionManager.fightingTimeCount = 0;
     }
 
     /*

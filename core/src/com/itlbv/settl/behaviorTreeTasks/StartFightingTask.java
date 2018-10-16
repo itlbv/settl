@@ -9,7 +9,7 @@ public class StartFightingTask extends LeafTask<Mob> {
     public Status execute() {
         Mob owner = getObject();
         owner.startFighting();
-        System.out.println(owner.getClass().getSimpleName() + " starting fight");
+        System.out.println(owner.getClass().getSimpleName() + " starting a fight");
         return Status.SUCCEEDED;
     }
 

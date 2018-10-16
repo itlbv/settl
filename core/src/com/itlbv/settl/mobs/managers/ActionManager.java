@@ -1,5 +1,6 @@
 package com.itlbv.settl.mobs.managers;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.mobs.utils.ActionState;
 import com.itlbv.settl.mobs.utils.MobState;
@@ -29,24 +30,26 @@ public class ActionManager {
     }
 
 
-    private float fightingTimeCount = 0f;
-    private final float ATTACK_FREQ = 5f;
+    public float fightingTimeCount = 0f;
+    private final float ATTACK_FREQ = 1f;
     private void fight() {
         fightingTimeCount += Game.DELTA_TIME;
         if (fightingTimeCount > ATTACK_FREQ) {
-            fightingTimeCount = 0;
-            attack();
+            if (MathUtils.randomBoolean(.3f)) {
+                fightingTimeCount = 0;
+                attack();
+            }
         }
     }
 
     private void attack() {
         owner.setState(MobState.ATTACK);
-        System.out.println(owner.getClass().getSimpleName() + " ATTACK " + Game.RENDER_ITERATION);
+        //System.out.println(owner.getClass().getSimpleName() + " ATTACK " + Game.RENDER_ITERATION);
         getTarget().defend();
     }
 
     private float onHoldTimeCount;
-    private final float HOLD_TIME = 1f;
+    private final float HOLD_TIME = 0.3f;
     public void defend() {
         actionState = ActionState.ON_HOLD;
         onHoldTimeCount = 0;
@@ -55,12 +58,13 @@ public class ActionManager {
 
     private void hold() {
         onHoldTimeCount += Game.DELTA_TIME;
-        System.out.println(owner.getClass().getSimpleName() + " ON HOLD " + Game.RENDER_ITERATION);
+        //System.out.println(owner.getClass().getSimpleName() + " ON HOLD " + Game.RENDER_ITERATION);
         if (onHoldTimeCount > HOLD_TIME) {
             owner.setState(MobState.GOT_HIT);
-            System.out.println(owner.getClass().getSimpleName() + " GOT HIT " + Game.RENDER_ITERATION);
+            //System.out.println(owner.getClass().getSimpleName() + " GOT HIT " + Game.RENDER_ITERATION);
             actionState = ActionState.IN_FIGHT;
             fightingTimeCount = 0;
+            getTarget().setFightingTimeCountToZero();
         }
     }
 
