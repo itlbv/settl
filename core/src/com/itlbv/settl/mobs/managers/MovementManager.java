@@ -91,6 +91,9 @@ public class MovementManager {
         steeringBehavior.setEnabled(true);
     }
 
+    /*
+    TODO steering movement updates when the path is empty but target isn't reached and steering behavior isn't set
+     */
     private void updateSteeringMovement() {
         if (!steeringBehavior.isEnabled()) {
             return;

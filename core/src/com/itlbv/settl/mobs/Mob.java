@@ -22,6 +22,15 @@ public abstract class Mob extends GameObject {
     private boolean alive;
     private boolean targetWithinReach = false;
 
+    private int hitpoints = 2;
+    public void minusHitpoint() {
+        hitpoints--;
+        System.out.println(this.getClass().getSimpleName() + " hitpoints: " + hitpoints);
+        if (hitpoints == 0) {
+            alive = false;
+        }
+    }
+
     public Mob(float x, float y, MobObjectType type,float width, float height,
                float bodyWidth, float bodyHeight, float speed, String bhvTree) {
         super(x, y, type, width, height);
@@ -36,6 +45,14 @@ public abstract class Mob extends GameObject {
     }
 
     public void update() {
+        if (!alive) {
+            state = MobState.DEAD;
+            System.out.println(this.getClass().getSimpleName() + " IS DEAD");
+            animationManager.update();
+            return;
+        }
+
+
         bhvTree.step();
         movementManager.update();
         animationManager.update();

@@ -61,6 +61,7 @@ public class ActionManager {
         //System.out.println(owner.getClass().getSimpleName() + " ON HOLD " + Game.RENDER_ITERATION);
         if (onHoldTimeCount > HOLD_TIME) {
             owner.setState(MobState.GOT_HIT);
+            owner.minusHitpoint();
             //System.out.println(owner.getClass().getSimpleName() + " GOT HIT " + Game.RENDER_ITERATION);
             actionState = ActionState.IN_FIGHT;
             fightingTimeCount = 0;

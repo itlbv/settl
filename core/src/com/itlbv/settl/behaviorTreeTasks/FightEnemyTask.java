@@ -9,8 +9,12 @@ public class FightEnemyTask extends LeafTask<Mob> {
     @Override
     public Status execute() {
         Mob owner = getObject();
+        Mob target = (Mob) owner.getTarget();
         if (!owner.isTargetWithinReach()) {
             return Status.FAILED;
+        }
+        if (!target.isAlive()) {
+            return Status.SUCCEEDED;
         }
         owner.fight();
         return Status.RUNNING;
