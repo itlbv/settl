@@ -15,6 +15,7 @@ public class MovementManager {
     private PathMovement pathMovement;
     private SteeringMovement steeringMovement;
 
+    private boolean useSteering;
     private Vector2 linearVelocity;
     private float maxLinearSpeed;
 
@@ -29,41 +30,47 @@ public class MovementManager {
 
     public void initMoving() {
         owner.setState(MobState.WALK);
-        if (isTargetCloseAndVisible()) {
-            steeringMovement.init();
-        } else {
-            pathMovement.initAndCalculatePath();
-        }
+        chooseMovementType();
+        if (useSteering) switchToSteering();
+        else switchToPath();
+    }
+
+    private void chooseMovementType() {
+        useSteering = isTargetCloseAndVisible();
     }
 
     public void update() {
         recalculateMovement();
-        if (pathMovement.isNotEmpty()) {
-            linearVelocity = pathMovement.calculateAndGet();
-        } else {
-            linearVelocity = steeringMovement.calculateAndGet();
-        }
+        linearVelocity = useSteering ?
+                steeringMovement.calculateAndGet() :
+                pathMovement.calculateAndGet();
         setLinearVelocity();
         checkSensorAlignment();
     }
 
-    private final float CALCULATION_FREQ = 2f;
+    private final float RECALCULATION_FREQ = 2f;
     private float timeCount = 0f;
     private void recalculateMovement() {
-        if (!pathMovement.isNotEmpty()) {
+        if (pathMovement.isEmpty()) {
+            switchToSteering();
             return;
         }
         timeCount += Game.DELTA_TIME;
-        if (timeCount < CALCULATION_FREQ) {
-            return;
-        }
-        if (isTargetCloseAndVisible()) {
-            pathMovement.clearPath();
-            steeringMovement.init();
-        } else {
-            pathMovement.initAndCalculatePath();
-        }
+        if (timeCount < RECALCULATION_FREQ) return;
+        if (isTargetCloseAndVisible()) switchToSteering();
+        else switchToPath();
         timeCount = 0;
+    }
+
+    private void switchToSteering() {
+        useSteering = true;
+        pathMovement.clearPath();
+        steeringMovement.init();
+    }
+
+    private void switchToPath() {
+        useSteering = false;
+        pathMovement.initAndCalculatePath();
     }
 
     private void checkSensorAlignment() {
@@ -83,8 +90,8 @@ public class MovementManager {
 
     public void stopMoving() {
         owner.setState(MobState.IDLE);
-        steeringMovement.steeringBehavior.setEnabled(false);
-        pathMovement.path.clear();
+        steeringMovement.disable();
+        pathMovement.clearPath();
         linearVelocity.set(0f, 0f);
         setLinearVelocity();
     }

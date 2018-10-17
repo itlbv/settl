@@ -36,7 +36,7 @@ public class PathMovement {
     private Vector2 getNextWaypoint() {
         Vector2 nextPosition = path.getFirstPosition();
         Vector2 currentPosition = owner.getPosition();
-        if(nextPosition.dst(currentPosition) < .2f) { //TODO what if render frequency changes
+        if(nextPosition.dst(currentPosition) < .7f) { //TODO what if render frequency changes
             path.nodes.removeIndex(0);
             if (path.size() == 0) {
                 return currentPosition;
@@ -62,8 +62,8 @@ public class PathMovement {
         return (Mob) owner.getTarget();
     }
 
-    public boolean isNotEmpty() {
-        return path.size() > 0;
+    public boolean isEmpty() {
+        return path.size() == 0;
     }
 
     public void clearPath() {

@@ -59,11 +59,11 @@ public class Game extends ApplicationAdapter {
     }
 
     private void createMobs() {
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 1; i++) {
             Mob mob = MobFactory.createMobAtRandomPosition(false, MobObjectType.HUMAN_KNIGHT);
             mobs.add(mob);
         }
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 1; i++) {
             Mob mob = MobFactory.createMobAtRandomPosition(true, MobObjectType.ORC_SHAMAN);
             mobs.add(mob);
         }

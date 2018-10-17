@@ -38,6 +38,10 @@ public class SteeringMovement {
         return steeringOutput.linear.limit(maxLinearSpeed);
     }
 
+    public void disable() {
+        steeringBehavior.setEnabled(false);
+    }
+
     private Mob getTarget() {
         return (Mob) owner.getTarget();
     }
