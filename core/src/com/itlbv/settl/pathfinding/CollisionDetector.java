@@ -14,11 +14,11 @@ import com.itlbv.settl.map.Tile;
 
 public class CollisionDetector implements RaycastCollisionDetector<Vector2> {
 
-    Map map;
-    World world;
-    Box2dRaycastCallback callback;
+    private Map map;
+    private World world;
+    private Box2dRaycastCallback callback;
 
-    public CollisionDetector () {
+    CollisionDetector () {
         map = Map.getInstance();
         this.world = GameWorld.world;
         this.callback = new Box2dRaycastCallback();
@@ -51,15 +51,12 @@ public class CollisionDetector implements RaycastCollisionDetector<Vector2> {
                 code++;
             }
         }
-        return (code > 0 && code < 3) ? true : false;
+        return code > 0 && code < 3;
     }
 
     public static class Box2dRaycastCallback implements RayCastCallback {
-        public Collision<Vector2> outputCollision;
-        public boolean collided;
-
-        public Box2dRaycastCallback () {
-        }
+        Collision<Vector2> outputCollision;
+        boolean collided;
 
         @Override
         public float reportRayFixture (Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
