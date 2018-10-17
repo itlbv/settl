@@ -17,15 +17,13 @@ public class MovementManager {
 
     private boolean useSteering;
     private Vector2 linearVelocity;
-    private float maxLinearSpeed;
 
     public MovementManager(float speed, Mob owner) {
         this.owner = owner;
         this.collisionDetector = new RayCastHelper(owner);
         this.linearVelocity = new Vector2();
-        this.maxLinearSpeed = speed;
-        this.pathMovement = new PathMovement(owner, maxLinearSpeed);
-        this.steeringMovement = new SteeringMovement(owner, maxLinearSpeed);
+        this.pathMovement = new PathMovement(owner, speed);
+        this.steeringMovement = new SteeringMovement(owner, speed);
     }
 
     public void initMoving() {
