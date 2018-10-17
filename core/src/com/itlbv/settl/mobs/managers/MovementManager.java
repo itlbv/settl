@@ -1,24 +1,17 @@
 package com.itlbv.settl.mobs.managers;
 
-import com.badlogic.gdx.ai.steer.SteeringAcceleration;
-import com.badlogic.gdx.ai.steer.behaviors.Seek;
 import com.badlogic.gdx.ai.utils.Ray;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.itlbv.settl.*;
-import com.itlbv.settl.enumsObjectType.MapObjectType;
-import com.itlbv.settl.map.Tile;
 import com.itlbv.settl.mobs.Mob;
 import com.itlbv.settl.mobs.utils.MobState;
-import com.itlbv.settl.pathfinding.Path;
-import com.itlbv.settl.pathfinding.PathHelper;
 
 public class MovementManager {
     private final Mob owner;
+    private RayCastHelper collisionDetector;
     private PathMovement pathMovement;
     private SteeringMovement steeringMovement;
 
@@ -27,6 +20,7 @@ public class MovementManager {
 
     public MovementManager(float speed, Mob owner) {
         this.owner = owner;
+        this.collisionDetector = new RayCastHelper(owner);
         this.linearVelocity = new Vector2();
         this.maxLinearSpeed = speed;
         this.pathMovement = new PathMovement(owner, maxLinearSpeed);
@@ -66,20 +60,6 @@ public class MovementManager {
             steeringMovement.init();
         }
     }
-    private boolean isTargetCloseAndVisible() {
-        if (getDistanceToTarget() > 1000) {
-            return false;
-        }
-        RayCastHelper collisionCallback = new RayCastHelper();
-        collisionCallback.collided = false;
-        Ray<Vector2> rayToTarget = new Ray<>(owner.getPosition(), getTarget().getPosition());
-        GameWorld.world.rayCast(collisionCallback, rayToTarget.start, rayToTarget.end);
-        if (collisionCallback.collided) {
-            return false;
-        }
-        return true;
-    }
-
     private float getDistanceToTarget() {
         return owner.getPosition().dst(getTarget().getPosition());
     }
@@ -107,16 +87,27 @@ public class MovementManager {
         setLinearVelocity();
     }
 
-    private class RayCastHelper implements RayCastCallback {
+    private boolean isTargetCloseAndVisible() {
+        if (getDistanceToTarget() > 1000) {
+            return false;
+        }
+        Ray<Vector2> rayToTarget = new Ray<>(owner.getPosition(), getTarget().getPosition());
+        GameWorld.world.rayCast(collisionDetector, rayToTarget.start, rayToTarget.end);
+        return !collisionDetector.collided;
+    }
+
+    private static class RayCastHelper implements RayCastCallback {
         boolean collided;
+        Mob owner;
+
+        RayCastHelper(Mob owner) {
+            this.owner = owner;
+        }
+
         @Override
         public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
-            if (fixture.getBody().getUserData() == owner.getTarget()) {
-                return -1;
-            } else {
-                collided = true;
-                return 0;
-            }
+            collided = fixture.getBody().getUserData() != owner.getTarget();
+            return fraction;
         }
     }
 
