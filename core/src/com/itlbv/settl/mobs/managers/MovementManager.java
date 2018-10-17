@@ -32,14 +32,14 @@ public class MovementManager {
         if (isTargetCloseAndVisible()) {
             steeringMovement.init();
         } else {
-            pathMovement.init();
+            pathMovement.initAndCalculatePath();
         }
     }
 
     public void update() {
-        if (!pathMovement.isEmpty()) {
+        recalculateMovement();
+        if (pathMovement.isNotEmpty()) {
             linearVelocity = pathMovement.calculateAndGet();
-            checkTargetDistanceAndVisibility();
         } else {
             linearVelocity = steeringMovement.calculateAndGet();
         }
@@ -47,21 +47,23 @@ public class MovementManager {
         checkSensorAlignment();
     }
 
-    private float TIME_TRESHOLD = 0f;
-
-    private void checkTargetDistanceAndVisibility() {
-        TIME_TRESHOLD += Game.DELTA_TIME;
-        if (TIME_TRESHOLD < 2f) {
+    private final float CALCULATION_FREQ = 2f;
+    private float timeCount = 0f;
+    private void recalculateMovement() {
+        if (!pathMovement.isNotEmpty()) {
             return;
         }
-        TIME_TRESHOLD = 0f;
-        if (isTargetCloseAndVisible()) {
-            pathMovement.path.clear();
-            steeringMovement.init();
+        timeCount += Game.DELTA_TIME;
+        if (timeCount < CALCULATION_FREQ) {
+            return;
         }
-    }
-    private float getDistanceToTarget() {
-        return owner.getPosition().dst(getTarget().getPosition());
+        if (isTargetCloseAndVisible()) {
+            pathMovement.clearPath();
+            steeringMovement.init();
+        } else {
+            pathMovement.initAndCalculatePath();
+        }
+        timeCount = 0;
     }
 
     private void checkSensorAlignment() {
@@ -85,6 +87,10 @@ public class MovementManager {
         pathMovement.path.clear();
         linearVelocity.set(0f, 0f);
         setLinearVelocity();
+    }
+
+    private float getDistanceToTarget() {
+        return owner.getPosition().dst(getTarget().getPosition());
     }
 
     private boolean isTargetCloseAndVisible() {

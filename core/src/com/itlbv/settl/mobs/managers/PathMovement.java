@@ -22,7 +22,7 @@ public class PathMovement {
         this.maxLinearSpeed = maxLinearSpeed;
     }
 
-    public void init() {
+    public void initAndCalculatePath() {
         Vector2 startPosition = owner.getPosition();
         Vector2 targetPosition = getTarget().getPosition(); //TODO what if target doesn't have a body
         path = PathHelper.getPath(startPosition, targetPosition);
@@ -62,7 +62,11 @@ public class PathMovement {
         return (Mob) owner.getTarget();
     }
 
-    public boolean isEmpty() {
-        return path.size() == 0;
+    public boolean isNotEmpty() {
+        return path.size() > 0;
+    }
+
+    public void clearPath() {
+        path.clear();
     }
 }
