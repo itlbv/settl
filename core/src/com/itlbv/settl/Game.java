@@ -21,6 +21,7 @@ public class Game extends ApplicationAdapter {
     private static OrthographicCamera camera;
     public static Map map;
     public static ArrayList<Mob> mobs;
+    public static ArrayList<Mob> deadMobs;
     public static Array<GameObject> testObjects = new Array<>(); //TODO test objects
 
     private static final int VIEWPORT = 40;
@@ -42,6 +43,7 @@ public class Game extends ApplicationAdapter {
         batch = new SpriteBatch();
         map = Map.getInstance();
         mobs = new ArrayList<Mob>();
+        deadMobs = new ArrayList<Mob>();
         initializeCamera();
     }
 
@@ -59,11 +61,11 @@ public class Game extends ApplicationAdapter {
     }
 
     private void createMobs() {
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 5; i++) {
             Mob mob = MobFactory.createMobAtRandomPosition(false, MobObjectType.HUMAN_KNIGHT);
             mobs.add(mob);
         }
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 5; i++) {
             Mob mob = MobFactory.createMobAtRandomPosition(true, MobObjectType.ORC_SHAMAN);
             mobs.add(mob);
         }
@@ -80,6 +82,7 @@ public class Game extends ApplicationAdapter {
 
         batch.begin();
         drawMap();
+        drawDeadMobs();
         drawMobs();
         drawTestObjects(); //TODO test objects
         player.draw();
@@ -93,9 +96,23 @@ public class Game extends ApplicationAdapter {
     }
 
     private void updateMobs() {
+        cleanMobsFromDead();
         mobs.forEach(Mob::update);
         //mobs.get(0).update();
         //mobs.get(1).update();
+    }
+
+    private void cleanMobsFromDead() {
+        for (int i = 0; i < mobs.size(); i++) {
+            Mob mob = mobs.get(i);
+            if (mob.isDead()) {
+                deadMobs.add(mob);
+                mobs.remove(i);
+                i--;
+
+                mob.die();
+            }
+        }
     }
 
     private void drawTestObjects() {
@@ -107,6 +124,10 @@ public class Game extends ApplicationAdapter {
         camera.update();
         batch.setProjectionMatrix(camera.combined);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); //this magic clears the screen
+    }
+
+    private void drawDeadMobs() {
+        deadMobs.forEach(Mob::draw);
     }
 
     private void drawMobs() {
