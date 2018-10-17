@@ -59,19 +59,19 @@ public abstract class Mob extends GameObject {
         updateRenderPosition();
     }
 
-    public void initMovingToTarget() {
+    public void initMoving() {
         if (target == null) {
             return;
         }
-        movementManager.initMovingToTarget();
+        movementManager.initMoving();
     }
 
     public void stopMoving() {
         movementManager.stopMoving();
     }
 
-    public void startFighting() {
-        actionManager.startFighting();
+    public void initFighting() {
+        actionManager.initFighting();
     }
 
     public void fight() {

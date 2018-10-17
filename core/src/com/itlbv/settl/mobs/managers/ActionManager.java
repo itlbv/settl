@@ -24,7 +24,7 @@ public class ActionManager {
         }
     }
 
-    public void startFighting() {
+    public void initFighting() {
         actionState = ActionState.IN_FIGHT;
         fight();
     }

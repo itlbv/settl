@@ -8,7 +8,7 @@ public class StartFightingTask extends LeafTask<Mob> {
     @Override
     public Status execute() {
         Mob owner = getObject();
-        owner.startFighting();
+        owner.initFighting();
         System.out.println(owner.getClass().getSimpleName() + " starting a fight");
         return Status.SUCCEEDED;
     }
