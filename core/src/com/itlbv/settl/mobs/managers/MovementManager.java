@@ -38,6 +38,7 @@ public class MovementManager {
     }
 
     public void update() {
+        if (owner.isTargetWithinReach()) return;
         recalculateMovement();
         linearVelocity = useSteering ?
                 steeringMovement.calculateAndGet() :
