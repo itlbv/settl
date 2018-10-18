@@ -13,7 +13,7 @@ public class FightEnemyTask extends LeafTask<Mob> {
         if (!owner.isTargetWithinReach()) {
             return Status.FAILED;
         }
-        if (!target.isAlive()) {
+        if (target.isDead()) {
             return Status.SUCCEEDED;
         }
         owner.fight();
