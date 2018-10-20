@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.itlbv.settl.enumsObjectType.GameObjectType;
+import com.itlbv.settl.util.BodyFactory;
 
 public abstract class GameObject extends SteerableAdapter<Vector2> {
     private Vector2 renderPosition;
@@ -25,21 +26,6 @@ public abstract class GameObject extends SteerableAdapter<Vector2> {
         //Gdx.app.log(this.toString(), "created");
     }
 
-    public void createBody(BodyType bodyType, float bodyWidth, float bodyHeight) {
-        this.bodyWidth = bodyWidth;
-        this.bodyHeight = bodyHeight;
-        body = BodyFactory.createBody(bodyType, bodyWidth, bodyHeight,this, false);
-        //Gdx.app.log(this.toString(), "body created");
-    }
-
-    public void createSensor(float sensorWidth, float sensorHeight) {
-        if (body == null) {
-            return; //TODO do smth with it
-        }
-        sensor = BodyFactory.createBody(body.getType(), sensorWidth, sensorHeight, this, true);
-        Gdx.app.log(this.toString(), "sensor created " + Game.RENDER_ITERATION);
-    }
-
     public void updateRenderPosition() {
         float x = body.getPosition().x - renderWidth/2;
         float y = body.getPosition().y - bodyHeight/2;
@@ -55,12 +41,19 @@ public abstract class GameObject extends SteerableAdapter<Vector2> {
     public Body getBody() {
         return body;
     }
-    public float getRenderX() {
-        return renderPosition.x;
+
+    public void setBody(Body body, float bodyWidth, float bodyHeight) {
+        this.body = body;
+        this.bodyWidth = bodyWidth;
+        this.bodyHeight = bodyHeight;
     }
 
-    public float getRenderY() {
-        return renderPosition.y;
+    public Body getSensor() {
+        return sensor;
+    }
+
+    public void setSensor(Body sensor) {
+        this.sensor = sensor;
     }
 
     public Vector2 getRenderPosition() {
@@ -77,10 +70,6 @@ public abstract class GameObject extends SteerableAdapter<Vector2> {
 
     public Vector2 getPosition() {
         return body.getPosition();
-    }
-
-    public Body getSensor() {
-        return sensor;
     }
 
     public void setTexture(TextureRegion texture) {

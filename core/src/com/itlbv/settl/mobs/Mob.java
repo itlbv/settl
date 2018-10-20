@@ -25,16 +25,14 @@ public abstract class Mob extends GameObject {
     private boolean targetWithinReach = false;
 
     public Mob(float x, float y, MobObjectType type,float width, float height,
-               float bodyWidth, float bodyHeight, float speed, String bhvTree) {
+               float bodyWidth, float bodyHeight, float speed) {
         super(x, y, type, width, height);
-        super.createBody(BodyDef.BodyType.DynamicBody, bodyWidth, bodyHeight);
         this.alive = true;
         this.type = type;
         this.state = MobState.IDLE;
         this.movementManager = new MovementManager(speed, this);
         this.animationManager = new AnimationManager(this);
         this.actionManager = new ActionManager(this);
-        this.bhvTree = BehaviorTreeLibraryManager.getInstance().createBehaviorTree(bhvTree, this);
     }
 
     public void update() {
@@ -125,5 +123,9 @@ public abstract class Mob extends GameObject {
 
     public void setState(MobState state) {
         this.state = state;
+    }
+
+    public void setBhvTree(String bhvTree) {
+        this.bhvTree = BehaviorTreeLibraryManager.getInstance().createBehaviorTree(bhvTree, this);
     }
 }

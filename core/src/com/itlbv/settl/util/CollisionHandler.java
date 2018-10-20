@@ -1,4 +1,4 @@
-package com.itlbv.settl;
+package com.itlbv.settl.util;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -47,6 +47,7 @@ public class CollisionHandler implements ContactListener {
     }
 
     private void printCollision(Contact contact, boolean begin) {
+        /*
         String logStr = o1.getClass().getSimpleName()
                 + (contact.getFixtureA().isSensor() ? "SENSOR" : "BODY")
                 + (begin ? "  ---begin--- " : "  ---end--- ")
@@ -54,6 +55,8 @@ public class CollisionHandler implements ContactListener {
                 + ((contact.getFixtureB().isSensor() ? "SENSOR" : "BODY"))
                 + " " + Game.RENDER_ITERATION;
         Gdx.app.log("Contact", logStr);
+
+         */
     }
 
     @Override

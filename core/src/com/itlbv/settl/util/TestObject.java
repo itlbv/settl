@@ -1,6 +1,7 @@
-package com.itlbv.settl;
+package com.itlbv.settl.util;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.itlbv.settl.GameObject;
 import com.itlbv.settl.enumsObjectType.MapObjectType;
 
 public class TestObject extends GameObject {

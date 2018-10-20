@@ -7,7 +7,6 @@ public class HumanKnight extends Human {
     private static final MobObjectType MOB_TYPE = MobObjectType.HUMAN_KNIGHT;
 
     public HumanKnight(float x, float y) {
-        super(x, y,  MOB_TYPE,"bhvTrees/humanKnight.btree");
-        createSensor(MobConstants.HUMAN_SENSOR_WIDTH, MobConstants.HUMAN_SENSOR_HEIGHT);
+        super(x, y,  MOB_TYPE);
     }
 }

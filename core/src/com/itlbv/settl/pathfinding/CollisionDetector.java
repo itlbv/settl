@@ -8,9 +8,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
+import com.itlbv.settl.Game;
 import com.itlbv.settl.GameWorld;
 import com.itlbv.settl.map.Map;
-import com.itlbv.settl.map.Tile;
 
 public class CollisionDetector implements RaycastCollisionDetector<Vector2> {
 
@@ -19,7 +19,7 @@ public class CollisionDetector implements RaycastCollisionDetector<Vector2> {
     private Box2dRaycastCallback callback;
 
     CollisionDetector () {
-        map = Map.getInstance();
+        map = Game.map;
         this.world = GameWorld.world;
         this.callback = new Box2dRaycastCallback();
     }
@@ -36,15 +36,18 @@ public class CollisionDetector implements RaycastCollisionDetector<Vector2> {
             callback.outputCollision = outputCollision;
             world.rayCast(callback, inputRay.start, inputRay.end);
         }
-        if (isCornerTile(inputRay.end)) {
+        /*
+        if (isCornerTile(inputRay.end)) { //TODO make it work
             return true;
         }
+        */
         return callback.collided;
     }
 
+    /*
     private boolean isCornerTile(Vector2 tilePosition) {
-        Tile tile = map.getTileFromPosition(tilePosition);
-        char[] codeArray = tile.getCode().toCharArray();
+        oldTile oldTile = oldMap.getTileFromPosition(tilePosition);
+        char[] codeArray = oldTile.getCode().toCharArray();
         int code = 0;
         for (char c : codeArray) {
             if (c == '1') {
@@ -53,6 +56,7 @@ public class CollisionDetector implements RaycastCollisionDetector<Vector2> {
         }
         return code > 0 && code < 3;
     }
+    */
 
     public static class Box2dRaycastCallback implements RayCastCallback {
         Collision<Vector2> outputCollision;

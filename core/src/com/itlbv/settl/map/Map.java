@@ -3,100 +3,50 @@ package com.itlbv.settl.map;
 import com.badlogic.gdx.ai.pfa.Connection;
 import com.badlogic.gdx.ai.pfa.DefaultConnection;
 import com.badlogic.gdx.ai.pfa.indexed.IndexedGraph;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
-import com.itlbv.settl.enumsObjectType.MapObjectType;
+import com.itlbv.settl.util.BodyFactory;
+import com.itlbv.settl.GameConstants;
 
+public class Map implements IndexedGraph<Node> {
+    private TiledMap map;
+    private TiledMapTileLayer tileLayer;
+    private Array<Node> nodes;
 
-public class Map implements IndexedGraph<Tile> {
-    private static Map instance = new Map();
-    public static Map getInstance() {return instance;}
-    private Array<Tile> nodes;
-    private Array<Array<Tile>> tiles;
-
-    private static final int MAP_SIZE = 60;
-
-    private Map(){initialize();}
-
-    private void initialize() {
-        nodes = new Array<Tile>();
-        tiles = new Array<Array<Tile>>();
-        for (int i = 0; i < MAP_SIZE; i++) {
-            tiles.add(new Array<Tile>());
-        }
+    public Map(String path) {
+        map = new TmxMapLoader().load(path);
+        tileLayer = (TiledMapTileLayer) map.getLayers().get(0);
+        tileLayer.setOffsetX(-GameConstants.TILE_SIZE_PXL/2);
+        tileLayer.setOffsetY(GameConstants.TILE_SIZE_PXL/2);
+        nodes = new Array<>();
     }
 
-    public void assignCodes() {
-        for (int row = 0; row < MAP_SIZE; row++) {
-            for (int column = 0; column < MAP_SIZE; column++) {
-                Tile tile = tiles.get(row).get(column);
-                if (tile.isCollidable()) {
-                    continue;
-                }
-                String code = calculateCode(row, column);
-                tile.setCode(code);
+    public Body mapSensor;
+    public void init() {
+        mapSensor = BodyFactory.createSensorForMap();
+        for (int x = 0; x < tileLayer.getWidth(); x++) {
+            for (int y = 0; y < tileLayer.getHeight(); y++) {
+                Cell cell = tileLayer.getCell(x, y);
+                boolean passable = (boolean) cell.getTile().getProperties().get("passable");
+                if (!passable) BodyFactory.createBodyForMap(x, y, cell.getTile());
+                createNode(x, y, passable);
             }
         }
+        initPathfindingGraph();
     }
 
-    private String calculateCode(int row, int column) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getCharFromTile(row, column, -1, -1));
-        sb.append(getCharFromTile(row, column, -1, 0));
-        sb.append(getCharFromTile(row, column, -1, +1));
-        sb.append(getCharFromTile(row, column, 0, +1));
-        sb.append(getCharFromTile(row, column, +1, +1));
-        sb.append(getCharFromTile(row, column, +1, 0));
-        sb.append(getCharFromTile(row, column, +1, -1));
-        sb.append(getCharFromTile(row, column, 0, -1));
-        return sb.toString();
-    }
-
-    private char getCharFromTile(int row, int column, int xOffset, int yOffset) {
-        row += xOffset;
-        column += yOffset;
-        if (row < 0 || column < 0 || row == MAP_SIZE || column == MAP_SIZE) {
-            return '0';
-        }
-
-        if (tiles.get(row).get(column).isCollidable()) {
-            return '1';
-        } else {
-            return '0';
-        }
-    }
-
-    public void addTileToRow(MapObjectType type, int row) {
-        TextureRegion texture = MapTextureHelper.getTileTexture(type);
-        int x = row;
-        int y = tiles.get(row).size;
-        Tile tile = new Tile(x, y, type, texture);
-        createBodyIfNotPassable(tile);
-        tiles.get(row).add(tile);
-        nodes.add(tile);
-    }
-
-    private void createBodyIfNotPassable(Tile tile) {
-        if (tile.getType().passable) {
-            return;
-        }
-        tile.createBody(BodyType.StaticBody, 1, 1); //TODO magical numbers
-        tile.setCollidable(true);
-    }
-
-    /*
-    **Graph implementation
-     */
-    public void initGraph() {
-        //TODO wtf is going on here?
-        int width = MAP_SIZE;
-        int height = MAP_SIZE;
+    private void initPathfindingGraph() {
+        int width = tileLayer.getWidth();
+        int height = tileLayer.getHeight();
         for (int x = 0; x < width; x++) {
             int idx = x * height;
             for (int y = 0; y < height; y++) {
-                Tile node = nodes.get(idx + y);
+                Node node = nodes.get(idx + y);
                 if (x > 0) addConnection(node, -1, 0);
                 if (y > 0) addConnection(node, 0, -1);
                 if (x < width - 1) addConnection(node, 1, 0);
@@ -105,26 +55,33 @@ public class Map implements IndexedGraph<Tile> {
         }
     }
 
-    private void addConnection (Tile node, int xOffset, int yOffset) {
-        Tile target = getNode(node.getRenderX() + xOffset, node.getRenderY() + yOffset);
-        if (!target.isCollidable()) {
-            getConnections(node).add(new DefaultConnection<Tile>(node, target));
-        }
+    private void addConnection (Node node, int xOffset, int yOffset) {
+        Node targetNode = getNode(node.getX() + xOffset, node.getY() + yOffset);
+        boolean targetNodePassable = (boolean) tileLayer.getCell(targetNode.getX(), targetNode.getY())
+                                                .getTile()
+                                                .getProperties().get("passable");
+        if (targetNodePassable) getConnections(node).add(new DefaultConnection<>(node, targetNode));
     }
 
-    private Tile getNode(float xf, float yf) {
-        int x = (int)xf;
-        int y = (int)yf;
-        return tiles.get(x).get(y);
+    private void createNode(int x, int y, boolean passable) {
+        nodes.add(new Node(x, y, passable));
     }
 
-    public Array<Connection<Tile>> getConnections(Tile node) {
-        return node.getConnections();
+    private Node getNode(int x, int y) {
+        return nodes.get(x * tileLayer.getHeight() + y);
+    }
+
+    public Node getNodeFromPosition(Vector2 position) {
+        return getNode((int)position.x, (int)position.y);
+    }
+
+    public Vector2 getNodePosition(int index) {
+        return nodes.get(index).getPosition();
     }
 
     @Override
-    public int getIndex(Tile node) {
-        return (int) (node.getRenderX() * MAP_SIZE + node.getRenderY());
+    public int getIndex(Node node) {
+        return node.getX() * tileLayer.getHeight() + node.getY();
     }
 
     @Override
@@ -132,16 +89,20 @@ public class Map implements IndexedGraph<Tile> {
         return nodes.size;
     }
 
-    public Tile getTileFromPosition(Vector2 position) { //TODO refactoring
-        float posX = position.x;
-        float posY = position.y;
-        int nodeX = (int)posX;
-        int nodeY = (int)posY;
-        return tiles.get(nodeX).get(nodeY);
+    @Override
+    public Array<Connection<Node>> getConnections(Node fromNode) {
+        return fromNode.getConnections();
     }
 
-    //***Getters & setters***
-    public Array<Array<Tile>> getTiles() {
-        return tiles;
+    public TiledMap getMap() {
+        return map;
+    }
+
+    public int getWidth() {
+        return tileLayer.getWidth();
+    }
+
+    public int getHeight() {
+        return tileLayer.getHeight();
     }
 }

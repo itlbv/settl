@@ -3,13 +3,14 @@ package com.itlbv.settl.pathfinding;
 import com.badlogic.gdx.ai.pfa.DefaultGraphPath;
 import com.badlogic.gdx.ai.pfa.SmoothableGraphPath;
 import com.badlogic.gdx.math.Vector2;
-import com.itlbv.settl.map.Tile;
+import com.itlbv.settl.Game;
+import com.itlbv.settl.map.Node;
 
-public class Path extends DefaultGraphPath<Tile> implements SmoothableGraphPath<Tile, Vector2> {
+public class Path extends DefaultGraphPath<Node> implements SmoothableGraphPath<Node, Vector2> {
 
     @Override
     public Vector2 getNodePosition(int index) {
-        return nodes.get(index).getCenterPosition();
+        return Game.map.getNodePosition(index);
     }
 
     @Override
@@ -27,6 +28,6 @@ public class Path extends DefaultGraphPath<Tile> implements SmoothableGraphPath<
     }
 
     public Vector2 getFirstPosition() {
-        return nodes.first().getCenterPosition();
+        return nodes.get(0).getPosition();
     }
 }

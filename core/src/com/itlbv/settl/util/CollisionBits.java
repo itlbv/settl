@@ -1,4 +1,4 @@
-package com.itlbv.settl;
+package com.itlbv.settl.util;
 
 public class CollisionBits {
     public final static short MOB_BODY = 0x0001;

@@ -1,11 +1,11 @@
 package com.itlbv.settl.pathfinding;
 
 import com.badlogic.gdx.ai.pfa.Heuristic;
-import com.itlbv.settl.map.Tile;
+import com.itlbv.settl.map.Node;
 
-public class ManhattanDistance implements Heuristic<Tile> {
+public class ManhattanDistance implements Heuristic<Node> {
     @Override
-    public float estimate(Tile node, Tile endNode) {
-        return Math.abs(endNode.getRenderX() - node.getRenderX()) + Math.abs(endNode.getRenderY() - node.getRenderY());
+    public float estimate(Node node, Node endNode) {
+        return Math.abs(endNode.getX() - node.getX()) + Math.abs(endNode.getY() - node.getY());
     }
 }
