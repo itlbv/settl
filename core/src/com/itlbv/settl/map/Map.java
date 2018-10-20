@@ -44,9 +44,9 @@ public class Map implements IndexedGraph<Node> {
         int width = tileLayer.getWidth();
         int height = tileLayer.getHeight();
         for (int x = 0; x < width; x++) {
-            int idx = x * height;
+            int columnX = x * height;
             for (int y = 0; y < height; y++) {
-                Node node = nodes.get(idx + y);
+                Node node = nodes.get(columnX + y);
                 if (x > 0) addConnection(node, -1, 0);
                 if (y > 0) addConnection(node, 0, -1);
                 if (x < width - 1) addConnection(node, 1, 0);
