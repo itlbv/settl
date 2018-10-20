@@ -28,7 +28,7 @@ public class MobFactory {
     }
 
     private static boolean mapTileIsNotPassable(int x, int y) {
-        return !Game.map.getNodeFromPosition(new Vector2(x, y)).isPassable();
+        return !Game.map.getNode(x, y).isPassable();
     }
 
     private static Mob createMob(float x, float y, MobObjectType type) {

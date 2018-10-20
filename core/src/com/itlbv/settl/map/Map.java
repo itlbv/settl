@@ -16,6 +16,7 @@ import com.itlbv.settl.GameConstants;
 public class Map implements IndexedGraph<Node> {
     private TiledMap map;
     private TiledMapTileLayer tileLayer;
+    private int mapWidth, mapHeight;
     private Array<Node> nodes;
 
     public Map(String path) {
@@ -23,14 +24,16 @@ public class Map implements IndexedGraph<Node> {
         tileLayer = (TiledMapTileLayer) map.getLayers().get(0);
         tileLayer.setOffsetX(-GameConstants.TILE_SIZE_PXL/2);
         tileLayer.setOffsetY(GameConstants.TILE_SIZE_PXL/2);
+        mapWidth = tileLayer.getWidth();
+        mapHeight = tileLayer.getHeight();
         nodes = new Array<>();
     }
 
     public Body mapSensor;
     public void init() {
         mapSensor = BodyFactory.createSensorForMap();
-        for (int x = 0; x < tileLayer.getWidth(); x++) {
-            for (int y = 0; y < tileLayer.getHeight(); y++) {
+        for (int x = 0; x < mapWidth; x++) {
+            for (int y = 0; y < mapHeight; y++) {
                 Cell cell = tileLayer.getCell(x, y);
                 boolean passable = (boolean) cell.getTile().getProperties().get("passable");
                 if (!passable) BodyFactory.createBodyForMap(x, y, cell.getTile());
@@ -41,16 +44,15 @@ public class Map implements IndexedGraph<Node> {
     }
 
     private void initPathfindingGraph() {
-        int width = tileLayer.getWidth();
-        int height = tileLayer.getHeight();
-        for (int x = 0; x < width; x++) {
-            int columnX = x * height;
-            for (int y = 0; y < height; y++) {
+        for (int x = 0; x < mapWidth; x++) {
+            int columnX = x * mapHeight;
+            for (int y = 0; y < mapHeight; y++) {
                 Node node = nodes.get(columnX + y);
                 if (x > 0) addConnection(node, -1, 0);
                 if (y > 0) addConnection(node, 0, -1);
-                if (x < width - 1) addConnection(node, 1, 0);
-                if (y < height - 1) addConnection(node, 0, 1);
+                if (x < mapWidth - 1) addConnection(node, 1, 0);
+                if (y < mapHeight - 1) addConnection(node, 0, 1);
+                calculateAndSetCode(x, y, node);
             }
         }
     }
@@ -63,12 +65,38 @@ public class Map implements IndexedGraph<Node> {
         if (targetNodePassable) getConnections(node).add(new DefaultConnection<>(node, targetNode));
     }
 
+    private void calculateAndSetCode(int row, int column, Node node) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getCharFromTile(row, column, -1, -1));
+        sb.append(getCharFromTile(row, column, -1, 0));
+        sb.append(getCharFromTile(row, column, -1, +1));
+        sb.append(getCharFromTile(row, column, 0, +1));
+        sb.append(getCharFromTile(row, column, +1, +1));
+        sb.append(getCharFromTile(row, column, +1, 0));
+        sb.append(getCharFromTile(row, column, +1, -1));
+        sb.append(getCharFromTile(row, column, 0, -1));
+        node.setCode(sb.toString());
+    }
+
+    private char getCharFromTile(int x, int y, int xOffset, int yOffset) {
+        x += xOffset;
+        y += yOffset;
+        if (x < 0 || y < 0 || x == mapWidth || y == mapHeight) {
+            return '0';
+        }
+        if (getNode(x, y).isPassable()) {
+            return '1';
+        } else {
+            return '0';
+        }
+    }
+
     private void createNode(int x, int y, boolean passable) {
         nodes.add(new Node(x, y, passable));
     }
 
-    private Node getNode(int x, int y) {
-        return nodes.get(x * tileLayer.getHeight() + y);
+    public Node getNode(int x, int y) {
+        return nodes.get(x * mapHeight + y);
     }
 
     public Node getNodeFromPosition(Vector2 position) {
@@ -81,7 +109,7 @@ public class Map implements IndexedGraph<Node> {
 
     @Override
     public int getIndex(Node node) {
-        return node.getX() * tileLayer.getHeight() + node.getY();
+        return node.getX() * mapHeight + node.getY();
     }
 
     @Override
@@ -99,10 +127,10 @@ public class Map implements IndexedGraph<Node> {
     }
 
     public int getWidth() {
-        return tileLayer.getWidth();
+        return mapWidth;
     }
 
     public int getHeight() {
-        return tileLayer.getHeight();
+        return mapHeight;
     }
 }
