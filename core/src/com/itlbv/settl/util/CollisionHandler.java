@@ -31,7 +31,7 @@ public class CollisionHandler implements ContactListener {
     }
 
     private boolean collisionOfMobs() {
-        return (o1 instanceof Mob) || (o2 instanceof Mob);
+        return (o1 instanceof Mob) && (o2 instanceof Mob);
     }
 
     private void beginContactForSensor(Object sensorOwnerObj, Object mobOfCollisionObj) {
