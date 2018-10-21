@@ -85,9 +85,9 @@ public class Map implements IndexedGraph<Node> {
             return '0';
         }
         if (getNode(x, y).isPassable()) {
-            return '1';
-        } else {
             return '0';
+        } else {
+            return '1';
         }
     }
 

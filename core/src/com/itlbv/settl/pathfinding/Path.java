@@ -10,7 +10,7 @@ public class Path extends DefaultGraphPath<Node> implements SmoothableGraphPath<
 
     @Override
     public Vector2 getNodePosition(int index) {
-        return Game.map.getNodePosition(index);
+        return nodes.get(index).getPosition();
     }
 
     @Override
