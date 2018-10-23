@@ -3,9 +3,7 @@ package com.itlbv.settl.behaviorTreeTasks;
 import com.badlogic.gdx.ai.btree.LeafTask;
 import com.badlogic.gdx.ai.btree.Task;
 import com.itlbv.settl.Game;
-import com.itlbv.settl.mobs.Human;
 import com.itlbv.settl.mobs.Mob;
-import com.itlbv.settl.mobs.Orc;
 
 public class IsEnemyAroundCondition extends LeafTask<Mob> {
     @Override
@@ -17,7 +15,7 @@ public class IsEnemyAroundCondition extends LeafTask<Mob> {
         }
 
         for (Mob mob : Game.mobs) {
-            if (!owner.getClass().isInstance(mob)) {
+            if (mob.getType() != owner.getType()) {
                 return Status.SUCCEEDED;
             }
         }

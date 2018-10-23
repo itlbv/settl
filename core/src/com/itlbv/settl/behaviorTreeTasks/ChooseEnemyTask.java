@@ -4,6 +4,8 @@ import com.badlogic.gdx.ai.btree.LeafTask;
 import com.badlogic.gdx.ai.btree.Task;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.mobs.Mob;
+import sun.plugin2.message.OverlayWindowMoveMessage;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +23,7 @@ public class ChooseEnemyTask extends LeafTask<Mob>{
         }
 
         List<Mob> targets = Game.mobs.stream()
-                .filter(mob -> !mob.getClass().isInstance(owner))
+                .filter(mob -> mob.getType() != owner.getType())
                 .filter(Mob::isAlive).collect(Collectors.toList());
         if (targets.size() == 0) {
             return Status.FAILED;
