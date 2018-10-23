@@ -36,7 +36,7 @@ public class Map implements IndexedGraph<Node> {
             for (int y = 0; y < mapHeight; y++) {
                 Cell cell = tileLayer.getCell(x, y);
                 boolean passable = (boolean) cell.getTile().getProperties().get("passable");
-                if (!passable) BodyFactory.createBodyForMap(x, y, cell.getTile());
+                if (!passable) BodyFactory.createMapTileBody(x, y, cell.getTile());
                 createNode(x, y, passable);
             }
         }
