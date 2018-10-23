@@ -1,18 +1,15 @@
 package com.itlbv.settl.mobs.utils;
 
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.itlbv.settl.Game;
-import com.itlbv.settl.GameWorld;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
-import com.itlbv.settl.map.Node;
-import com.itlbv.settl.mobs.HumanKnight;
-import com.itlbv.settl.mobs.HumanPeasant;
 import com.itlbv.settl.mobs.Mob;
-import com.itlbv.settl.mobs.OrcShaman;
 import com.itlbv.settl.util.BodyFactory;
+
+import static com.itlbv.settl.mobs.utils.MobConstants.MOB_RENDER_HEIGHT;
+import static com.itlbv.settl.mobs.utils.MobConstants.MOB_RENDER_WIDTH;
+import static com.itlbv.settl.mobs.utils.MobConstants.MOB_SPEED;
 
 public class MobFactory {
     public static Mob createMobAtRandomPosition(boolean rightMapSide, MobObjectType type) {
@@ -31,48 +28,13 @@ public class MobFactory {
         return !Game.map.getNode(x, y).isPassable();
     }
 
-    private static Mob createMob(float x, float y, MobObjectType type) {
-        Mob mob;
-        String bhvTree;
-        float bodyWidth, bodyHeight, sensorWidth, sensorHeight;
-        switch (type) {
-            case HUMAN_PEASANT:
-                mob = new HumanPeasant(x, y);
-                bhvTree = "bhvTrees/humanKnight.btree";
-                bodyWidth = MobConstants.HUMAN_BODY_WIDTH;
-                bodyHeight = MobConstants.HUMAN_BODY_HEIGHT;
-                sensorWidth = MobConstants.HUMAN_SENSOR_WIDTH;
-                sensorHeight = MobConstants.HUMAN_SENSOR_HEIGHT;
-                break;
-            case HUMAN_KNIGHT:
-                mob =  new HumanKnight(x, y);
-                bhvTree = "bhvTrees/humanKnight.btree";
-                bodyWidth = MobConstants.HUMAN_BODY_WIDTH;
-                bodyHeight = MobConstants.HUMAN_BODY_HEIGHT;
-                sensorWidth = MobConstants.HUMAN_SENSOR_WIDTH;
-                sensorHeight = MobConstants.HUMAN_SENSOR_HEIGHT;
-                break;
-            case ORC_SHAMAN:
-                mob = new OrcShaman(x, y);
-                bhvTree = "bhvTrees/humanKnight.btree";
-                bodyWidth = MobConstants.ORC_BODY_WIDTH;
-                bodyHeight = MobConstants.ORC_BODY_HEIGHT;
-                sensorWidth = MobConstants.ORC_SENSOR_WIDTH;
-                sensorHeight = MobConstants.ORC_SENSOR_HEIGHT;
-                break;
-            default:
-                mob = new HumanPeasant(x, y);
-                bhvTree = "bhvTrees/humanKnight.btree";
-                bodyWidth = MobConstants.HUMAN_BODY_WIDTH;
-                bodyHeight = MobConstants.HUMAN_BODY_HEIGHT;
-                sensorWidth = MobConstants.HUMAN_SENSOR_WIDTH;
-                sensorHeight = MobConstants.HUMAN_SENSOR_HEIGHT;
-        }
-        Body mobBody = BodyFactory.createBody(BodyDef.BodyType.DynamicBody, bodyWidth, bodyHeight, mob, false);
-        mob.setBody(mobBody, bodyWidth, bodyHeight);
-        Body mobSensor = BodyFactory.createBody(BodyDef.BodyType.DynamicBody, sensorWidth, sensorHeight, mob, true);
+    private static Mob createMob(int x, int y, MobObjectType type) {
+        Mob mob = new Mob(type, "bhvTrees/humanKnight.btree", MOB_SPEED, MOB_RENDER_WIDTH, MOB_RENDER_HEIGHT);
+        Body mobBody = BodyFactory.createAndGetMobBody(x, y, mob, false);
+        Body mobSensor = BodyFactory.createAndGetMobBody(x, y, mob, true);
+        mob.setBody(mobBody);
         mob.setSensor(mobSensor);
-        mob.setBhvTree(bhvTree);
+        mob.updateRenderPosition();
         return mob;
     }
 }

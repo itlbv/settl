@@ -1,6 +1,13 @@
 package com.itlbv.settl.mobs.utils;
 
 public class MobConstants {
+    public static final float MOB_SPEED = 4f;
+    public static final float MOB_RENDER_WIDTH = 2.5f;
+    public static final float MOB_RENDER_HEIGHT = 2.5f;
+    public static final float MOB_BODY_RADIUS = .2f;
+    public static final float MOB_SENSOR_RADIUS = 2f;
+
+    /*
     public static final float HUMAN_SPEED = 4f;
     public static final float HUMAN_WIDTH = 2.5f;
     public static final float HUMAN_HEIGHT = 2.5f;
@@ -16,4 +23,5 @@ public class MobConstants {
     public static final float ORC_BODY_HEIGHT = .6f;
     public static final float ORC_SENSOR_WIDTH = 2f;
     public static final float ORC_SENSOR_HEIGHT = 2f;
+    */
 }

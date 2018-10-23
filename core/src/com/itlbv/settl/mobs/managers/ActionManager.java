@@ -44,7 +44,6 @@ public class ActionManager {
 
     private void attack() {
         owner.setState(MobState.ATTACK);
-        //System.out.println(owner.getClass().getSimpleName() + " ATTACK " + Game.RENDER_ITERATION);
         getTarget().defend();
     }
 

@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.itlbv.settl.enumsObjectType.GameObjectType;
+import com.itlbv.settl.mobs.utils.MobConstants;
 import com.itlbv.settl.util.BodyFactory;
 
 public abstract class GameObject extends SteerableAdapter<Vector2> {
@@ -14,21 +15,19 @@ public abstract class GameObject extends SteerableAdapter<Vector2> {
     private GameObjectType type;
     private TextureRegion texture;
     private float renderWidth, renderHeight;
-    private float bodyWidth, bodyHeight;
     private Body body;
     private Body sensor;
 
-    public GameObject(float x, float y, GameObjectType type, float renderWidth, float renderHeight) {
-        this.renderPosition = new Vector2(x, y);
+    public GameObject(GameObjectType type, float renderWidth, float renderHeight) {
         this.type = type;
         this.renderWidth = renderWidth;
         this.renderHeight = renderHeight;
-        //Gdx.app.log(this.toString(), "created");
+        this.renderPosition = new Vector2();
     }
 
     public void updateRenderPosition() {
         float x = body.getPosition().x - renderWidth/2;
-        float y = body.getPosition().y - bodyHeight/2;
+        float y = body.getPosition().y - MobConstants.MOB_BODY_RADIUS;
         renderPosition.set(x, y);
     }
 
@@ -42,10 +41,8 @@ public abstract class GameObject extends SteerableAdapter<Vector2> {
         return body;
     }
 
-    public void setBody(Body body, float bodyWidth, float bodyHeight) {
+    public void setBody(Body body) {
         this.body = body;
-        this.bodyWidth = bodyWidth;
-        this.bodyHeight = bodyHeight;
     }
 
     public Body getSensor() {

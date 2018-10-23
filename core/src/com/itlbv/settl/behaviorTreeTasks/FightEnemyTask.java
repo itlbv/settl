@@ -15,6 +15,7 @@ public class FightEnemyTask extends LeafTask<Mob> {
         }
         if (target.isDead()) {
             owner.setTarget(null);
+            owner.stopMoving();
             return Status.SUCCEEDED;
         }
         owner.fight();

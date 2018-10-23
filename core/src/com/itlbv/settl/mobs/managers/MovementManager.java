@@ -28,8 +28,7 @@ public class MovementManager {
 
     public void initMoving() {
         owner.setState(MobState.WALK);
-        //chooseMovementType();
-        useSteering = false;
+        chooseMovementType();
         if (useSteering) switchToSteering();
         else switchToPath();
     }
@@ -40,7 +39,7 @@ public class MovementManager {
 
     public void update() {
         if (owner.isTargetWithinReach()) return;
-        //recalculateMovement();
+        recalculateMovement();
         linearVelocity = useSteering ?
                 steeringMovement.calculateAndGet() :
                 pathMovement.calculateAndGet();

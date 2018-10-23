@@ -35,7 +35,7 @@ public class PathMovement {
     }
 
     private Vector2 getNextWaypoint() {
-        Vector2 nextPosition = path.getFirstPosition();
+        Vector2 nextPosition = path.getFirstPosition(); //TODO falls when there is no path
         Vector2 currentPosition = owner.getPosition();
         if(nextPosition.dst(currentPosition) < .7f) { //TODO touches corners with 0.7
             path.nodes.removeIndex(0);

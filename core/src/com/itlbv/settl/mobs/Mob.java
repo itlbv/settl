@@ -12,7 +12,7 @@ import com.itlbv.settl.mobs.managers.AnimationManager;
 import com.itlbv.settl.mobs.managers.ActionManager;
 import com.itlbv.settl.mobs.managers.MovementManager;
 
-public abstract class Mob extends GameObject {
+public class Mob extends GameObject {
     private final MovementManager movementManager;
     private final AnimationManager animationManager;
     private final ActionManager actionManager;
@@ -24,15 +24,15 @@ public abstract class Mob extends GameObject {
     private boolean alive;
     private boolean targetWithinReach = false;
 
-    public Mob(float x, float y, MobObjectType type,float width, float height,
-               float bodyWidth, float bodyHeight, float speed) {
-        super(x, y, type, width, height);
+    public Mob(MobObjectType type, String bhvTree, float speed, float renderWidth, float renderHeight) {
+        super(type, renderWidth, renderHeight);
         this.alive = true;
         this.type = type;
         this.state = MobState.IDLE;
         this.movementManager = new MovementManager(speed, this);
         this.animationManager = new AnimationManager(this);
         this.actionManager = new ActionManager(this);
+        setBhvTree(bhvTree);
     }
 
     public void update() {

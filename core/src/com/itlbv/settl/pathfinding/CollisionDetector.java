@@ -43,7 +43,7 @@ public class CollisionDetector implements RaycastCollisionDetector<Vector2> {
 
 
     private boolean endsInCornerMapTile(Vector2 tilePosition) {
-        Node node = Game.map.getNodeFromPosition(tilePosition);
+        Node node = map.getNodeFromPosition(tilePosition);
         char[] codeArray = node.getCode().toCharArray();
         int code = 0;
         for (char c : codeArray) {
