@@ -51,8 +51,12 @@ public class Mob extends GameObject {
         updateRenderPosition();
     }
 
+    public void chooseEnemy() {
+        actionManager.chooseEnemy();
+    }
+
     public void startMoving() {
-        Objects.requireNonNull(getTarget());
+        Objects.requireNonNull(target);
         setState(WALK);
         movementManager.initMoving();
     }
@@ -64,27 +68,6 @@ public class Mob extends GameObject {
     public void stopMoving() {
         setState(IDLE);
         movementManager.stopMoving();
-    }
-
-    private final float enemyCheckFreq = 1f;
-    private float enemyCheckTimeCount = 0f;
-    public void chooseEnemy() {
-        if (getTarget() == null) chooseClosestEnemy();
-        enemyCheckTimeCount += Game.DELTA_TIME;
-        if (enemyCheckTimeCount > enemyCheckFreq){
-            enemyCheckTimeCount = 0;
-            chooseClosestEnemy();
-        }
-    }
-    private void chooseClosestEnemy() {
-        List<Mob> potentialTargets = Game.mobs.stream()
-                .filter(mob -> mob.getType() != getType())
-                .collect(Collectors.toList());
-        if (potentialTargets.size() == 0) return;
-        Mob target = potentialTargets.stream()
-                .min(Comparator.comparing(mob -> mob.getPosition().dst(getPosition())))
-                .get();
-        setTarget(target);
     }
 
     public void startFighting() {
@@ -156,9 +139,5 @@ public class Mob extends GameObject {
 
     private void setBhvTree(String bhvTree) {
         this.bhvTree = BehaviorTreeLibraryManager.getInstance().createBehaviorTree(bhvTree, this);
-    }
-
-    public TaskManager getTaskManager() {
-        return taskManager;
     }
 }

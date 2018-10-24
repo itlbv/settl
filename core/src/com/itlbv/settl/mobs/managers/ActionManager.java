@@ -6,6 +6,10 @@ import com.itlbv.settl.mobs.utils.ActionState;
 import com.itlbv.settl.mobs.utils.MobAnimationState;
 import com.itlbv.settl.mobs.Mob;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class ActionManager {
     private final Mob owner;
     private ActionState actionState;
@@ -72,6 +76,27 @@ public class ActionManager {
         if (hitpoints == 0) {
             owner.setAlive(false);
         }
+    }
+
+    private final float enemyCheckFreq = 1f;
+    private float enemyCheckTimeCount = 0f;
+    public void chooseEnemy() {
+        if (getTarget() == null) chooseClosestEnemy();
+        enemyCheckTimeCount += Game.DELTA_TIME;
+        if (enemyCheckTimeCount > enemyCheckFreq){
+            enemyCheckTimeCount = 0;
+            chooseClosestEnemy();
+        }
+    }
+    private void chooseClosestEnemy() {
+        List<Mob> potentialTargets = Game.mobs.stream()
+                .filter(mob -> mob.getType() != owner.getType())
+                .collect(Collectors.toList());
+        if (potentialTargets.size() == 0) return;
+        Mob target = potentialTargets.stream()
+                .min(Comparator.comparing(mob -> mob.getPosition().dst(owner.getPosition())))
+                .get();
+        owner.setTarget(target);
     }
 
     private Mob getTarget() {
