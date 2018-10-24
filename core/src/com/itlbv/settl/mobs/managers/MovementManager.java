@@ -27,7 +27,6 @@ public class MovementManager {
     }
 
     public void initMoving() {
-        owner.setState(MobState.WALK);
         chooseMovementType();
         if (useSteering) switchToSteering();
         else switchToPath();
@@ -88,7 +87,6 @@ public class MovementManager {
     }
 
     public void stopMoving() {
-        owner.setState(MobState.IDLE);
         steeringMovement.disable();
         pathMovement.clearPath();
         linearVelocity.set(0f, 0f);

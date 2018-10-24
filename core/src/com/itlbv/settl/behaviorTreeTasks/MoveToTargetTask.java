@@ -6,16 +6,18 @@ import com.itlbv.settl.mobs.managers.TaskManager;
 import com.itlbv.settl.mobs.utils.MobState;
 import com.itlbv.settl.mobs.Mob;
 
-public class ApproachTargetTask extends LeafTask<Mob> {
+public class MoveToTargetTask extends LeafTask<Mob> {
     @Override
     public Status execute() {
         Mob owner = getObject();
         if (owner.isTargetWithinReach()) {
-            owner.getTaskManager().stopMoving();
+            owner.stopMoving();
             return Status.SUCCEEDED;
         } else {
+            owner.move();
             return Status.RUNNING;
         }
+
     }
 
     @Override

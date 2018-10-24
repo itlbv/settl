@@ -20,42 +20,7 @@ public class TaskManager {
         this.actionManager = actionManager;
     }
 
-    public void initFightingEnemy() {
-        actionManager.initFighting();
-    }
 
-    public void initMovingToTarget() {
-        Objects.requireNonNull(getTarget());
-        movementManager.initMoving();
-    }
-
-    public void stopMoving() {
-        movementManager.stopMoving();
-    }
-
-    private final float enemyCheckFreq = 1f;
-    private float enemyCheckTimeCount = 0f;
-    public void chooseEnemy() {
-        if (getTarget() == null) chooseClosestEnemy();
-        enemyCheckTimeCount += Game.DELTA_TIME;
-        if (enemyCheckTimeCount > enemyCheckFreq){
-            enemyCheckTimeCount = 0;
-            chooseClosestEnemy();
-        }
-    }
-
-    private void chooseClosestEnemy() {
-        List<Mob> potentialTargets = Game.mobs.stream()
-                .filter(mob -> mob.getType() != owner.getType())
-                .collect(Collectors.toList());
-        if (potentialTargets.size() == 0) return;
-        Mob target = potentialTargets.stream()
-                .min(Comparator.comparing(mob -> mob.getPosition().dst(owner.getPosition())))
-                .get();
-
-        System.out.println("choosing closest enemy");
-        setTarget(target);
-    }
 
     private GameObject getTarget() {
         return owner.getTarget();

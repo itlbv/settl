@@ -2,7 +2,6 @@ package com.itlbv.settl.mobs;
 
 import com.badlogic.gdx.ai.btree.BehaviorTree;
 import com.badlogic.gdx.ai.btree.utils.BehaviorTreeLibraryManager;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.GameObject;
 import com.itlbv.settl.GameWorld;
@@ -17,6 +16,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static com.itlbv.settl.mobs.utils.MobState.IDLE;
+import static com.itlbv.settl.mobs.utils.MobState.WALK;
 
 public class Mob extends GameObject {
     private final MovementManager movementManager;
@@ -35,7 +37,7 @@ public class Mob extends GameObject {
         super(type, renderWidth, renderHeight);
         this.alive = true;
         this.type = type;
-        this.state = MobState.IDLE;
+        this.state = IDLE;
         this.movementManager = new MovementManager(speed, this);
         this.animationManager = new AnimationManager(this);
         this.actionManager = new ActionManager(this);
@@ -45,10 +47,52 @@ public class Mob extends GameObject {
 
     public void update() {
         bhvTree.step();
-        movementManager.update();
-        actionManager.update();
         animationManager.update();
         updateRenderPosition();
+    }
+
+    public void startMoving() {
+        Objects.requireNonNull(getTarget());
+        setState(WALK);
+        movementManager.initMoving();
+    }
+
+    public void move() {
+        movementManager.update();
+    }
+
+    public void stopMoving() {
+        setState(IDLE);
+        movementManager.stopMoving();
+    }
+
+    private final float enemyCheckFreq = 1f;
+    private float enemyCheckTimeCount = 0f;
+    public void chooseEnemy() {
+        if (getTarget() == null) chooseClosestEnemy();
+        enemyCheckTimeCount += Game.DELTA_TIME;
+        if (enemyCheckTimeCount > enemyCheckFreq){
+            enemyCheckTimeCount = 0;
+            chooseClosestEnemy();
+        }
+    }
+    private void chooseClosestEnemy() {
+        List<Mob> potentialTargets = Game.mobs.stream()
+                .filter(mob -> mob.getType() != getType())
+                .collect(Collectors.toList());
+        if (potentialTargets.size() == 0) return;
+        Mob target = potentialTargets.stream()
+                .min(Comparator.comparing(mob -> mob.getPosition().dst(getPosition())))
+                .get();
+        setTarget(target);
+    }
+
+    public void startFighting() {
+        actionManager.startFighting();
+    }
+
+    public void fight() {
+        actionManager.update();
     }
 
     public void defend() {

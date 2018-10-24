@@ -24,7 +24,7 @@ public class ActionManager {
         }
     }
 
-    public void initFighting() {
+    public void startFighting() {
         actionState = ActionState.IN_FIGHT;
         fight();
     }
@@ -37,7 +37,7 @@ public class ActionManager {
         if (fightingTimeCount > ATTACK_FREQ) {
             if (MathUtils.randomBoolean(.3f)) {
                 fightingTimeCount = 0;
-                attack();
+                attack(); //TODO crashes when target is dead and higher in list of mobs
             }
         }
     }
@@ -57,11 +57,9 @@ public class ActionManager {
 
     private void hold() {
         onHoldTimeCount += Game.DELTA_TIME;
-        //System.out.println(owner.getClass().getSimpleName() + " ON HOLD " + Game.RENDER_ITERATION);
         if (onHoldTimeCount > HOLD_TIME) {
             owner.setState(MobState.GOT_HIT);
             owner.minusHitpoint();
-            //System.out.println(owner.getClass().getSimpleName() + " GOT HIT " + Game.RENDER_ITERATION);
             actionState = ActionState.IN_FIGHT;
             fightingTimeCount = 0;
             getTarget().setFightingTimeCountToZero();

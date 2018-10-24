@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class ChooseEnemyTask extends LeafTask<Mob>{
     @Override
     public Status execute() {
-        getObject().getTaskManager().chooseEnemy();
+        getObject().chooseEnemy();
         return Status.SUCCEEDED;
     }
 

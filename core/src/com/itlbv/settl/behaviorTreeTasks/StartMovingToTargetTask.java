@@ -4,10 +4,10 @@ import com.badlogic.gdx.ai.btree.LeafTask;
 import com.badlogic.gdx.ai.btree.Task;
 import com.itlbv.settl.mobs.Mob;
 
-public class InitializeMovingToTargetTask extends LeafTask<Mob> {
+public class StartMovingToTargetTask extends LeafTask<Mob> {
     @Override
     public Status execute() {
-        getObject().getTaskManager().initMovingToTarget();
+        getObject().startMoving();
         return Status.SUCCEEDED;
 }
 

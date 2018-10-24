@@ -1,16 +1,16 @@
 import chooseEnemy:"com.itlbv.settl.behaviorTreeTasks.ChooseEnemyTask"
-import initializeMovingToTarget:"com.itlbv.settl.behaviorTreeTasks.InitializeMovingToTargetTask"
+import startMovingToTarget:"com.itlbv.settl.behaviorTreeTasks.StartMovingToTargetTask"
 import isTargetWithinReach?:"com.itlbv.settl.behaviorTreeTasks.IsTargetWithinReachCondition"
 import isEnemyAround?:"com.itlbv.settl.behaviorTreeTasks.IsEnemyAroundCondition"
-import approachTarget:"com.itlbv.settl.behaviorTreeTasks.ApproachTargetTask"
+import moveToTarget:"com.itlbv.settl.behaviorTreeTasks.MoveToTargetTask"
 import fightEnemy:"com.itlbv.settl.behaviorTreeTasks.FightEnemyTask"
 import startFighting:"com.itlbv.settl.behaviorTreeTasks.StartFightingTask"
 import doNothing:"com.itlbv.settl.behaviorTreeTasks.DoNothingTask"
 
 subtree name: "killEnemy"
     sequence
-        initializeMovingToTarget
-        approachTarget
+        startMovingToTarget
+        moveToTarget
         startFighting
         (isTargetWithinReach?) fightEnemy
 

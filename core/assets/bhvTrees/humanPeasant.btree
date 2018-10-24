@@ -1,4 +1,0 @@
-import doNothing:"com.itlbv.settl.behaviorTreeTasks.DoNothingTask"
-
-root
-    doNothing

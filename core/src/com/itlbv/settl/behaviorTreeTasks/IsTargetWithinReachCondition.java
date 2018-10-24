@@ -8,11 +8,8 @@ public class IsTargetWithinReachCondition extends LeafTask<Mob> {
     @Override
     public Status execute() {
         Mob owner = getObject();
-        if (owner.isTargetWithinReach()) {
-            return Status.SUCCEEDED;
-        } else {
-            return Status.FAILED;
-        }
+        if (owner.isTargetWithinReach()) return Status.SUCCEEDED;
+        else return Status.FAILED;
     }
 
     @Override

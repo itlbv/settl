@@ -7,7 +7,7 @@ import com.itlbv.settl.mobs.Mob;
 public class StartFightingTask extends LeafTask<Mob> {
     @Override
     public Status execute() {
-        getObject().getTaskManager().initFightingEnemy();
+        getObject().startFighting();
         return Status.SUCCEEDED;
     }
 
