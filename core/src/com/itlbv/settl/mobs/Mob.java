@@ -2,20 +2,15 @@ package com.itlbv.settl.mobs;
 
 import com.badlogic.gdx.ai.btree.BehaviorTree;
 import com.badlogic.gdx.ai.btree.utils.BehaviorTreeLibraryManager;
-import com.itlbv.settl.Game;
 import com.itlbv.settl.GameObject;
 import com.itlbv.settl.GameWorld;
-import com.itlbv.settl.mobs.managers.TaskManager;
 import com.itlbv.settl.mobs.utils.MobAnimationState;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
 import com.itlbv.settl.mobs.managers.AnimationManager;
 import com.itlbv.settl.mobs.managers.ActionManager;
 import com.itlbv.settl.mobs.managers.MovementManager;
 
-import java.util.Comparator;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static com.itlbv.settl.mobs.utils.MobAnimationState.IDLE;
 import static com.itlbv.settl.mobs.utils.MobAnimationState.WALK;
@@ -24,7 +19,6 @@ public class Mob extends GameObject {
     private final MovementManager movementManager;
     private final AnimationManager animationManager;
     private final ActionManager actionManager;
-    private final TaskManager taskManager;
     private BehaviorTree<Mob> bhvTree;
     private MobObjectType type;
     private MobAnimationState state;
@@ -41,7 +35,6 @@ public class Mob extends GameObject {
         this.movementManager = new MovementManager(speed, this);
         this.animationManager = new AnimationManager(this);
         this.actionManager = new ActionManager(this);
-        this.taskManager = new TaskManager(this, movementManager, actionManager);
         setBhvTree(bhvTree);
     }
 
