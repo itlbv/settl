@@ -6,16 +6,23 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.GameObject;
 import com.itlbv.settl.GameWorld;
+import com.itlbv.settl.mobs.managers.TaskManager;
 import com.itlbv.settl.mobs.utils.MobState;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
 import com.itlbv.settl.mobs.managers.AnimationManager;
 import com.itlbv.settl.mobs.managers.ActionManager;
 import com.itlbv.settl.mobs.managers.MovementManager;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 public class Mob extends GameObject {
     private final MovementManager movementManager;
     private final AnimationManager animationManager;
     private final ActionManager actionManager;
+    private final TaskManager taskManager;
     private BehaviorTree<Mob> bhvTree;
     private MobObjectType type;
     private MobState state;
@@ -32,33 +39,16 @@ public class Mob extends GameObject {
         this.movementManager = new MovementManager(speed, this);
         this.animationManager = new AnimationManager(this);
         this.actionManager = new ActionManager(this);
+        this.taskManager = new TaskManager(this, movementManager, actionManager);
         setBhvTree(bhvTree);
     }
 
     public void update() {
         bhvTree.step();
         movementManager.update();
+        actionManager.update();
         animationManager.update();
         updateRenderPosition();
-    }
-
-    public void initMoving() {
-        if (target == null) {
-            return;
-        }
-        movementManager.initMoving();
-    }
-
-    public void stopMoving() {
-        movementManager.stopMoving();
-    }
-
-    public void initFighting() {
-        actionManager.initFighting();
-    }
-
-    public void fight() {
-        actionManager.update();
     }
 
     public void defend() {
@@ -125,7 +115,11 @@ public class Mob extends GameObject {
         this.state = state;
     }
 
-    public void setBhvTree(String bhvTree) {
+    private void setBhvTree(String bhvTree) {
         this.bhvTree = BehaviorTreeLibraryManager.getInstance().createBehaviorTree(bhvTree, this);
+    }
+
+    public TaskManager getTaskManager() {
+        return taskManager;
     }
 }

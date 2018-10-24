@@ -7,24 +7,17 @@ import fightEnemy:"com.itlbv.settl.behaviorTreeTasks.FightEnemyTask"
 import startFighting:"com.itlbv.settl.behaviorTreeTasks.StartFightingTask"
 import doNothing:"com.itlbv.settl.behaviorTreeTasks.DoNothingTask"
 
-subtree name: "enemyAround?"
-    isEnemyAround?
-
-subtree name: "targetWithinReach?"
-    isTargetWithinReach?
-
 subtree name: "killEnemy"
     sequence
-        chooseEnemy
         initializeMovingToTarget
         approachTarget
         startFighting
-        ($targetWithinReach?) fightEnemy
+        (isTargetWithinReach?) fightEnemy
 
 subtree name: "todoNothing"
     doNothing
 
 root
      dynamicGuardSelector
-      ($enemyAround?) $killEnemy
+      (isEnemyAround?) (chooseEnemy) $killEnemy
       () $todoNothing

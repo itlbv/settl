@@ -7,9 +7,7 @@ import com.itlbv.settl.mobs.Mob;
 public class InitializeMovingToTargetTask extends LeafTask<Mob> {
     @Override
     public Status execute() {
-        Mob owner = getObject();
-        owner.initMoving();
-        System.out.println(owner.getClass().getSimpleName() + " initializing movement to target");
+        getObject().getTaskManager().initMovingToTarget();
         return Status.SUCCEEDED;
 }
 
