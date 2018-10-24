@@ -88,7 +88,7 @@ public class BodyFactory {
         Body body = GameWorld.world.createBody(bodyDef);
         CircleShape circleShape = new CircleShape();
         if (isSensor) {
-            circleShape.setRadius(1.2f);
+            circleShape.setRadius(1f);
         } else {
             circleShape.setRadius(.3f);
         }
