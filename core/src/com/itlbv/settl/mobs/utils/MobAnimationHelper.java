@@ -15,7 +15,7 @@ public class MobAnimationHelper {
     private static Texture orcShaman01 = new Texture("textures/mobs/orcShaman01.png");
     private static Texture orcShaman02 = new Texture("textures/mobs/orcShaman02.png");
 
-    public static Animation<TextureRegion> getAnimation(MobObjectType type, MobState state) {
+    public static Animation<TextureRegion> getAnimation(MobObjectType type, MobAnimationState state) {
         Texture textureOfType = getTextureOfType(type);
         return getAnimationOfState(textureOfType, state);
     }
@@ -33,7 +33,7 @@ public class MobAnimationHelper {
         }
     }
 
-    private static Animation<TextureRegion> getAnimationOfState(Texture textureOfType, MobState state) {
+    private static Animation<TextureRegion> getAnimationOfState(Texture textureOfType, MobAnimationState state) {
         switch (state) {
             case IDLE:
                 return getIdle(textureOfType);

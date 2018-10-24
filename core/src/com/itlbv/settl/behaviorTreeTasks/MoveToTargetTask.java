@@ -2,8 +2,6 @@ package com.itlbv.settl.behaviorTreeTasks;
 
 import com.badlogic.gdx.ai.btree.LeafTask;
 import com.badlogic.gdx.ai.btree.Task;
-import com.itlbv.settl.mobs.managers.TaskManager;
-import com.itlbv.settl.mobs.utils.MobState;
 import com.itlbv.settl.mobs.Mob;
 
 public class MoveToTargetTask extends LeafTask<Mob> {

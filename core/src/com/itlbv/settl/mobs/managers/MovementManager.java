@@ -7,7 +7,6 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.itlbv.settl.*;
 import com.itlbv.settl.mobs.Mob;
-import com.itlbv.settl.mobs.utils.MobState;
 
 public class MovementManager {
     private final Mob owner;

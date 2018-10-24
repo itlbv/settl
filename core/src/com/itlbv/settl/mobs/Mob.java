@@ -6,7 +6,7 @@ import com.itlbv.settl.Game;
 import com.itlbv.settl.GameObject;
 import com.itlbv.settl.GameWorld;
 import com.itlbv.settl.mobs.managers.TaskManager;
-import com.itlbv.settl.mobs.utils.MobState;
+import com.itlbv.settl.mobs.utils.MobAnimationState;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
 import com.itlbv.settl.mobs.managers.AnimationManager;
 import com.itlbv.settl.mobs.managers.ActionManager;
@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.itlbv.settl.mobs.utils.MobState.IDLE;
-import static com.itlbv.settl.mobs.utils.MobState.WALK;
+import static com.itlbv.settl.mobs.utils.MobAnimationState.IDLE;
+import static com.itlbv.settl.mobs.utils.MobAnimationState.WALK;
 
 public class Mob extends GameObject {
     private final MovementManager movementManager;
@@ -27,7 +27,7 @@ public class Mob extends GameObject {
     private final TaskManager taskManager;
     private BehaviorTree<Mob> bhvTree;
     private MobObjectType type;
-    private MobState state;
+    private MobAnimationState state;
 
     private GameObject target;
     private boolean alive;
@@ -103,17 +103,8 @@ public class Mob extends GameObject {
         actionManager.fightingTimeCount = 0;
     }
 
-    public int hitpoints = 2;
-    public void minusHitpoint() {
-        hitpoints--;
-        System.out.println(this.getClass().getSimpleName() + " hitpoints: " + hitpoints);
-        if (hitpoints == 0) {
-            alive = false;
-        }
-    }
-
     public void die() {
-        setState(MobState.DEAD);
+        setState(MobAnimationState.DEAD);
         animationManager.update();
         System.out.println(getClass().getSimpleName() + " is dead");
         GameWorld.world.destroyBody(getBody());
@@ -143,6 +134,10 @@ public class Mob extends GameObject {
         this.targetWithinReach = targetWithinReach;
     }
 
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
+
     public boolean isAlive() {
         return alive;
     }
@@ -151,11 +146,11 @@ public class Mob extends GameObject {
         return !alive;
     }
 
-    public MobState getState() {
+    public MobAnimationState getState() {
         return state;
     }
 
-    public void setState(MobState state) {
+    public void setState(MobAnimationState state) {
         this.state = state;
     }
 

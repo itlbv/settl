@@ -1,6 +1,6 @@
 package com.itlbv.settl.mobs.utils;
 
-public enum MobState {
+public enum MobAnimationState {
     IDLE(false),
     WALK(false),
     ATTACK(true),
@@ -9,7 +9,7 @@ public enum MobState {
 
     private boolean oneTime;
 
-    MobState(boolean oneTime) {
+    MobAnimationState(boolean oneTime) {
         this.oneTime = oneTime;
     }
 

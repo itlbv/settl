@@ -3,7 +3,7 @@ package com.itlbv.settl.mobs.managers;
 import com.badlogic.gdx.math.MathUtils;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.mobs.utils.ActionState;
-import com.itlbv.settl.mobs.utils.MobState;
+import com.itlbv.settl.mobs.utils.MobAnimationState;
 import com.itlbv.settl.mobs.Mob;
 
 public class ActionManager {
@@ -11,7 +11,7 @@ public class ActionManager {
     private ActionState actionState;
     public ActionManager(Mob owner) {
         this.owner = owner;
-        this.actionState = ActionState.IDLE;
+        this.actionState = ActionState.READY_TO_ATTACK;
     }
     public void update() {
         switch (actionState) {
@@ -43,7 +43,7 @@ public class ActionManager {
     }
 
     private void attack() {
-        owner.setState(MobState.ATTACK);
+        owner.setState(MobAnimationState.ATTACK);
         getTarget().defend();
     }
 
@@ -58,11 +58,19 @@ public class ActionManager {
     private void hold() {
         onHoldTimeCount += Game.DELTA_TIME;
         if (onHoldTimeCount > HOLD_TIME) {
-            owner.setState(MobState.GOT_HIT);
-            owner.minusHitpoint();
+            owner.setState(MobAnimationState.GOT_HIT);
+            minusHitpoint();
             actionState = ActionState.IN_FIGHT;
             fightingTimeCount = 0;
             getTarget().setFightingTimeCountToZero();
+        }
+    }
+
+    private int hitpoints = 2;
+    private void minusHitpoint() {
+        hitpoints--;
+        if (hitpoints == 0) {
+            owner.setAlive(false);
         }
     }
 

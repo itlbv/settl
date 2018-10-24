@@ -3,13 +3,13 @@ package com.itlbv.settl.mobs.managers;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.itlbv.settl.Game;
-import com.itlbv.settl.mobs.utils.MobState;
+import com.itlbv.settl.mobs.utils.MobAnimationState;
 import com.itlbv.settl.mobs.Mob;
 import com.itlbv.settl.mobs.utils.MobAnimationHelper;
 
 public class AnimationManager {
     private final Mob owner;
-    private MobState currentState;
+    private MobAnimationState currentState;
     private float animationTime;
     private Animation<TextureRegion> currentAnimation;
 
@@ -77,15 +77,15 @@ public class AnimationManager {
     private void resetAnimationIfFinished() {
         if (currentState.isOneTime() &&
                 currentAnimation.isAnimationFinished(animationTime)) {
-            owner.setState(MobState.IDLE);
+            owner.setState(MobAnimationState.IDLE);
         }
     }
 
     private void initializeTextures() {
-        idle = MobAnimationHelper.getAnimation(owner.getType(), MobState.IDLE);
-        walking = MobAnimationHelper.getAnimation(owner.getType(), MobState.WALK);
-        attack = MobAnimationHelper.getAnimation(owner.getType(), MobState.ATTACK);
-        gotHit = MobAnimationHelper.getAnimation(owner.getType(), MobState.GOT_HIT);
-        dead = MobAnimationHelper.getAnimation(owner.getType(), MobState.DEAD);
+        idle = MobAnimationHelper.getAnimation(owner.getType(), MobAnimationState.IDLE);
+        walking = MobAnimationHelper.getAnimation(owner.getType(), MobAnimationState.WALK);
+        attack = MobAnimationHelper.getAnimation(owner.getType(), MobAnimationState.ATTACK);
+        gotHit = MobAnimationHelper.getAnimation(owner.getType(), MobAnimationState.GOT_HIT);
+        dead = MobAnimationHelper.getAnimation(owner.getType(), MobAnimationState.DEAD);
     }
 }
