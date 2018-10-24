@@ -11,8 +11,8 @@ public class CollisionHandler implements ContactListener {
     private Object o1;
     private Object o2;
 
-    private boolean collisionOfMobs() {
-        return (o1 instanceof Mob) && (o2 instanceof Mob);
+    private boolean notMobsColliding() {
+        return (!(o1 instanceof Mob)) || (!(o2 instanceof Mob));
     }
 
     @Override
@@ -20,7 +20,7 @@ public class CollisionHandler implements ContactListener {
         o1 = contact.getFixtureA().getBody().getUserData();
         o2 = contact.getFixtureB().getBody().getUserData();
         if (o1 == o2) return;
-        if (!collisionOfMobs()) return;
+        if (notMobsColliding()) return;
         if (contact.getFixtureA().isSensor()) processContactForSensor(o1, o2, true);
         else if (contact.getFixtureB().isSensor()) processContactForSensor(o2, o1, true);
     }
@@ -30,7 +30,7 @@ public class CollisionHandler implements ContactListener {
         o1 = contact.getFixtureA().getBody().getUserData();
         o2 = contact.getFixtureB().getBody().getUserData();
         if (o1 == o2) return;
-        if (!collisionOfMobs()) return;
+        if (notMobsColliding()) return;
         if (contact.getFixtureA().isSensor()) processContactForSensor(o1, o2, false);
         else if (contact.getFixtureB().isSensor()) processContactForSensor(o2, o1, false);
     }
