@@ -13,6 +13,7 @@ public class IsEnemyAroundCondition extends LeafTask<Mob> {
         for (Mob mob : Game.mobs) {
             if (mob.getType() != owner.getType()) return Status.SUCCEEDED;
         }
+        owner.stopMoving();
         return Status.FAILED;
     }
 

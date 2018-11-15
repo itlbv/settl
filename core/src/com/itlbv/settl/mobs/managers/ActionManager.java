@@ -41,7 +41,7 @@ public class ActionManager {
         if (fightingTimeCount > ATTACK_FREQ) {
             if (MathUtils.randomBoolean(.3f)) {
                 fightingTimeCount = 0;
-                attack(); //TODO crashes when target is dead and higher in list of mobs
+                attack(); //TODO crashes when target is dead and is placed higher up in list of mobs
             }
         }
     }
