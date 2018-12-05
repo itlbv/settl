@@ -27,6 +27,8 @@ public class Mob extends GameObject {
     private boolean alive;
     private boolean targetWithinReach = false;
 
+    private String stringId;
+
     public Mob(MobObjectType type, String bhvTree, float speed, float renderWidth, float renderHeight) {
         super(type, renderWidth, renderHeight);
         this.alive = true;
@@ -132,5 +134,13 @@ public class Mob extends GameObject {
 
     private void setBhvTree(String bhvTree) {
         this.bhvTree = BehaviorTreeLibraryManager.getInstance().createBehaviorTree(bhvTree, this);
+    }
+
+    public String getStringId() {
+        return stringId;
+    }
+
+    public void setStringId(int stringId) {
+        this.stringId = Integer.toString(stringId);
     }
 }

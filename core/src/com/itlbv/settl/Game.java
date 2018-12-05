@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.Array;
@@ -24,8 +25,11 @@ public class Game extends ApplicationAdapter {
     private static OrthoCamController cameraController;
     private static OrthogonalTiledMapRenderer mapRenderer;
     public static ArrayList<Mob> mobs;
+    public static ArrayList<Mob> humans;
+    public static ArrayList<Mob> orcs;
     private static ArrayList<Mob> deadMobs;
     public static Array<GameObject> testObjects = new Array<>(); //TODO test objects
+    public static BitmapFont font; //TODO font
 
     private static final int VIEWPORT = 40;
     public static float DELTA_TIME = 0;
@@ -50,7 +54,11 @@ public class Game extends ApplicationAdapter {
     private void initializeClassFields() {
         batch = new SpriteBatch();
         mobs = new ArrayList<Mob>();
+        humans = new ArrayList<Mob>();
+        orcs = new ArrayList<Mob>();
         deadMobs = new ArrayList<Mob>();
+        font = new BitmapFont(Gdx.files.internal("fontjava4.fnt"), false);
+        font.getData().setScale(.1f);
     }
 
     private void createCamera() {
@@ -99,10 +107,10 @@ public class Game extends ApplicationAdapter {
         //player2.update();
 
         batch.begin();
+
         drawDeadMobs();
         drawMobs();
         drawTestObjects(); //TODO test objects
-
         //player.draw();
         //player2.draw();
 
@@ -157,7 +165,10 @@ public class Game extends ApplicationAdapter {
     }
 
     private void drawMobs() {
-        mobs.forEach(Mob::draw);
+        for (Mob mob : mobs) {
+            mob.draw();
+            font.draw(batch, mob.getStringId(), mob.getRenderPosition().x, mob.getRenderPosition().y);
+        }
     }
 
     @Override
