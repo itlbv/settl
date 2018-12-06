@@ -11,6 +11,9 @@ public class InputController extends InputAdapter{
     public boolean left;
     public boolean right;
 
+    public boolean zoomIn;
+    public boolean zoomOut;
+
     public boolean debugMode = true;
 
     private OrthographicCamera camera;
@@ -33,6 +36,12 @@ public class InputController extends InputAdapter{
             case Keys.D:
                 right = false;
                 break;
+            case Keys.Q:
+                zoomOut = false;
+                break;
+            case Keys.E:
+                zoomIn = false;
+                break;
         }
         return false;
     }
@@ -51,6 +60,12 @@ public class InputController extends InputAdapter{
                 break;
             case Keys.D:
                 right = true;
+                break;
+            case Keys.Q:
+                zoomOut = true;
+                break;
+            case Keys.E:
+                zoomIn = true;
                 break;
         }
         return false;

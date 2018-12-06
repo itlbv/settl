@@ -151,6 +151,9 @@ public class Game extends ApplicationAdapter {
         if(inputController.left) directionX = -1;
         if(inputController.right) directionX = 1;
 
+        if (inputController.zoomIn) camera.zoom -= .02;
+        if (inputController.zoomOut) camera.zoom += .02;
+
         camera.position.x += directionX * cameraSpeed;
         camera.position.y += directionY * cameraSpeed;
         camera.update();
@@ -201,29 +204,6 @@ public class Game extends ApplicationAdapter {
 
 
     /*
-    private void handleInput() {
-        if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
-            camera.zoom += 0.02;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.E)) {
-            camera.zoom -= 0.02;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            camera.translate(-.5f, 0, 0);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            camera.translate(.5f, 0, 0);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            camera.translate(0, -.5f, 0);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            camera.translate(0, .5f, 0);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-
-        }
-
         camera.zoom = MathUtils.clamp(camera.zoom, 0.1f, 100/camera.viewportWidth);
 
         float effectiveViewportWidth = camera.viewportWidth * camera.zoom;
