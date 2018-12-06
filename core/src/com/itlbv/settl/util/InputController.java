@@ -4,15 +4,17 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.Input.Keys;
 
-public class OrthoCamController extends InputAdapter{
+public class InputController extends InputAdapter{
 
     public boolean up;
     public boolean down;
     public boolean left;
     public boolean right;
 
+    public boolean debugMode = true;
+
     private OrthographicCamera camera;
-    public OrthoCamController (OrthographicCamera camera) {
+    public InputController(OrthographicCamera camera) {
         this.camera = camera;
     }
 
@@ -49,6 +51,16 @@ public class OrthoCamController extends InputAdapter{
                 break;
             case Keys.D:
                 right = true;
+                break;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        switch (character) {
+            case '\b': //BACKSPACE
+                debugMode = !debugMode;
                 break;
         }
         return false;

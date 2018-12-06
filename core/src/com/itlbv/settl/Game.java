@@ -4,7 +4,6 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -17,14 +16,14 @@ import com.itlbv.settl.map.Map;
 import com.itlbv.settl.mobs.Mob;
 import com.itlbv.settl.mobs.utils.MobFactory;
 import com.itlbv.settl.util.CollisionHandler;
-import com.itlbv.settl.util.OrthoCamController;
+import com.itlbv.settl.util.InputController;
 import com.itlbv.settl.util.Player;
 
 import java.util.ArrayList;
 
 public class Game extends ApplicationAdapter {
     private static OrthographicCamera camera;
-    private static OrthoCamController cameraController;
+    private static InputController inputController;
 
     public static World world;
     public static Map map;
@@ -78,8 +77,8 @@ public class Game extends ApplicationAdapter {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, VIEWPORT * (w/h), VIEWPORT);
         camera.position.set(VIEWPORT/2 * (w/h) - 6, VIEWPORT/2 - 5, 0); //todo MAGIC NUMBERS
-        cameraController = new OrthoCamController(camera);
-        Gdx.input.setInputProcessor(cameraController);
+        inputController = new InputController(camera);
+        Gdx.input.setInputProcessor(inputController);
     }
 
     private void createMap() {
@@ -117,6 +116,8 @@ public class Game extends ApplicationAdapter {
         //player.update();
         //player2.update();
 
+        renderDebugInfo();
+
         batch.begin();
 
         drawDeadMobs();
@@ -127,9 +128,14 @@ public class Game extends ApplicationAdapter {
 
         batch.end();
 
-        debugRenderer.render(world, camera.combined);
         world.step(Gdx.app.getGraphics().getDeltaTime(), 6, 2);
         world.clearForces(); //TODO should it be here?
+    }
+
+    private void renderDebugInfo() {
+        if (inputController.debugMode) {
+            debugRenderer.render(world,camera.combined);
+        }
     }
 
     private void updateCamera() {
@@ -140,10 +146,10 @@ public class Game extends ApplicationAdapter {
         int directionY = 0;
         int cameraSpeed = 1;
 
-        if(cameraController.down) directionY = -1 ;
-        if(cameraController.up) directionY = 1 ;
-        if(cameraController.left) directionX = -1;
-        if(cameraController.right) directionX = 1;
+        if(inputController.down) directionY = -1 ;
+        if(inputController.up) directionY = 1 ;
+        if(inputController.left) directionX = -1;
+        if(inputController.right) directionX = 1;
 
         camera.position.x += directionX * cameraSpeed;
         camera.position.y += directionY * cameraSpeed;
@@ -180,7 +186,9 @@ public class Game extends ApplicationAdapter {
     private void drawMobs() {
         for (Mob mob : mobs) {
             mob.draw();
-            font.draw(batch, mob.getStringId(), mob.getRenderPosition().x, mob.getRenderPosition().y);
+            if (inputController.debugMode) {
+                font.draw(batch, mob.getStringId(), mob.getRenderPosition().x, mob.getRenderPosition().y);
+            }
         }
     }
 
