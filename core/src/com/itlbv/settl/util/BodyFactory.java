@@ -5,7 +5,6 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.joints.FrictionJointDef;
 import com.itlbv.settl.Game;
-import com.itlbv.settl.GameWorld;
 import com.itlbv.settl.mobs.Mob;
 
 public class BodyFactory {
@@ -15,7 +14,7 @@ public class BodyFactory {
                                   GameObject ownerSrc, boolean isSensorSrc) {
         setClassFields(widthSrc, heightSrc, bodyTypeSrc, ownerSrc, isSensorSrc);
         createBodyDefinition();
-        body = GameWorld.world.createBody(bodyDef);
+        body = Game.world.createBody(bodyDef);
         createPolygonShapeAndFixtureDef();
         body.setUserData(owner);
         return body;
@@ -60,7 +59,7 @@ public class BodyFactory {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = bodyType;
         bodyDef.position.set(x, y);
-        body = GameWorld.world.createBody(bodyDef);
+        body = Game.world.createBody(bodyDef);
         PolygonShape polygonShape = new PolygonShape();
         //polygonShape.setAsBox(.5f,.5f);
         FixtureDef fixtureDef = new FixtureDef();
@@ -78,14 +77,14 @@ public class BodyFactory {
         FrictionJointDef jointDef = new FrictionJointDef();
         jointDef.initialize(ownerBody, Game.map.mapSensor, ownerBody.getPosition());
         jointDef.maxForce = 25;
-        GameWorld.world.createJoint(jointDef);
+        Game.world.createJoint(jointDef);
     }
 
     public static Body createAndGetMobBody(int x, int y, Mob owner, boolean isSensor) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyType.DynamicBody;
         bodyDef.position.set(x, y);
-        Body body = GameWorld.world.createBody(bodyDef);
+        Body body = Game.world.createBody(bodyDef);
         CircleShape circleShape = new CircleShape();
         if (isSensor) {
             circleShape.setRadius(1f);
@@ -115,7 +114,7 @@ public class BodyFactory {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyType.StaticBody;
         bodyDef.position.set(x, y);
-        Body body = GameWorld.world.createBody(bodyDef);
+        Body body = Game.world.createBody(bodyDef);
         PolygonShape polygonShape = new PolygonShape();
         polygonShape.setAsBox(.5f, .5f);
         FixtureDef fixtureDef = new FixtureDef();
@@ -153,7 +152,7 @@ public class BodyFactory {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
         bodyDef.position.set(x, y);
-        tileBody = GameWorld.world.createBody(bodyDef);
+        tileBody = Game.world.createBody(bodyDef);
         PolygonShape polygonShape = new PolygonShape();
         polygonShape.setAsBox(.5f, .5f);
         FixtureDef fixtureDef = new FixtureDef();
@@ -184,7 +183,7 @@ public class BodyFactory {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
         bodyDef.position.set(-5, -5);
-        mapSensor = GameWorld.world.createBody(bodyDef);
+        mapSensor = Game.world.createBody(bodyDef);
         PolygonShape polygonShape = new PolygonShape();
         polygonShape.setAsBox(5/2, 5/2);
         FixtureDef fixtureDef = new FixtureDef();

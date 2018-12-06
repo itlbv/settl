@@ -101,7 +101,7 @@ public class MovementManager {
             return false;
         }
         Ray<Vector2> rayToTarget = new Ray<>(owner.getPosition(), getTarget().getPosition());
-        GameWorld.world.rayCast(collisionDetector, rayToTarget.start, rayToTarget.end);
+        Game.world.rayCast(collisionDetector, rayToTarget.start, rayToTarget.end);
         return !collisionDetector.collided;
     }
 

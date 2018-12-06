@@ -2,8 +2,8 @@ package com.itlbv.settl.mobs;
 
 import com.badlogic.gdx.ai.btree.BehaviorTree;
 import com.badlogic.gdx.ai.btree.utils.BehaviorTreeLibraryManager;
+import com.itlbv.settl.Game;
 import com.itlbv.settl.GameObject;
-import com.itlbv.settl.GameWorld;
 import com.itlbv.settl.mobs.utils.MobAnimationState;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
 import com.itlbv.settl.mobs.managers.AnimationManager;
@@ -85,8 +85,8 @@ public class Mob extends GameObject {
         setState(MobAnimationState.DEAD);
         animationManager.update();
         System.out.println(getClass().getSimpleName() + " is dead");
-        GameWorld.world.destroyBody(getBody());
-        GameWorld.world.destroyBody(getSensor());
+        Game.world.destroyBody(getBody());
+        Game.world.destroyBody(getSensor());
     }
 
     /*

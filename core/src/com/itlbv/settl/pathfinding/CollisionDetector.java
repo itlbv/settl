@@ -9,7 +9,6 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
 import com.itlbv.settl.Game;
-import com.itlbv.settl.GameWorld;
 import com.itlbv.settl.map.Map;
 import com.itlbv.settl.map.Node;
 
@@ -21,7 +20,7 @@ public class CollisionDetector implements RaycastCollisionDetector<Vector2> {
 
     CollisionDetector () {
         map = Game.map;
-        this.world = GameWorld.world;
+        this.world = Game.world;
         this.callback = new Box2dRaycastCallback();
     }
 

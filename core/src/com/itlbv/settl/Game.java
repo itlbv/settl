@@ -8,28 +8,34 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
 import com.itlbv.settl.map.Map;
 import com.itlbv.settl.mobs.Mob;
 import com.itlbv.settl.mobs.utils.MobFactory;
+import com.itlbv.settl.util.CollisionHandler;
 import com.itlbv.settl.util.OrthoCamController;
 import com.itlbv.settl.util.Player;
 
 import java.util.ArrayList;
 
 public class Game extends ApplicationAdapter {
-    public static SpriteBatch batch;
-    public static Map map;
     private static OrthographicCamera camera;
     private static OrthoCamController cameraController;
+
+    public static World world;
+    public static Map map;
     private static OrthogonalTiledMapRenderer mapRenderer;
+    private static Box2DDebugRenderer debugRenderer;
+    public static SpriteBatch batch;
+
     public static ArrayList<Mob> mobs;
     public static ArrayList<Mob> humans;
     public static ArrayList<Mob> orcs;
     private static ArrayList<Mob> deadMobs;
-    public static Array<GameObject> testObjects = new Array<>(); //TODO test objects
-    public static BitmapFont font; //TODO font
 
     private static final int VIEWPORT = 40;
     public static float DELTA_TIME = 0;
@@ -37,6 +43,8 @@ public class Game extends ApplicationAdapter {
 
     public static Player player;
     public static Player player2;
+    public static Array<GameObject> testObjects = new Array<>(); //TODO test objects
+    public static BitmapFont font; //TODO font
 
 
     @Override
@@ -52,6 +60,9 @@ public class Game extends ApplicationAdapter {
     }
 
     private void initializeClassFields() {
+        world = new World(new Vector2(.0f, .0f), true);
+        world.setContactListener(new CollisionHandler());
+        debugRenderer = new Box2DDebugRenderer();
         batch = new SpriteBatch();
         mobs = new ArrayList<Mob>();
         humans = new ArrayList<Mob>();
@@ -116,7 +127,9 @@ public class Game extends ApplicationAdapter {
 
         batch.end();
 
-        GameWorld.tick(camera);
+        debugRenderer.render(world, camera.combined);
+        world.step(Gdx.app.getGraphics().getDeltaTime(), 6, 2);
+        world.clearForces(); //TODO should it be here?
     }
 
     private void updateCamera() {

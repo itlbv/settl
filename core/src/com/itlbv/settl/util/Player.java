@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.joints.FrictionJoint;
 import com.badlogic.gdx.physics.box2d.joints.FrictionJointDef;
 import com.itlbv.settl.Game;
-import com.itlbv.settl.GameWorld;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
 import com.itlbv.settl.mobs.Mob;
 
@@ -29,7 +28,7 @@ public class Player extends Mob {
         FrictionJointDef jointDef = new FrictionJointDef();
         jointDef.initialize(getBody(), Game.map.mapSensor, getBody().getPosition());
         jointDef.maxForce = 25;
-        GameWorld.world.createJoint(jointDef);
+        Game.world.createJoint(jointDef);
     }
 
     public void update() {
