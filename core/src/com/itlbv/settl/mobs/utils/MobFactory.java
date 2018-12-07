@@ -6,12 +6,17 @@ import com.itlbv.settl.Game;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
 import com.itlbv.settl.mobs.Mob;
 import com.itlbv.settl.util.BodyFactory;
+import org.slf4j.Logger;
 
 import static com.itlbv.settl.mobs.utils.MobConstants.MOB_RENDER_HEIGHT;
 import static com.itlbv.settl.mobs.utils.MobConstants.MOB_RENDER_WIDTH;
 import static com.itlbv.settl.mobs.utils.MobConstants.MOB_SPEED;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class MobFactory {
+
+    private static final Logger log = getLogger(MobFactory.class);
+
     public static Mob createMobAtRandomPosition(boolean rightMapSide, MobObjectType type) {
         int mapWidth = Game.map.getWidth();
         int mapHeight = Game.map.getHeight();
@@ -37,6 +42,7 @@ public class MobFactory {
         mob.updateRenderPosition();
         Game.mobs.add(mob);
         mob.setId(Game.mobs.size());
+        log.info(mob + " created");
         return mob;
     }
 }
