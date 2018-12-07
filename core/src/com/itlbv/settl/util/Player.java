@@ -14,7 +14,7 @@ public class Player extends Mob {
     FrictionJoint joint;
 
     public Player(float x, float y) {
-        super(MobObjectType.HUMAN_PEASANT, "", 1f, x, y);
+        super(MobObjectType.PEASANT, "", 1f, x, y);
         //super.setTexture(new TextureRegion(new Texture("black_dot.png")));
         UP = new Vector2(0, 0);
         DOWN = new Vector2(0, 0);

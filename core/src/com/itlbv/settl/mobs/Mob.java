@@ -27,7 +27,7 @@ public class Mob extends GameObject {
     private boolean alive;
     private boolean targetWithinReach = false;
 
-    private String stringId;
+    private int id;
 
     public Mob(MobObjectType type, String bhvTree, float speed, float renderWidth, float renderHeight) {
         super(type, renderWidth, renderHeight);
@@ -84,9 +84,14 @@ public class Mob extends GameObject {
     public void die() {
         setState(MobAnimationState.DEAD);
         animationManager.update();
-        System.out.println(getClass().getSimpleName() + " is dead");
+        System.out.println(this + " is dead");
         Game.world.destroyBody(getBody());
         Game.world.destroyBody(getSensor());
+    }
+
+    @Override
+    public String toString() {
+        return type.toString() + "_" + id;
     }
 
     /*
@@ -136,11 +141,11 @@ public class Mob extends GameObject {
         this.bhvTree = BehaviorTreeLibraryManager.getInstance().createBehaviorTree(bhvTree, this);
     }
 
-    public String getStringId() {
-        return stringId;
+    public int getId() {
+        return id;
     }
 
-    public void setStringId(int stringId) {
-        this.stringId = Integer.toString(stringId);
+    public void setId(int id) {
+        this.id = id;
     }
 }

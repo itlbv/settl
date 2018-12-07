@@ -35,19 +35,8 @@ public class MobFactory {
         mob.setBody(mobBody);
         mob.setSensor(mobSensor);
         mob.updateRenderPosition();
-
-        switch (type) {
-            case HUMAN_KNIGHT:
-                Game.humans.add(mob);
-                mob.setStringId(Game.humans.size());
-                break;
-            case ORC_SHAMAN:
-                Game.orcs.add(mob);
-                mob.setStringId(Game.orcs.size());
-                break;
-            default:
-                break;
-        }
+        Game.mobs.add(mob);
+        mob.setId(Game.mobs.size());
         return mob;
     }
 }

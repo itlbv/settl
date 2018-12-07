@@ -94,12 +94,10 @@ public class Game extends ApplicationAdapter {
 
     private void createMobs() {
         for (int i = 0; i < 5; i++) {
-            Mob mob = MobFactory.createMobAtRandomPosition(false, MobObjectType.HUMAN_KNIGHT);
-            mobs.add(mob);
+            MobFactory.createMobAtRandomPosition(false, MobObjectType.KNIGHT);
         }
         for (int i = 0; i < 5; i++) {
-            Mob mob = MobFactory.createMobAtRandomPosition(true, MobObjectType.ORC_SHAMAN);
-            mobs.add(mob);
+            MobFactory.createMobAtRandomPosition(true, MobObjectType.ORC);
         }
     }
 
@@ -190,7 +188,7 @@ public class Game extends ApplicationAdapter {
         for (Mob mob : mobs) {
             mob.draw();
             if (inputController.debugMode) {
-                font.draw(batch, mob.getStringId(), mob.getRenderPosition().x, mob.getRenderPosition().y);
+                font.draw(batch, Integer.toString(mob.getId()), mob.getRenderPosition().x, mob.getRenderPosition().y);
             }
         }
     }

@@ -22,11 +22,11 @@ public class MobAnimationHelper {
 
     private static Texture getTextureOfType(MobObjectType type) {
         switch (type) {
-            case HUMAN_PEASANT:
+            case PEASANT:
                 return man01;
-            case HUMAN_KNIGHT:
+            case KNIGHT:
                 return knight01;
-            case ORC_SHAMAN:
+            case ORC:
                 return orcShaman01;
             default:
                 return man01;
