@@ -22,8 +22,9 @@ import com.itlbv.settl.util.Player;
 import java.util.ArrayList;
 
 public class Game extends ApplicationAdapter {
-    private static OrthographicCamera camera;
     private static InputController inputController;
+    private static OrthographicCamera worldCamera;
+    private static OrthographicCamera uiCamera;
 
     public static World world;
     public static Map map;
@@ -49,7 +50,8 @@ public class Game extends ApplicationAdapter {
     @Override
     public void create() {
         initializeClassFields();
-        createCamera();
+        createWorldCamera();
+        createUiCamera();
         createMap();
         createMapRenderer();
         createMobs();
@@ -67,18 +69,25 @@ public class Game extends ApplicationAdapter {
         humans = new ArrayList<Mob>();
         orcs = new ArrayList<Mob>();
         deadMobs = new ArrayList<Mob>();
-        font = new BitmapFont(Gdx.files.internal("fontjava4.fnt"), false);
-        font.getData().setScale(.1f);
+        font = new BitmapFont(Gdx.files.internal("font26.fnt"), false);
+        //font.getData().setScale(.1f);
     }
 
-    private void createCamera() {
+    private void createWorldCamera() {
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, VIEWPORT * (w/h), VIEWPORT);
-        camera.position.set(VIEWPORT/2 * (w/h) - 6, VIEWPORT/2 - 5, 0); //todo MAGIC NUMBERS
-        inputController = new InputController(camera);
+        worldCamera = new OrthographicCamera();
+        worldCamera.setToOrtho(false, VIEWPORT * (w/h), VIEWPORT);
+        worldCamera.position.set(VIEWPORT/2 * (w/h) - 6, VIEWPORT/2 - 5, 0); //todo MAGIC NUMBERS
+        inputController = new InputController(worldCamera);
         Gdx.input.setInputProcessor(inputController);
+    }
+
+    private void createUiCamera() {
+        float w = Gdx.graphics.getWidth();
+        float h = Gdx.graphics.getHeight();
+        uiCamera = new OrthographicCamera();
+        uiCamera.setToOrtho(false, 1024 * (w/h), 1024);
     }
 
     private void createMap() {
@@ -89,7 +98,7 @@ public class Game extends ApplicationAdapter {
     private void createMapRenderer() {
         float unitScale = (float) 1/GameConstants.TILE_SIZE_PXL;
         mapRenderer = new OrthogonalTiledMapRenderer(map.getMap(), unitScale);
-        mapRenderer.setView(camera);
+        mapRenderer.setView(worldCamera);
     }
 
     private void createMobs() {
@@ -105,10 +114,11 @@ public class Game extends ApplicationAdapter {
     public void render() {
         RENDER_ITERATION++;
         updateDeltaTime();
-        updateCamera();
+        updateWorldCamera();
+        uiCamera.update();
         updateMobs();
 
-        mapRenderer.setView(camera);
+        mapRenderer.setView(worldCamera);
         mapRenderer.render();
 
         //player.update();
@@ -124,21 +134,31 @@ public class Game extends ApplicationAdapter {
         //player.draw();
         //player2.draw();
 
+        drawText();
+
         batch.end();
 
         world.step(Gdx.app.getGraphics().getDeltaTime(), 6, 2);
         world.clearForces(); //TODO should it be here?
     }
 
-    private void renderDebugInfo() {
-        if (inputController.debugMode) {
-            debugRenderer.render(world,camera.combined);
+    private void drawText() {
+        batch.setProjectionMatrix(uiCamera.combined);
+        for (Mob mob : mobs) {
+            //font.draw(batch, Integer.toString(mob.getId()), mob.getRenderPosition().x, mob.getRenderPosition().y);
+            font.draw(batch, "test text", 20, 20);
         }
     }
 
-    private void updateCamera() {
+    private void renderDebugInfo() {
+        if (inputController.debugMode) {
+            debugRenderer.render(world, worldCamera.combined);
+        }
+    }
+
+    private void updateWorldCamera() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        batch.setProjectionMatrix(camera.combined);
+        batch.setProjectionMatrix(worldCamera.combined);
 
         int directionX = 0;
         int directionY = 0;
@@ -149,12 +169,12 @@ public class Game extends ApplicationAdapter {
         if(inputController.left) directionX = -1;
         if(inputController.right) directionX = 1;
 
-        if (inputController.zoomIn) camera.zoom -= .02;
-        if (inputController.zoomOut) camera.zoom += .02;
+        if (inputController.zoomIn) worldCamera.zoom -= .02;
+        if (inputController.zoomOut) worldCamera.zoom += .02;
 
-        camera.position.x += directionX * cameraSpeed;
-        camera.position.y += directionY * cameraSpeed;
-        camera.update();
+        worldCamera.position.x += directionX * cameraSpeed;
+        worldCamera.position.y += directionY * cameraSpeed;
+        worldCamera.update();
     }
 
     private void updateMobs() {
@@ -187,28 +207,28 @@ public class Game extends ApplicationAdapter {
     private void drawMobs() {
         for (Mob mob : mobs) {
             mob.draw();
-            if (inputController.debugMode) {
-                font.draw(batch, Integer.toString(mob.getId()), mob.getRenderPosition().x, mob.getRenderPosition().y);
-            }
+            //if (inputController.debugMode) {
+            //    font.draw(batch, Integer.toString(mob.getId()), mob.getRenderPosition().x, mob.getRenderPosition().y);
+            //}
         }
     }
 
     @Override
     public void resize(int width, int height) {
-        camera.viewportWidth = VIEWPORT;
-        camera.viewportHeight = VIEWPORT * height/width;
-        camera.update();
+        worldCamera.viewportWidth = VIEWPORT;
+        worldCamera.viewportHeight = VIEWPORT * height/width;
+        worldCamera.update();
     }
 
 
     /*
-        camera.zoom = MathUtils.clamp(camera.zoom, 0.1f, 100/camera.viewportWidth);
+        worldCamera.zoom = MathUtils.clamp(worldCamera.zoom, 0.1f, 100/worldCamera.viewportWidth);
 
-        float effectiveViewportWidth = camera.viewportWidth * camera.zoom;
-        float effectiveViewportHeight = camera.viewportHeight * camera.zoom;
+        float effectiveViewportWidth = worldCamera.viewportWidth * worldCamera.zoom;
+        float effectiveViewportHeight = worldCamera.viewportHeight * worldCamera.zoom;
 
-        camera.position.x = MathUtils.clamp(camera.position.x, effectiveViewportWidth / 2f, 100 - effectiveViewportWidth / 2f);
-        camera.position.y = MathUtils.clamp(camera.position.y, effectiveViewportHeight / 2f, 100 - effectiveViewportHeight / 2f);
+        worldCamera.position.x = MathUtils.clamp(worldCamera.position.x, effectiveViewportWidth / 2f, 100 - effectiveViewportWidth / 2f);
+        worldCamera.position.y = MathUtils.clamp(worldCamera.position.y, effectiveViewportHeight / 2f, 100 - effectiveViewportHeight / 2f);
     }
     */
     private void updateDeltaTime() {
