@@ -138,34 +138,31 @@ public class Game extends ApplicationAdapter {
 
     @Override
     public void render() {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // clears the screen
 
         RENDER_ITERATION++;
         updateDeltaTime();
         updateCamera();
-        debugCamera.update();
         updateMobs();
 
-        mapRenderer.setView(camera);
-        mapRenderer.render();
-
-        drawGame();
+        drawGameObjects();
         drawDebugInfo();
-
-        stage.act(DELTA_TIME);
-        stage.draw();
 
         world.step(Gdx.app.getGraphics().getDeltaTime(), 6, 2);
         world.clearForces(); //TODO should it be here?
     }
 
-    private void drawGame() {
+    private void drawGameObjects() {
+        mapRenderer.setView(camera);
+        mapRenderer.render();
         batch.begin();
         drawDeadMobs();
         drawMobs();
         drawTestObjects(); //TODO test objects drawing
         //drawPlayer();
         batch.end();
+        //stage.act(DELTA_TIME);
+        stage.draw();
     }
 
     private void drawDebugInfo() {
