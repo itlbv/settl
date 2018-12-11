@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -15,9 +16,9 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.Array;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
 import com.itlbv.settl.map.Map;
+import com.itlbv.settl.map.Node;
 import com.itlbv.settl.mobs.Mob;
 import com.itlbv.settl.mobs.utils.MobFactory;
 import com.itlbv.settl.util.CollisionHandler;
@@ -31,13 +32,15 @@ public class Game extends ApplicationAdapter {
     public static Map map;
 
     private static OrthogonalTiledMapRenderer mapRenderer;
-    private static Box2DDebugRenderer debugRenderer;
     private static InputController inputController;
     private static OrthographicCamera camera;
-    private static OrthographicCamera debugCamera;
-    static SpriteBatch batch;
-    private static Stage stage;
     private static BitmapFont font;
+    private static Stage stage;
+    static SpriteBatch batch;
+
+    private static Box2DDebugRenderer box2dBodyRenderer;
+    private static ShapeRenderer shapeDebugRenderer;
+    private static OrthographicCamera debugCamera;
 
     public static ArrayList<Mob> mobs;
     private static ArrayList<Mob> deadMobs;
@@ -49,7 +52,6 @@ public class Game extends ApplicationAdapter {
     // Test stuff
     private static Player player;
     private static Player player2;
-    public static Array<GameObject> testObjects = new Array<>(); //TODO test objects
 
 
     private static void createPlayers() {
@@ -74,7 +76,8 @@ public class Game extends ApplicationAdapter {
     private void initializeClassFields() {
         world = new World(new Vector2(.0f, .0f), true);
         world.setContactListener(new CollisionHandler());
-        debugRenderer = new Box2DDebugRenderer();
+        box2dBodyRenderer = new Box2DDebugRenderer();
+        shapeDebugRenderer = new ShapeRenderer();
         batch = new SpriteBatch();
         font = new BitmapFont(Gdx.files.internal("font26.fnt"));
         mobs = new ArrayList<>();
@@ -158,7 +161,6 @@ public class Game extends ApplicationAdapter {
         batch.begin();
         drawDeadMobs();
         drawMobs();
-        drawTestObjects(); //TODO test objects drawing
         //drawPlayer();
         batch.end();
         //stage.act(DELTA_TIME);
@@ -167,11 +169,40 @@ public class Game extends ApplicationAdapter {
 
     private void drawDebugInfo() {
         if (!inputController.debugMode) return;
+        if (inputController.drawPath) {
+          drawMobPath();
+        }
         debugCamera.update();
         batch.begin();
         drawMobId();
         batch.end();
-        debugRenderer.render(world, camera.combined);
+        box2dBodyRenderer.render(world, camera.combined);
+    }
+
+    private void drawMobPath() {
+        shapeDebugRenderer.setProjectionMatrix(camera.combined);
+        shapeDebugRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        for (Mob mob : mobs) {
+            if (mob.getPath().size() == 0) {
+                shapeDebugRenderer.setColor(Color.YELLOW);
+                Mob target = (Mob) mob.getTarget();
+                if (target == null) break;
+                shapeDebugRenderer.rectLine(mob.getPosition().x, mob.getPosition().y, target.getPosition().x, target.getPosition().y, .1f);
+            } else {
+                shapeDebugRenderer.setColor(Color.WHITE);
+                ArrayList<Vector2> nodesToDraw = new ArrayList<>();
+                nodesToDraw.add(mob.getPosition());
+                for (Node node : mob.getPath().nodes) {
+                    nodesToDraw.add(node.getPosition());
+                }
+                for (int i = 0; i < nodesToDraw.size() - 1; i++) {
+                    Vector2 currNode = nodesToDraw.get(i);
+                    Vector2 nextNode = nodesToDraw.get(i + 1);
+                    shapeDebugRenderer.rectLine(currNode.x, currNode.y, nextNode.x, nextNode.y, .1f);
+                }
+            }
+        }
+        shapeDebugRenderer.end();
     }
 
     private void drawMobId() {
@@ -226,10 +257,6 @@ public class Game extends ApplicationAdapter {
     private void drawPlayer() {
         player.draw();
         player2.draw();
-    }
-
-    private void drawTestObjects() {
-        testObjects.forEach(GameObject::draw);
     }
 
     private void drawDeadMobs() {

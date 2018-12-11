@@ -11,7 +11,7 @@ import com.itlbv.settl.mobs.Mob;
 public class MovementManager {
     private final Mob owner;
     private RayCastHelper collisionDetector;
-    private PathMovement pathMovement;
+    public PathMovement pathMovement; // TODO public is for path drawing in Game class
     private SteeringMovement steeringMovement;
 
     private boolean useSteering;

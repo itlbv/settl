@@ -15,6 +15,7 @@ public class InputController extends InputAdapter{
     public boolean zoomOut;
 
     public boolean debugMode = true;
+    public boolean drawPath = true;
 
     private OrthographicCamera camera;
     public InputController(OrthographicCamera camera) {
@@ -76,7 +77,8 @@ public class InputController extends InputAdapter{
         switch (character) {
             case '\b': //BACKSPACE
                 debugMode = !debugMode;
-                break;
+            case 't':
+                drawPath = !drawPath;
         }
         return false;
     }

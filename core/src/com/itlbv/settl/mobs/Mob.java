@@ -9,6 +9,7 @@ import com.itlbv.settl.enumsObjectType.MobObjectType;
 import com.itlbv.settl.mobs.managers.AnimationManager;
 import com.itlbv.settl.mobs.managers.ActionManager;
 import com.itlbv.settl.mobs.managers.MovementManager;
+import com.itlbv.settl.pathfinding.Path;
 
 import java.util.Objects;
 
@@ -147,5 +148,9 @@ public class Mob extends GameObject {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Path getPath() {
+        return movementManager.pathMovement.path; // TODO for path drawing in Game class
     }
 }

@@ -1,19 +1,13 @@
 package com.itlbv.settl.mobs.managers;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.itlbv.settl.Game;
-import com.itlbv.settl.util.TestObject;
-import com.itlbv.settl.enumsObjectType.MapObjectType;
-import com.itlbv.settl.map.Node;
 import com.itlbv.settl.mobs.Mob;
 import com.itlbv.settl.pathfinding.Path;
 import com.itlbv.settl.pathfinding.PathHelper;
 
 public class PathMovement {
     private Mob owner;
-    public Path path;
+    public Path path; // TODO public is for path drawing in Game class
     private float maxLinearSpeed;
 
     public PathMovement(Mob owner, float maxLinearSpeed){
@@ -26,7 +20,6 @@ public class PathMovement {
         Vector2 startPosition = owner.getPosition();
         Vector2 targetPosition = getTarget().getPosition(); //TODO what if target doesn't have a body
         path = PathHelper.getPath(startPosition, targetPosition);
-        drawPath();
     }
 
     public Vector2 calculateAndGet() {
@@ -49,14 +42,6 @@ public class PathMovement {
 
     private Vector2 getVectorToWaypoint(Vector2 nextWaypoint) {
         return nextWaypoint.cpy().sub(owner.getPosition()).nor().scl(maxLinearSpeed);
-    }
-
-    private void drawPath() {
-        for (Node node : path.nodes) {
-            TextureRegion texture = new TextureRegion(new Texture("white_dot.png"));
-            TestObject o = new TestObject(node.getX(),node.getY(), MapObjectType.TESTOBJECT, texture);
-            Game.testObjects.add(o);
-        }
     }
 
     private Mob getTarget() {
