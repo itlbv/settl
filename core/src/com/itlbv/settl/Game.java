@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -33,8 +34,10 @@ public class Game extends ApplicationAdapter {
     private static Box2DDebugRenderer debugRenderer;
     private static InputController inputController;
     private static OrthographicCamera camera;
+    private static OrthographicCamera debugCamera;
     static SpriteBatch batch;
     private static Stage stage;
+    private static BitmapFont font;
 
     public static ArrayList<Mob> mobs;
     private static ArrayList<Mob> deadMobs;
@@ -58,7 +61,9 @@ public class Game extends ApplicationAdapter {
     public void create() {
         initializeClassFields();
         setCamera();
+        setDebugCamera();
         setUi();
+        setInputController();
         setMap();
         setMapRenderer();
         createMobs();
@@ -71,18 +76,23 @@ public class Game extends ApplicationAdapter {
         world.setContactListener(new CollisionHandler());
         debugRenderer = new Box2DDebugRenderer();
         batch = new SpriteBatch();
+        font = new BitmapFont(Gdx.files.internal("font26.fnt"));
         mobs = new ArrayList<>();
         deadMobs = new ArrayList<>();
     }
 
     private void setCamera() {
+        float screenRatio = Gdx.graphics.getWidth() / Gdx.graphics.getHeight();
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, VIEWPORT * screenRatio, VIEWPORT);
+        camera.position.set(VIEWPORT/2 * screenRatio - 6, VIEWPORT/2 - 5, 0); //todo MAGIC NUMBERS
+    }
+
+    private void setDebugCamera() {
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, VIEWPORT * (w/h), VIEWPORT);
-        camera.position.set(VIEWPORT/2 * (w/h) - 6, VIEWPORT/2 - 5, 0); //todo MAGIC NUMBERS
-        inputController = new InputController(camera);
-        Gdx.input.setInputProcessor(inputController);
+        debugCamera = new OrthographicCamera();
+        debugCamera.setToOrtho(false, w, h);
     }
 
     private void setUi() {
@@ -92,14 +102,18 @@ public class Game extends ApplicationAdapter {
         stage.addActor(table);
 
         Label.LabelStyle labelStyle = new Label.LabelStyle();
-        labelStyle.font = new BitmapFont(Gdx.files.internal("font26.fnt"));
+        labelStyle.font = font;
         labelStyle.fontColor = Color.WHITE;
 
         Label label = new Label("test label", labelStyle);
         label.setPosition(0, 0);
         label.setSize(100,100);
         stage.addActor(label);
+    }
 
+    private void setInputController() {
+        inputController = new InputController(camera);
+        Gdx.input.setInputProcessor(inputController);
     }
 
     private void setMap() {
@@ -129,25 +143,15 @@ public class Game extends ApplicationAdapter {
         RENDER_ITERATION++;
         updateDeltaTime();
         updateCamera();
+        debugCamera.update();
         updateMobs();
 
         mapRenderer.setView(camera);
         mapRenderer.render();
 
-        //player.update();
-        //player2.update();
+        drawGame();
+        drawDebugInfo();
 
-        batch.begin();
-
-        drawDeadMobs();
-        drawMobs();
-        drawTestObjects(); //TODO test objects
-        //player.draw();
-        //player2.draw();
-
-        batch.end();
-
-        renderDebugInfo();
         stage.act(DELTA_TIME);
         stage.draw();
 
@@ -155,19 +159,31 @@ public class Game extends ApplicationAdapter {
         world.clearForces(); //TODO should it be here?
     }
 
-    /*
-    private void drawText() {
-        batch.setProjectionMatrix(uiCamera.combined);
-        for (Mob mob : mobs) {
-            //font.draw(batch, Integer.toString(mob.getId()), mob.getRenderPosition().x, mob.getRenderPosition().y);
-            font.draw(batch, "test text", 20, 20);
-        }
+    private void drawGame() {
+        batch.begin();
+        drawDeadMobs();
+        drawMobs();
+        drawTestObjects(); //TODO test objects drawing
+        //drawPlayer();
+        batch.end();
     }
-    */
 
-    private void renderDebugInfo() {
-        if (inputController.debugMode) {
-            debugRenderer.render(world, camera.combined);
+    private void drawDebugInfo() {
+        if (!inputController.debugMode) return;
+        debugCamera.update();
+        batch.begin();
+        drawMobId();
+        batch.end();
+        debugRenderer.render(world, camera.combined);
+    }
+
+    private void drawMobId() {
+        batch.setProjectionMatrix(debugCamera.combined);
+        Vector3 fontPos = new Vector3();
+        for (Mob mob : mobs) {
+            fontPos.set(mob.getPosition(), 0);
+            camera.project(fontPos,0,0, debugCamera.viewportWidth, debugCamera.viewportHeight);
+            font.draw(batch, Integer.toString(mob.getId()), fontPos.x, fontPos.y);
         }
     }
 
@@ -210,6 +226,11 @@ public class Game extends ApplicationAdapter {
         }
     }
 
+    private void drawPlayer() {
+        player.draw();
+        player2.draw();
+    }
+
     private void drawTestObjects() {
         testObjects.forEach(GameObject::draw);
     }
@@ -221,9 +242,6 @@ public class Game extends ApplicationAdapter {
     private void drawMobs() {
         for (Mob mob : mobs) {
             mob.draw();
-            //if (inputController.debugMode) {
-            //    font.draw(batch, Integer.toString(mob.getId()), mob.getRenderPosition().x, mob.getRenderPosition().y);
-            //}
         }
     }
 
