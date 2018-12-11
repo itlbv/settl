@@ -10,11 +10,14 @@ import com.itlbv.settl.mobs.managers.AnimationManager;
 import com.itlbv.settl.mobs.managers.ActionManager;
 import com.itlbv.settl.mobs.managers.MovementManager;
 import com.itlbv.settl.pathfinding.Path;
+import org.slf4j.Logger;
 
 import java.util.Objects;
 
 import static com.itlbv.settl.mobs.utils.MobAnimationState.IDLE;
 import static com.itlbv.settl.mobs.utils.MobAnimationState.WALK;
+import static org.slf4j.LoggerFactory.getLogger;
+
 
 public class Mob extends GameObject {
     private final MovementManager movementManager;
@@ -23,6 +26,7 @@ public class Mob extends GameObject {
     private BehaviorTree<Mob> bhvTree;
     private MobObjectType type;
     private MobAnimationState state;
+    private static final Logger log = getLogger(Mob.class);
 
     private GameObject target;
     private boolean alive;
@@ -85,7 +89,7 @@ public class Mob extends GameObject {
     public void die() {
         setState(MobAnimationState.DEAD);
         animationManager.update();
-        System.out.println(this + " is dead");
+        log.info(this + " is dead");
         Game.world.destroyBody(getBody());
         Game.world.destroyBody(getSensor());
     }
