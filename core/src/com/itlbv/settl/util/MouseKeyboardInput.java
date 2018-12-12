@@ -17,18 +17,19 @@ public class MouseKeyboardInput extends InputAdapter{
     public boolean debugMode = true;
     public boolean drawPath = true;
 
+    public float mouseX;
+    public float mouseY;
+
     private OrthographicCamera camera;
     public MouseKeyboardInput(OrthographicCamera camera) {
         this.camera = camera;
     }
 
     public void handleInput() {
-        updateCamera();
+        updateCameraPosition();
     }
 
-    private void updateCamera() {
-
-
+    private void updateCameraPosition() {
         int directionX = 0;
         int directionY = 0;
         int cameraSpeed = 1;
@@ -43,10 +44,7 @@ public class MouseKeyboardInput extends InputAdapter{
 
         camera.position.x += directionX * cameraSpeed;
         camera.position.y += directionY * cameraSpeed;
-        camera.update();
-    }
-
-    /*
+         /*
         camera.zoom = MathUtils.clamp(camera.zoom, 0.1f, 100/camera.viewportWidth);
 
         float effectiveViewportWidth = camera.viewportWidth * camera.zoom;
@@ -56,6 +54,14 @@ public class MouseKeyboardInput extends InputAdapter{
         camera.position.y = MathUtils.clamp(camera.position.y, effectiveViewportHeight / 2f, 100 - effectiveViewportHeight / 2f);
     }
     */
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        mouseX = screenX;
+        mouseY = screenY;
+        return false;
+    }
 
     @Override
     public boolean keyUp(int keycode) {

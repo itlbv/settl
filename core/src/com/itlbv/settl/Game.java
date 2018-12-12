@@ -99,6 +99,7 @@ public class Game extends ApplicationAdapter {
         debugCamera.setToOrtho(false, w, h);
     }
 
+    private static Label label;
     private void setUiStage() {
         stage = new Stage();
         Table table = new Table();
@@ -109,7 +110,7 @@ public class Game extends ApplicationAdapter {
         labelStyle.font = font;
         labelStyle.fontColor = Color.WHITE;
 
-        Label label = new Label("test label", labelStyle);
+        label = new Label("test label", labelStyle);
         label.setPosition(0, 0);
         label.setSize(100,100);
         stage.addActor(label);
@@ -161,6 +162,9 @@ public class Game extends ApplicationAdapter {
     }
 
     private void handleInput() {
+        Vector3 mouseCoord = new Vector3(mouseKeyboardInput.mouseX, mouseKeyboardInput.mouseY, 0);
+        camera.unproject(mouseCoord);
+        label.setText("MouseX: " + mouseCoord.x + " MouseY: " + mouseCoord.y);
         stage.act(DELTA_TIME);
         mouseKeyboardInput.handleInput();
     }
