@@ -6,7 +6,9 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -60,8 +62,10 @@ public class Game extends ApplicationAdapter {
         player2 = new Player(6,6);
     }
 
+    private static Sprite sprite;
     @Override
     public void create() {
+        sprite = new Sprite(new Texture(Gdx.files.internal("textures/mobs/man01.png")));
         initializeClassFields();
         setCamera();
         setDebugCamera();
@@ -130,7 +134,7 @@ public class Game extends ApplicationAdapter {
     }
 
     private void setMapRenderer() {
-        float unitScale = (float) 1/GameConstants.TILE_SIZE_PXL;
+        float unitScale = (float) 1/GameConstants.TILE_TEXTURE_SIZE_PXL;
         mapRenderer = new OrthogonalTiledMapRenderer(map.getMap(), unitScale);
         mapRenderer.setView(camera);
     }
@@ -253,17 +257,19 @@ public class Game extends ApplicationAdapter {
     }
 
     private void drawPlayer() {
-        player.draw();
-        player2.draw();
+        //player.draw();
+        //player2.draw();
     }
 
     private void drawDeadMobs() {
-        deadMobs.forEach(Mob::draw);
+        for (Mob deadMob : deadMobs) {
+            deadMob.getSprite().draw(batch);
+        }
     }
 
     private void drawMobs() {
-        for (Mob mob : mobs) {
-            mob.draw();
+       for (Mob mob : mobs) {
+           mob.getSprite().draw(batch);
         }
     }
 

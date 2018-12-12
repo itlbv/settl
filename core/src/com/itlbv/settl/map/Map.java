@@ -22,8 +22,8 @@ public class Map implements IndexedGraph<Node> {
     public Map(String path) {
         map = new TmxMapLoader().load(path);
         tileLayer = (TiledMapTileLayer) map.getLayers().get(0);
-        tileLayer.setOffsetX(-GameConstants.TILE_SIZE_PXL/2);
-        tileLayer.setOffsetY(GameConstants.TILE_SIZE_PXL/2);
+        tileLayer.setOffsetX(-GameConstants.TILE_TEXTURE_SIZE_PXL /2);
+        tileLayer.setOffsetY(GameConstants.TILE_TEXTURE_SIZE_PXL /2);
         mapWidth = tileLayer.getWidth();
         mapHeight = tileLayer.getHeight();
         nodes = new Array<>();

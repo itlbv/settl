@@ -5,9 +5,10 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
 
+import static com.itlbv.settl.GameConstants.MOB_TEXTURE_SIZE_PXL;
+
 public class MobAnimationHelper {
     private static final float ANIMATION_SPEED = 0.1f;
-    private static final int TEXTURE_SIZE = 24;
 
     private static Texture man01 = new Texture("textures/mobs/man01.png");
     private static Texture knight01 = new Texture("textures/mobs/knight01.png");
@@ -51,13 +52,13 @@ public class MobAnimationHelper {
     }
 
     private static Animation<TextureRegion> getIdle(Texture textureOfType) {
-        TextureRegion[] allFrames = TextureRegion.split(textureOfType, TEXTURE_SIZE,TEXTURE_SIZE)[0];
+        TextureRegion[] allFrames = TextureRegion.split(textureOfType, MOB_TEXTURE_SIZE_PXL, MOB_TEXTURE_SIZE_PXL)[0];
         TextureRegion[] idleFrames = {allFrames[0]};
         return new Animation<>(ANIMATION_SPEED, idleFrames);
     }
 
     private static Animation<TextureRegion> getWalking(Texture textureOfType) {
-        TextureRegion[] allFrames = TextureRegion.split(textureOfType, TEXTURE_SIZE,TEXTURE_SIZE)[0];
+        TextureRegion[] allFrames = TextureRegion.split(textureOfType, MOB_TEXTURE_SIZE_PXL, MOB_TEXTURE_SIZE_PXL)[0];
         TextureRegion[] walkFrames = {allFrames[0],
                 allFrames[1],
                 allFrames[0],
@@ -66,7 +67,7 @@ public class MobAnimationHelper {
     }
 
     private static Animation<TextureRegion> getAttack(Texture textureOfType) {
-        TextureRegion[] allFrames = TextureRegion.split(textureOfType, TEXTURE_SIZE,TEXTURE_SIZE)[0];
+        TextureRegion[] allFrames = TextureRegion.split(textureOfType, MOB_TEXTURE_SIZE_PXL, MOB_TEXTURE_SIZE_PXL)[0];
         TextureRegion[] attackFrames = {allFrames[3],
                 allFrames[4],
                 allFrames[5]};
@@ -74,14 +75,14 @@ public class MobAnimationHelper {
     }
 
     private static Animation<TextureRegion> getGotHit(Texture textureOfType) {
-        TextureRegion[] allFrames = TextureRegion.split(textureOfType, TEXTURE_SIZE,TEXTURE_SIZE)[0];
+        TextureRegion[] allFrames = TextureRegion.split(textureOfType, MOB_TEXTURE_SIZE_PXL, MOB_TEXTURE_SIZE_PXL)[0];
         TextureRegion[] gotHit = {allFrames[6],
                 allFrames[7]};
         return new Animation<>(ANIMATION_SPEED, gotHit);
     }
 
     private static Animation<TextureRegion> getDead(Texture textureOfType) {
-        TextureRegion[] allFrames = TextureRegion.split(textureOfType, TEXTURE_SIZE, TEXTURE_SIZE)[0];
+        TextureRegion[] allFrames = TextureRegion.split(textureOfType, MOB_TEXTURE_SIZE_PXL, MOB_TEXTURE_SIZE_PXL)[0];
         TextureRegion[] deadFrames = {allFrames[8]};
         return new Animation<>(ANIMATION_SPEED, deadFrames);
     }

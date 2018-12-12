@@ -34,8 +34,8 @@ public class Mob extends GameObject {
 
     private int id;
 
-    public Mob(MobObjectType type, String bhvTree, float speed, float renderWidth, float renderHeight) {
-        super(type, renderWidth, renderHeight);
+    public Mob(MobObjectType type, String bhvTree, float speed) {
+        super(type);
         this.alive = true;
         this.type = type;
         this.state = IDLE;

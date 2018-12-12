@@ -1,5 +1,6 @@
 package com.itlbv.settl.mobs.utils;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.itlbv.settl.Game;
@@ -34,14 +35,25 @@ public class MobFactory {
     }
 
     private static void createMob(int x, int y, MobObjectType type) {
-        Mob mob = new Mob(type, "bhvTrees/humanKnight.btree", MOB_SPEED, MOB_RENDER_WIDTH, MOB_RENDER_HEIGHT);
+        Mob mob = new Mob(type, "bhvTrees/humanKnight.btree", MOB_SPEED);
+        setBodyAndSensor(x, y, mob);
+        setSprite(x, y, mob);
+        Game.mobs.add(mob);
+        mob.setId(Game.mobs.size());
+        log.info(mob + " created");
+    }
+
+    private static void setBodyAndSensor(int x, int y, Mob mob) {
         Body mobBody = BodyFactory.createAndGetMobBody(x, y, mob, false);
         Body mobSensor = BodyFactory.createAndGetMobBody(x, y, mob, true);
         mob.setBody(mobBody);
         mob.setSensor(mobSensor);
+    }
+
+    private static void setSprite(int x, int y, Mob mob) {
+        Sprite sprite = mob.getSprite();
+        sprite.setSize(MOB_RENDER_WIDTH, MOB_RENDER_HEIGHT);
+        mob.setSprite(sprite);
         mob.updateRenderPosition();
-        Game.mobs.add(mob);
-        mob.setId(Game.mobs.size());
-        log.info(mob + " created");
     }
 }
