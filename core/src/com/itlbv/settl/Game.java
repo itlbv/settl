@@ -55,17 +55,13 @@ public class Game extends ApplicationAdapter {
     // Test stuff
     private static Player player;
     private static Player player2;
-
-
     private static void createPlayers() {
         player = new Player(3,3);
         player2 = new Player(6,6);
     }
 
-    private static Sprite sprite;
     @Override
     public void create() {
-        sprite = new Sprite(new Texture(Gdx.files.internal("textures/mobs/man01.png")));
         initializeClassFields();
         setCamera();
         setDebugCamera();
