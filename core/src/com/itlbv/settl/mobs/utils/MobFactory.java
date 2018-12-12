@@ -17,7 +17,7 @@ public class MobFactory {
 
     private static final Logger log = getLogger(MobFactory.class);
 
-    public static Mob createMobAtRandomPosition(boolean rightMapSide, MobObjectType type) {
+    public static void createMobAtRandomPosition(boolean rightMapSide, MobObjectType type) {
         int mapWidth = Game.map.getWidth();
         int mapHeight = Game.map.getHeight();
         int randX, randY;
@@ -26,14 +26,14 @@ public class MobFactory {
             randY = MathUtils.random(mapHeight - 1);
             if (rightMapSide) randX += mapWidth/2;
         } while (mapTileIsNotPassable(randX, randY));
-        return createMob(randX, randY, type);
+        createMob(randX, randY, type);
     }
 
     private static boolean mapTileIsNotPassable(int x, int y) {
         return !Game.map.getNode(x, y).isPassable();
     }
 
-    private static Mob createMob(int x, int y, MobObjectType type) {
+    private static void createMob(int x, int y, MobObjectType type) {
         Mob mob = new Mob(type, "bhvTrees/humanKnight.btree", MOB_SPEED, MOB_RENDER_WIDTH, MOB_RENDER_HEIGHT);
         Body mobBody = BodyFactory.createAndGetMobBody(x, y, mob, false);
         Body mobSensor = BodyFactory.createAndGetMobBody(x, y, mob, true);
@@ -43,6 +43,5 @@ public class MobFactory {
         Game.mobs.add(mob);
         mob.setId(Game.mobs.size());
         log.info(mob + " created");
-        return mob;
     }
 }
