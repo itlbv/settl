@@ -145,18 +145,29 @@ public class Game extends ApplicationAdapter {
 
     @Override
     public void render() {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // clears the screen
-
-        RENDER_ITERATION++;
         updateDeltaTime();
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // clears the screen
+        RENDER_ITERATION++;
+
+        handleInput();
         updateCamera();
         updateMobs();
 
         drawGameObjects();
         drawDebugInfo();
 
-        world.step(Gdx.app.getGraphics().getDeltaTime(), 6, 2);
+        world.step(DELTA_TIME, 6, 2);
         world.clearForces(); //TODO should it be here?
+    }
+
+    private void handleInput() {
+        stage.act(DELTA_TIME);
+        mouseKeyboardInput.handleInput();
+    }
+
+    private void updateCamera() {
+        batch.setProjectionMatrix(camera.combined);
+        camera.update();
     }
 
     private void drawGameObjects() {
@@ -167,7 +178,6 @@ public class Game extends ApplicationAdapter {
         drawMobs();
         //drawPlayer();
         batch.end();
-        //stage.act(DELTA_TIME);
         stage.draw();
     }
 
@@ -184,7 +194,7 @@ public class Game extends ApplicationAdapter {
     }
 
     private void drawMobPath() {
-        shapeDebugRenderer.setProjectionMatrix(camera.combined);
+        shapeDebugRenderer.setProjectionMatrix(camera.combined); //TODO can it be moved to declaration?
         shapeDebugRenderer.begin(ShapeRenderer.ShapeType.Filled);
         for (Mob mob : mobs) {
             if (mob.getPath().size() == 0) {
@@ -217,26 +227,6 @@ public class Game extends ApplicationAdapter {
             camera.project(fontPos,0,0, debugCamera.viewportWidth, debugCamera.viewportHeight);
             font.draw(batch, Integer.toString(mob.getId()), fontPos.x, fontPos.y);
         }
-    }
-
-    private void updateCamera() {
-        batch.setProjectionMatrix(camera.combined);
-
-        int directionX = 0;
-        int directionY = 0;
-        int cameraSpeed = 1;
-
-        if(mouseKeyboardInput.down) directionY = -1 ;
-        if(mouseKeyboardInput.up) directionY = 1 ;
-        if(mouseKeyboardInput.left) directionX = -1;
-        if(mouseKeyboardInput.right) directionX = 1;
-
-        if (mouseKeyboardInput.zoomIn) camera.zoom -= .02;
-        if (mouseKeyboardInput.zoomOut) camera.zoom += .02;
-
-        camera.position.x += directionX * cameraSpeed;
-        camera.position.y += directionY * cameraSpeed;
-        camera.update();
     }
 
     private void updateMobs() {
@@ -277,19 +267,9 @@ public class Game extends ApplicationAdapter {
     public void resize(int width, int height) {
         camera.viewportWidth = VIEWPORT;
         camera.viewportHeight = VIEWPORT * height/width;
-        camera.update();
+        camera.update(); //TODO should it be here?
     }
 
-    /*
-        camera.zoom = MathUtils.clamp(camera.zoom, 0.1f, 100/camera.viewportWidth);
-
-        float effectiveViewportWidth = camera.viewportWidth * camera.zoom;
-        float effectiveViewportHeight = camera.viewportHeight * camera.zoom;
-
-        camera.position.x = MathUtils.clamp(camera.position.x, effectiveViewportWidth / 2f, 100 - effectiveViewportWidth / 2f);
-        camera.position.y = MathUtils.clamp(camera.position.y, effectiveViewportHeight / 2f, 100 - effectiveViewportHeight / 2f);
-    }
-    */
     private void updateDeltaTime() {
         DELTA_TIME = Gdx.graphics.getDeltaTime();
     }

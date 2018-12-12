@@ -6,13 +6,13 @@ import com.badlogic.gdx.Input.Keys;
 
 public class MouseKeyboardInput extends InputAdapter{
 
-    public boolean up;
-    public boolean down;
-    public boolean left;
-    public boolean right;
+    private boolean up;
+    private boolean down;
+    private boolean left;
+    private boolean right;
 
-    public boolean zoomIn;
-    public boolean zoomOut;
+    private boolean zoomIn;
+    private boolean zoomOut;
 
     public boolean debugMode = true;
     public boolean drawPath = true;
@@ -21,6 +21,41 @@ public class MouseKeyboardInput extends InputAdapter{
     public MouseKeyboardInput(OrthographicCamera camera) {
         this.camera = camera;
     }
+
+    public void handleInput() {
+        updateCamera();
+    }
+
+    private void updateCamera() {
+
+
+        int directionX = 0;
+        int directionY = 0;
+        int cameraSpeed = 1;
+
+        if(down) directionY = -1 ;
+        if(up) directionY = 1 ;
+        if(left) directionX = -1;
+        if(right) directionX = 1;
+
+        if (zoomIn) camera.zoom -= .02;
+        if (zoomOut) camera.zoom += .02;
+
+        camera.position.x += directionX * cameraSpeed;
+        camera.position.y += directionY * cameraSpeed;
+        camera.update();
+    }
+
+    /*
+        camera.zoom = MathUtils.clamp(camera.zoom, 0.1f, 100/camera.viewportWidth);
+
+        float effectiveViewportWidth = camera.viewportWidth * camera.zoom;
+        float effectiveViewportHeight = camera.viewportHeight * camera.zoom;
+
+        camera.position.x = MathUtils.clamp(camera.position.x, effectiveViewportWidth / 2f, 100 - effectiveViewportWidth / 2f);
+        camera.position.y = MathUtils.clamp(camera.position.y, effectiveViewportHeight / 2f, 100 - effectiveViewportHeight / 2f);
+    }
+    */
 
     @Override
     public boolean keyUp(int keycode) {
