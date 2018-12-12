@@ -39,7 +39,7 @@ public class Game extends ApplicationAdapter {
     private static OrthographicCamera camera;
     private static BitmapFont font;
     private static Stage stage;
-    static SpriteBatch batch;
+    private static SpriteBatch batch;
 
     private static Box2DDebugRenderer box2dBodyRenderer;
     private static ShapeRenderer shapeDebugRenderer;
