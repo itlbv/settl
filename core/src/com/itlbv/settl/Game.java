@@ -2,6 +2,7 @@ package com.itlbv.settl;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -22,7 +23,7 @@ import com.itlbv.settl.map.Node;
 import com.itlbv.settl.mobs.Mob;
 import com.itlbv.settl.mobs.utils.MobFactory;
 import com.itlbv.settl.util.CollisionHandler;
-import com.itlbv.settl.util.InputController;
+import com.itlbv.settl.util.MouseKeyboardInput;
 import com.itlbv.settl.util.Player;
 
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class Game extends ApplicationAdapter {
     public static Map map;
 
     private static OrthogonalTiledMapRenderer mapRenderer;
-    private static InputController inputController;
+    private static MouseKeyboardInput mouseKeyboardInput;
     private static OrthographicCamera camera;
     private static BitmapFont font;
     private static Stage stage;
@@ -64,8 +65,8 @@ public class Game extends ApplicationAdapter {
         initializeClassFields();
         setCamera();
         setDebugCamera();
-        setUi();
-        setInputController();
+        setUiStage();
+        setInputProcessor();
         setMap();
         setMapRenderer();
         createMobs();
@@ -98,7 +99,7 @@ public class Game extends ApplicationAdapter {
         debugCamera.setToOrtho(false, w, h);
     }
 
-    private void setUi() {
+    private void setUiStage() {
         stage = new Stage();
         Table table = new Table();
         table.setFillParent(true);
@@ -114,9 +115,12 @@ public class Game extends ApplicationAdapter {
         stage.addActor(label);
     }
 
-    private void setInputController() {
-        inputController = new InputController(camera);
-        Gdx.input.setInputProcessor(inputController);
+    private void setInputProcessor() {
+        mouseKeyboardInput = new MouseKeyboardInput(camera);
+        InputMultiplexer inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer.addProcessor(mouseKeyboardInput);
+        inputMultiplexer.addProcessor(stage);
+        Gdx.input.setInputProcessor(inputMultiplexer);
     }
 
     private void setMap() {
@@ -168,8 +172,8 @@ public class Game extends ApplicationAdapter {
     }
 
     private void drawDebugInfo() {
-        if (!inputController.debugMode) return;
-        if (inputController.drawPath) {
+        if (!mouseKeyboardInput.debugMode) return;
+        if (mouseKeyboardInput.drawPath) {
           drawMobPath();
         }
         debugCamera.update();
@@ -222,13 +226,13 @@ public class Game extends ApplicationAdapter {
         int directionY = 0;
         int cameraSpeed = 1;
 
-        if(inputController.down) directionY = -1 ;
-        if(inputController.up) directionY = 1 ;
-        if(inputController.left) directionX = -1;
-        if(inputController.right) directionX = 1;
+        if(mouseKeyboardInput.down) directionY = -1 ;
+        if(mouseKeyboardInput.up) directionY = 1 ;
+        if(mouseKeyboardInput.left) directionX = -1;
+        if(mouseKeyboardInput.right) directionX = 1;
 
-        if (inputController.zoomIn) camera.zoom -= .02;
-        if (inputController.zoomOut) camera.zoom += .02;
+        if (mouseKeyboardInput.zoomIn) camera.zoom -= .02;
+        if (mouseKeyboardInput.zoomOut) camera.zoom += .02;
 
         camera.position.x += directionX * cameraSpeed;
         camera.position.y += directionY * cameraSpeed;

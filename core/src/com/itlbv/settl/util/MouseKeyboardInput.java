@@ -4,7 +4,7 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.Input.Keys;
 
-public class InputController extends InputAdapter{
+public class MouseKeyboardInput extends InputAdapter{
 
     public boolean up;
     public boolean down;
@@ -18,7 +18,7 @@ public class InputController extends InputAdapter{
     public boolean drawPath = true;
 
     private OrthographicCamera camera;
-    public InputController(OrthographicCamera camera) {
+    public MouseKeyboardInput(OrthographicCamera camera) {
         this.camera = camera;
     }
 
