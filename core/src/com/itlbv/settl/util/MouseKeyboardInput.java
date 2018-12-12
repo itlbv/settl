@@ -3,6 +3,7 @@ package com.itlbv.settl.util;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.math.Vector2;
 
 public class MouseKeyboardInput extends InputAdapter{
 
@@ -60,6 +61,15 @@ public class MouseKeyboardInput extends InputAdapter{
     public boolean mouseMoved(int screenX, int screenY) {
         mouseX = screenX;
         mouseY = screenY;
+        return false;
+    }
+
+    public Vector2 mouseClickCoord = new Vector2(0,0);
+    public boolean clickHappened = false;
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        mouseClickCoord.set(screenX, screenY);
+        clickHappened = true;
         return false;
     }
 

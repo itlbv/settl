@@ -100,6 +100,7 @@ public class Game extends ApplicationAdapter {
     }
 
     private static Label label;
+    private static Label labelSelectedMob;
     private void setUiStage() {
         stage = new Stage();
         Table table = new Table();
@@ -114,6 +115,11 @@ public class Game extends ApplicationAdapter {
         label.setPosition(0, 0);
         label.setSize(100,100);
         stage.addActor(label);
+
+        labelSelectedMob = new Label("selected mob", labelStyle);
+        labelSelectedMob.setPosition(50, 50);
+        labelSelectedMob.setSize(100,100);
+        stage.addActor(labelSelectedMob);
     }
 
     private void setInputProcessor() {
@@ -161,12 +167,27 @@ public class Game extends ApplicationAdapter {
         world.clearForces(); //TODO should it be here?
     }
 
+    private static Mob selectedMob;
     private void handleInput() {
+        mouseKeyboardInput.handleInput();
+        handleSelectedMob();
         Vector3 mouseCoord = new Vector3(mouseKeyboardInput.mouseX, mouseKeyboardInput.mouseY, 0);
         camera.unproject(mouseCoord);
         label.setText("MouseX: " + mouseCoord.x + " MouseY: " + mouseCoord.y);
         stage.act(DELTA_TIME);
-        mouseKeyboardInput.handleInput();
+    }
+
+    private void handleSelectedMob() {
+        if (!mouseKeyboardInput.clickHappened) return;
+        mouseKeyboardInput.clickHappened = false;
+        Vector3 clickCoord = new Vector3(mouseKeyboardInput.mouseClickCoord, 0);
+        camera.unproject(clickCoord);
+        for (Mob mob : mobs) {
+            if (mob.getSprite().getBoundingRectangle().contains(clickCoord.x, clickCoord.y)) {
+                selectedMob = mob;
+                labelSelectedMob.setText(mob.toString());
+            }
+        }
     }
 
     private void updateCamera() {
@@ -235,7 +256,7 @@ public class Game extends ApplicationAdapter {
 
     private void updateMobs() {
         cleanMobsFromDead();
-        mobs.forEach(Mob::update);
+        //mobs.forEach(Mob::update);
         //mobs.get(0).update();
         //mobs.get(1).update();
     }
