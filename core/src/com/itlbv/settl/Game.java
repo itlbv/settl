@@ -6,9 +6,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -16,14 +14,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
 import com.itlbv.settl.map.Map;
 import com.itlbv.settl.map.Node;
 import com.itlbv.settl.mobs.Mob;
 import com.itlbv.settl.mobs.utils.MobFactory;
+import com.itlbv.settl.ui.UiStage;
 import com.itlbv.settl.util.CollisionHandler;
 import com.itlbv.settl.util.MouseKeyboardInput;
 import com.itlbv.settl.util.Player;
@@ -38,7 +34,7 @@ public class Game extends ApplicationAdapter {
     private static MouseKeyboardInput mouseKeyboardInput;
     private static OrthographicCamera camera;
     private static BitmapFont font;
-    private static Stage stage;
+    private static UiStage uiStage;
     private static SpriteBatch batch;
 
     private static Box2DDebugRenderer box2dBodyRenderer;
@@ -99,34 +95,15 @@ public class Game extends ApplicationAdapter {
         debugCamera.setToOrtho(false, w, h);
     }
 
-    private static Label label;
-    private static Label labelSelectedMob;
     private void setUiStage() {
-        stage = new Stage();
-        Table table = new Table();
-        table.setFillParent(true);
-        stage.addActor(table);
-
-        Label.LabelStyle labelStyle = new Label.LabelStyle();
-        labelStyle.font = font;
-        labelStyle.fontColor = Color.WHITE;
-
-        label = new Label("test label", labelStyle);
-        label.setPosition(0, 0);
-        label.setSize(100,100);
-        stage.addActor(label);
-
-        labelSelectedMob = new Label("selected mob", labelStyle);
-        labelSelectedMob.setPosition(50, 50);
-        labelSelectedMob.setSize(100,100);
-        stage.addActor(labelSelectedMob);
+        uiStage = new UiStage();
     }
 
     private void setInputProcessor() {
         mouseKeyboardInput = new MouseKeyboardInput(camera);
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(mouseKeyboardInput);
-        inputMultiplexer.addProcessor(stage);
+        inputMultiplexer.addProcessor(uiStage);
         Gdx.input.setInputProcessor(inputMultiplexer);
     }
 
@@ -167,14 +144,12 @@ public class Game extends ApplicationAdapter {
         world.clearForces(); //TODO should it be here?
     }
 
-    private static Mob selectedMob;
     private void handleInput() {
         mouseKeyboardInput.handleInput();
         handleSelectedMob();
         Vector3 mouseCoord = new Vector3(mouseKeyboardInput.mouseX, mouseKeyboardInput.mouseY, 0);
         camera.unproject(mouseCoord);
-        label.setText("MouseX: " + mouseCoord.x + " MouseY: " + mouseCoord.y);
-        stage.act(DELTA_TIME);
+        uiStage.act(DELTA_TIME);
     }
 
     private void handleSelectedMob() {
@@ -184,8 +159,7 @@ public class Game extends ApplicationAdapter {
         camera.unproject(clickCoord);
         for (Mob mob : mobs) {
             if (mob.getSprite().getBoundingRectangle().contains(clickCoord.x, clickCoord.y)) {
-                selectedMob = mob;
-                labelSelectedMob.setText(mob.toString());
+                uiStage.labelSelectedMob.setText(mob.toString());
             }
         }
     }
@@ -203,7 +177,7 @@ public class Game extends ApplicationAdapter {
         drawMobs();
         //drawPlayer();
         batch.end();
-        stage.draw();
+        uiStage.draw();
     }
 
     private void drawDebugInfo() {
@@ -303,7 +277,7 @@ public class Game extends ApplicationAdapter {
 
     @Override
     public void dispose() {
-        stage.dispose();
+        uiStage.dispose();
         batch.dispose();
     }
 }
