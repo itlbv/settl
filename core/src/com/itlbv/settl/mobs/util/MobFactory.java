@@ -2,6 +2,8 @@ package com.itlbv.settl.mobs.util;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
@@ -53,6 +55,10 @@ public class MobFactory {
     private static void setSprite(int x, int y, Mob mob) {
         Sprite sprite = mob.getSprite();
         sprite.setSize(MOB_RENDER_WIDTH, MOB_RENDER_HEIGHT);
+        /*
+        Rectangle rect = sprite.getBoundingRectangle();
+        Vector2 centerPos = rect.getCenter();
+        */
         mob.setSprite(sprite);
         mob.updateRenderPosition();
     }

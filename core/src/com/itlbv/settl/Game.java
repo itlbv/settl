@@ -3,12 +3,10 @@ package com.itlbv.settl;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -16,9 +14,9 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
 import com.itlbv.settl.map.Map;
-import com.itlbv.settl.map.Node;
 import com.itlbv.settl.mobs.Mob;
 import com.itlbv.settl.mobs.util.MobFactory;
+import com.itlbv.settl.ui.UiShapeRenderer;
 import com.itlbv.settl.ui.UiStage;
 import com.itlbv.settl.util.CollisionHandler;
 import com.itlbv.settl.util.MouseKeyboardInput;
@@ -38,7 +36,7 @@ public class Game extends ApplicationAdapter {
     private static SpriteBatch batch;
 
     private static Box2DDebugRenderer box2dBodyRenderer;
-    private static ShapeRenderer shapeRenderer;
+    private static UiShapeRenderer uiShapeRenderer;
     private static OrthographicCamera debugCamera;
 
     public static ArrayList<Mob> mobs;
@@ -89,8 +87,7 @@ public class Game extends ApplicationAdapter {
     }
 
     private void setShapeRenderer() {
-        shapeRenderer = new ShapeRenderer();
-        shapeRenderer.setProjectionMatrix(camera.combined);
+        uiShapeRenderer = new UiShapeRenderer(camera.combined);
     }
 
     private void setDebugCamera() {
@@ -124,10 +121,10 @@ public class Game extends ApplicationAdapter {
     }
 
     private void createMobs() {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 10; i++) {
             MobFactory.createMobAtRandomPosition(false, MobObjectType.KNIGHT);
         }
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 10; i++) {
             MobFactory.createMobAtRandomPosition(true, MobObjectType.ORC);
         }
     }
@@ -188,8 +185,9 @@ public class Game extends ApplicationAdapter {
     private void drawDebugInfo() {
         if (!mouseKeyboardInput.debugMode) return;
         if (mouseKeyboardInput.drawPath) {
-          drawMobPath();
+          drawMobsRoutes();
         }
+        drawMobsBoundingRects();
         debugCamera.update();
         batch.begin();
         drawMobId();
@@ -197,37 +195,12 @@ public class Game extends ApplicationAdapter {
         box2dBodyRenderer.render(world, camera.combined);
     }
 
-    private void drawMobPath() {
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        for (Mob mob : mobs) {
+    private void drawMobsRoutes() {
+        mobs.forEach(m -> uiShapeRenderer.drawRoute(m));
+    }
 
-            shapeRenderer.rect(mob.getSprite().getBoundingRectangle().x,
-                    mob.getSprite().getBoundingRectangle().y,
-                    mob.getSprite().getBoundingRectangle().width,
-                    mob.getSprite().getBoundingRectangle().height);
-
-            if (mob.getTarget() == null) continue;
-
-            if (mob.getPath().size() == 0) {
-                shapeRenderer.setColor(Color.YELLOW);
-                Mob target = (Mob) mob.getTarget();
-                if (target == null) break;
-                shapeRenderer.rectLine(mob.getPosition().x, mob.getPosition().y, target.getPosition().x, target.getPosition().y, .1f);
-            } else {
-                shapeRenderer.setColor(Color.WHITE);
-                ArrayList<Vector2> nodesToDraw = new ArrayList<>();
-                nodesToDraw.add(mob.getPosition());
-                for (Node node : mob.getPath().nodes) {
-                    nodesToDraw.add(node.getPosition());
-                }
-                for (int i = 0; i < nodesToDraw.size() - 1; i++) {
-                    Vector2 currNode = nodesToDraw.get(i);
-                    Vector2 nextNode = nodesToDraw.get(i + 1);
-                    shapeRenderer.rectLine(currNode.x, currNode.y, nextNode.x, nextNode.y, .1f);
-                }
-            }
-        }
-        shapeRenderer.end();
+    private void drawMobsBoundingRects() {
+        mobs.forEach(m -> uiShapeRenderer.drawBoundingRect(m));
     }
 
     private void drawMobId() {
@@ -242,7 +215,7 @@ public class Game extends ApplicationAdapter {
 
     private void updateMobs() {
         cleanMobsFromDead();
-        //mobs.forEach(Mob::update);
+        mobs.forEach(Mob::update);
         //mobs.get(0).update();
         //mobs.get(1).update();
     }
