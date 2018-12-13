@@ -38,7 +38,7 @@ public class Game extends ApplicationAdapter {
     private static SpriteBatch batch;
 
     private static Box2DDebugRenderer box2dBodyRenderer;
-    private static ShapeRenderer shapeDebugRenderer;
+    private static ShapeRenderer shapeRenderer;
     private static OrthographicCamera debugCamera;
 
     public static ArrayList<Mob> mobs;
@@ -60,6 +60,7 @@ public class Game extends ApplicationAdapter {
     public void create() {
         initializeClassFields();
         setCamera();
+        setShapeRenderer();
         setDebugCamera();
         setUiStage();
         setInputProcessor();
@@ -74,7 +75,6 @@ public class Game extends ApplicationAdapter {
         world = new World(new Vector2(.0f, .0f), true);
         world.setContactListener(new CollisionHandler());
         box2dBodyRenderer = new Box2DDebugRenderer();
-        shapeDebugRenderer = new ShapeRenderer();
         batch = new SpriteBatch();
         font = new BitmapFont(Gdx.files.internal("font26.fnt"));
         mobs = new ArrayList<>();
@@ -86,6 +86,11 @@ public class Game extends ApplicationAdapter {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, VIEWPORT * screenRatio, VIEWPORT);
         camera.position.set(VIEWPORT/2 * screenRatio - 6, VIEWPORT/2 - 5, 0); //todo MAGIC NUMBERS
+    }
+
+    private void setShapeRenderer() {
+        shapeRenderer = new ShapeRenderer();
+        shapeRenderer.setProjectionMatrix(camera.combined);
     }
 
     private void setDebugCamera() {
@@ -193,16 +198,23 @@ public class Game extends ApplicationAdapter {
     }
 
     private void drawMobPath() {
-        shapeDebugRenderer.setProjectionMatrix(camera.combined); //TODO can it be moved to declaration?
-        shapeDebugRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         for (Mob mob : mobs) {
+
+            shapeRenderer.rect(mob.getSprite().getBoundingRectangle().x,
+                    mob.getSprite().getBoundingRectangle().y,
+                    mob.getSprite().getBoundingRectangle().width,
+                    mob.getSprite().getBoundingRectangle().height);
+
+            if (mob.getTarget() == null) continue;
+
             if (mob.getPath().size() == 0) {
-                shapeDebugRenderer.setColor(Color.YELLOW);
+                shapeRenderer.setColor(Color.YELLOW);
                 Mob target = (Mob) mob.getTarget();
                 if (target == null) break;
-                shapeDebugRenderer.rectLine(mob.getPosition().x, mob.getPosition().y, target.getPosition().x, target.getPosition().y, .1f);
+                shapeRenderer.rectLine(mob.getPosition().x, mob.getPosition().y, target.getPosition().x, target.getPosition().y, .1f);
             } else {
-                shapeDebugRenderer.setColor(Color.WHITE);
+                shapeRenderer.setColor(Color.WHITE);
                 ArrayList<Vector2> nodesToDraw = new ArrayList<>();
                 nodesToDraw.add(mob.getPosition());
                 for (Node node : mob.getPath().nodes) {
@@ -211,11 +223,11 @@ public class Game extends ApplicationAdapter {
                 for (int i = 0; i < nodesToDraw.size() - 1; i++) {
                     Vector2 currNode = nodesToDraw.get(i);
                     Vector2 nextNode = nodesToDraw.get(i + 1);
-                    shapeDebugRenderer.rectLine(currNode.x, currNode.y, nextNode.x, nextNode.y, .1f);
+                    shapeRenderer.rectLine(currNode.x, currNode.y, nextNode.x, nextNode.y, .1f);
                 }
             }
         }
-        shapeDebugRenderer.end();
+        shapeRenderer.end();
     }
 
     private void drawMobId() {
