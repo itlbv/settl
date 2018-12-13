@@ -149,8 +149,6 @@ public class Game extends ApplicationAdapter {
     private void handleInput() {
         mouseKeyboardInput.handleInput();
         handleSelectedMob();
-        Vector3 mouseCoord = new Vector3(mouseKeyboardInput.mouseX, mouseKeyboardInput.mouseY, 0);
-        camera.unproject(mouseCoord);
         uiStage.act(DELTA_TIME);
     }
 
