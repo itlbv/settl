@@ -234,17 +234,9 @@ public class Game extends ApplicationAdapter {
         //player2.draw();
     }
 
-    private void drawDeadMobs() {
-        for (Mob deadMob : deadMobs) {
-            deadMob.getSprite().draw(batch);
-        }
-    }
-
     private void drawMobs() {
-        drawDeadMobs();
-        for (Mob mob : mobs) {
-           mob.getSprite().draw(batch);
-        }
+        deadMobs.forEach(m -> m.getSprite().draw(batch));
+        mobs.forEach(m -> m.getSprite().draw(batch));
     }
 
     @Override
