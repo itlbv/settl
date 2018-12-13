@@ -2,8 +2,8 @@ package com.itlbv.settl.mobs.managers;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.itlbv.settl.Game;
-import com.itlbv.settl.mobs.utils.ActionState;
-import com.itlbv.settl.mobs.utils.MobAnimationState;
+import com.itlbv.settl.mobs.util.ActionState;
+import com.itlbv.settl.mobs.util.MobAnimationState;
 import com.itlbv.settl.mobs.Mob;
 
 import java.util.Comparator;

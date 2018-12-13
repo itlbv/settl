@@ -3,9 +3,9 @@ package com.itlbv.settl.mobs.managers;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.itlbv.settl.Game;
-import com.itlbv.settl.mobs.utils.MobAnimationState;
+import com.itlbv.settl.mobs.util.MobAnimationState;
 import com.itlbv.settl.mobs.Mob;
-import com.itlbv.settl.mobs.utils.MobAnimationHelper;
+import com.itlbv.settl.mobs.util.MobAnimationHelper;
 
 public class AnimationManager {
     private final Mob owner;
