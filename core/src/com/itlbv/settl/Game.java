@@ -173,7 +173,6 @@ public class Game extends ApplicationAdapter {
         mapRenderer.setView(camera);
         mapRenderer.render();
         batch.begin();
-        drawDeadMobs();
         drawMobs();
         //drawPlayer();
         batch.end();
@@ -242,7 +241,8 @@ public class Game extends ApplicationAdapter {
     }
 
     private void drawMobs() {
-       for (Mob mob : mobs) {
+        drawDeadMobs();
+        for (Mob mob : mobs) {
            mob.getSprite().draw(batch);
         }
     }
