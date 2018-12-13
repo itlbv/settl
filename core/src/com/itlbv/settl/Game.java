@@ -136,6 +136,7 @@ public class Game extends ApplicationAdapter {
         RENDER_ITERATION++;
 
         handleInput();
+        updateUiStage();
         updateCamera();
         updateMobs();
 
@@ -149,7 +150,10 @@ public class Game extends ApplicationAdapter {
     private void handleInput() {
         mouseKeyboardInput.handleInput();
         handleSelectedMob();
-        uiStage.act(DELTA_TIME);
+    }
+
+    private void updateUiStage() {
+        uiStage.update();
     }
 
     private void handleSelectedMob() {
@@ -159,7 +163,7 @@ public class Game extends ApplicationAdapter {
         camera.unproject(clickCoord);
         for (Mob mob : mobs) {
             if (mob.getSprite().getBoundingRectangle().contains(clickCoord.x, clickCoord.y)) {
-                uiStage.labelSelectedMob.setText(mob.toString());
+                uiStage.setSelectedMob(mob);
             }
         }
     }
@@ -167,6 +171,13 @@ public class Game extends ApplicationAdapter {
     private void updateCamera() {
         batch.setProjectionMatrix(camera.combined);
         camera.update();
+    }
+
+    private void updateMobs() {
+        cleanMobsFromDead();
+        //mobs.forEach(Mob::update);
+        //mobs.get(0).update();
+        //mobs.get(1).update();
     }
 
     private void drawGameObjects() {
@@ -208,13 +219,6 @@ public class Game extends ApplicationAdapter {
             camera.project(fontPos,0,0, debugCamera.viewportWidth, debugCamera.viewportHeight);
             font.draw(batch, Integer.toString(mob.getId()), fontPos.x, fontPos.y);
         }
-    }
-
-    private void updateMobs() {
-        cleanMobsFromDead();
-        mobs.forEach(Mob::update);
-        //mobs.get(0).update();
-        //mobs.get(1).update();
     }
 
     private void cleanMobsFromDead() {
