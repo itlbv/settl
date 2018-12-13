@@ -1,4 +1,4 @@
-package com.itlbv.settl.mobs.utils;
+package com.itlbv.settl.mobs.util;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
@@ -9,9 +9,9 @@ import com.itlbv.settl.mobs.Mob;
 import com.itlbv.settl.util.BodyFactory;
 import org.slf4j.Logger;
 
-import static com.itlbv.settl.mobs.utils.MobConstants.MOB_RENDER_HEIGHT;
-import static com.itlbv.settl.mobs.utils.MobConstants.MOB_RENDER_WIDTH;
-import static com.itlbv.settl.mobs.utils.MobConstants.MOB_SPEED;
+import static com.itlbv.settl.mobs.util.MobConstants.MOB_RENDER_HEIGHT;
+import static com.itlbv.settl.mobs.util.MobConstants.MOB_RENDER_WIDTH;
+import static com.itlbv.settl.mobs.util.MobConstants.MOB_SPEED;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class MobFactory {

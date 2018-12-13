@@ -1,4 +1,4 @@
-package com.itlbv.settl.mobs.utils;
+package com.itlbv.settl.mobs.util;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;

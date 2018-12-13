@@ -1,4 +1,4 @@
-package com.itlbv.settl.mobs.utils;
+package com.itlbv.settl.mobs.util;
 
 public enum MobAnimationState {
     IDLE(false),
