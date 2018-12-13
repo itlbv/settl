@@ -18,7 +18,7 @@ import com.itlbv.settl.enumsObjectType.MobObjectType;
 import com.itlbv.settl.map.Map;
 import com.itlbv.settl.map.Node;
 import com.itlbv.settl.mobs.Mob;
-import com.itlbv.settl.mobs.utils.MobFactory;
+import com.itlbv.settl.mobs.util.MobFactory;
 import com.itlbv.settl.ui.UiStage;
 import com.itlbv.settl.util.CollisionHandler;
 import com.itlbv.settl.util.MouseKeyboardInput;

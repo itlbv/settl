@@ -1,16 +1,12 @@
 package com.itlbv.settl;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.steer.SteerableAdapter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.itlbv.settl.enumsObjectType.GameObjectType;
-import com.itlbv.settl.mobs.Mob;
-import com.itlbv.settl.mobs.utils.MobConstants;
-import com.itlbv.settl.util.BodyFactory;
+import com.itlbv.settl.mobs.util.MobConstants;
 
 import static com.itlbv.settl.GameConstants.MOB_TEXTURE_SIZE_PXL;
 

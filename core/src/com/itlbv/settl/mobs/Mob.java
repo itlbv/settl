@@ -4,7 +4,7 @@ import com.badlogic.gdx.ai.btree.BehaviorTree;
 import com.badlogic.gdx.ai.btree.utils.BehaviorTreeLibraryManager;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.GameObject;
-import com.itlbv.settl.mobs.utils.MobAnimationState;
+import com.itlbv.settl.mobs.util.MobAnimationState;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
 import com.itlbv.settl.mobs.managers.AnimationManager;
 import com.itlbv.settl.mobs.managers.ActionManager;
@@ -14,8 +14,8 @@ import org.slf4j.Logger;
 
 import java.util.Objects;
 
-import static com.itlbv.settl.mobs.utils.MobAnimationState.IDLE;
-import static com.itlbv.settl.mobs.utils.MobAnimationState.WALK;
+import static com.itlbv.settl.mobs.util.MobAnimationState.IDLE;
+import static com.itlbv.settl.mobs.util.MobAnimationState.WALK;
 import static org.slf4j.LoggerFactory.getLogger;
 
 
