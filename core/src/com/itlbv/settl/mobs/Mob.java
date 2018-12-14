@@ -2,6 +2,7 @@ package com.itlbv.settl.mobs;
 
 import com.badlogic.gdx.ai.btree.BehaviorTree;
 import com.badlogic.gdx.ai.btree.utils.BehaviorTreeLibraryManager;
+import com.badlogic.gdx.math.Rectangle;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.GameObject;
 import com.itlbv.settl.mobs.util.MobAnimationState;
@@ -32,6 +33,8 @@ public class Mob extends GameObject {
     private boolean alive;
     private boolean targetWithinReach = false;
 
+    private Rectangle selectingRectangle;
+
     private int id;
 
     public Mob(MobObjectType type, String bhvTree, float speed) {
@@ -42,6 +45,7 @@ public class Mob extends GameObject {
         this.movementManager = new MovementManager(speed, this);
         this.animationManager = new AnimationManager(this);
         this.actionManager = new ActionManager(this);
+        this.selectingRectangle = new Rectangle();
         setBhvTree(bhvTree);
     }
 
@@ -156,5 +160,12 @@ public class Mob extends GameObject {
 
     public Path getPath() {
         return movementManager.pathMovement.path; // TODO for path drawing in Game class
+    }
+
+    public Rectangle getSelectingRectangle() {
+        selectingRectangle.set(getPosition().x - .5f,
+                getPosition().y,
+                1,1.5f);
+        return selectingRectangle;
     }
 }

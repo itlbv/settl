@@ -2,7 +2,6 @@ package com.itlbv.settl;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -17,9 +16,8 @@ import com.itlbv.settl.map.Map;
 import com.itlbv.settl.mobs.Mob;
 import com.itlbv.settl.mobs.util.MobFactory;
 import com.itlbv.settl.ui.UiShapeRenderer;
-import com.itlbv.settl.ui.UiStage;
+import com.itlbv.settl.ui.InputStage;
 import com.itlbv.settl.util.CollisionHandler;
-import com.itlbv.settl.util.MouseKeyboardInput;
 import com.itlbv.settl.util.Player;
 
 import java.util.ArrayList;
@@ -29,15 +27,9 @@ public class Game extends ApplicationAdapter {
     public static Map map;
 
     private static OrthogonalTiledMapRenderer mapRenderer;
-    private static MouseKeyboardInput mouseKeyboardInput;
     private static OrthographicCamera camera;
-    private static BitmapFont font;
-    private static UiStage uiStage;
-    private static SpriteBatch batch;
-
-    private static Box2DDebugRenderer box2dBodyRenderer;
-    private static UiShapeRenderer uiShapeRenderer;
-    private static OrthographicCamera debugCamera;
+    private static InputStage inputStage;
+    public static SpriteBatch batch;
 
     public static ArrayList<Mob> mobs;
     private static ArrayList<Mob> deadMobs;
@@ -58,10 +50,7 @@ public class Game extends ApplicationAdapter {
     public void create() {
         initializeClassFields();
         setCamera();
-        setShapeRenderer();
-        setDebugCamera();
-        setUiStage();
-        setInputProcessor();
+        setInputStage();
         setMap();
         setMapRenderer();
         createMobs();
@@ -72,9 +61,7 @@ public class Game extends ApplicationAdapter {
     private void initializeClassFields() {
         world = new World(new Vector2(.0f, .0f), true);
         world.setContactListener(new CollisionHandler());
-        box2dBodyRenderer = new Box2DDebugRenderer();
         batch = new SpriteBatch();
-        font = new BitmapFont(Gdx.files.internal("font26.fnt"));
         mobs = new ArrayList<>();
         deadMobs = new ArrayList<>();
     }
@@ -86,27 +73,9 @@ public class Game extends ApplicationAdapter {
         camera.position.set(VIEWPORT/2 * screenRatio - 6, VIEWPORT/2 - 5, 0); //todo MAGIC NUMBERS
     }
 
-    private void setShapeRenderer() {
-        uiShapeRenderer = new UiShapeRenderer(camera.combined);
-    }
-
-    private void setDebugCamera() {
-        float w = Gdx.graphics.getWidth();
-        float h = Gdx.graphics.getHeight();
-        debugCamera = new OrthographicCamera();
-        debugCamera.setToOrtho(false, w, h);
-    }
-
-    private void setUiStage() {
-        uiStage = new UiStage();
-    }
-
-    private void setInputProcessor() {
-        mouseKeyboardInput = new MouseKeyboardInput(camera);
-        InputMultiplexer inputMultiplexer = new InputMultiplexer();
-        inputMultiplexer.addProcessor(mouseKeyboardInput);
-        inputMultiplexer.addProcessor(uiStage);
-        Gdx.input.setInputProcessor(inputMultiplexer);
+    private void setInputStage() {
+        inputStage = new InputStage(camera);
+        Gdx.input.setInputProcessor(inputStage);
     }
 
     private void setMap() {
@@ -135,90 +104,42 @@ public class Game extends ApplicationAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // clears the screen
         RENDER_ITERATION++;
 
-        handleInput();
-        updateUiStage();
+        inputStage.act(DELTA_TIME);
         updateCamera();
         updateMobs();
 
-        drawGameObjects();
-        drawDebugInfo();
+        drawMap();
+        drawMobs();
+        inputStage.draw();
+        inputStage.drawAdditionalInfo();
 
         world.step(DELTA_TIME, 6, 2);
         world.clearForces(); //TODO should it be here?
     }
 
-    private void handleInput() {
-        mouseKeyboardInput.handleInput();
-        handleSelectedMob();
-    }
-
-    private void updateUiStage() {
-        uiStage.update();
-    }
-
-    private void handleSelectedMob() {
-        if (!mouseKeyboardInput.clickHappened) return;
-        mouseKeyboardInput.clickHappened = false;
-        Vector3 clickCoord = new Vector3(mouseKeyboardInput.mouseClickCoord, 0);
-        camera.unproject(clickCoord);
-        for (Mob mob : mobs) {
-            if (mob.getSprite().getBoundingRectangle().contains(clickCoord.x, clickCoord.y)) {
-                uiStage.setSelectedMob(mob);
-            }
-        }
-    }
-
     private void updateCamera() {
         batch.setProjectionMatrix(camera.combined);
+        inputStage.updateCameraPosition();
         camera.update();
     }
 
     private void updateMobs() {
         cleanMobsFromDead();
-        //mobs.forEach(Mob::update);
+        mobs.forEach(Mob::update);
         //mobs.get(0).update();
         //mobs.get(1).update();
     }
 
-    private void drawGameObjects() {
+    private void drawMap() {
         mapRenderer.setView(camera);
         mapRenderer.render();
+    }
+
+    private void drawMobs() {
         batch.begin();
-        drawMobs();
-        //drawPlayer();
+        deadMobs.forEach(m -> m.getSprite().draw(batch));
+        mobs.forEach(m -> m.getSprite().draw(batch));
         batch.end();
-        uiStage.draw();
-    }
-
-    private void drawDebugInfo() {
-        if (!mouseKeyboardInput.debugMode) return;
-        if (mouseKeyboardInput.drawPath) {
-          drawMobsRoutes();
-        }
-        drawMobsBoundingRects();
-        debugCamera.update();
-        batch.begin();
-        drawMobId();
-        batch.end();
-        box2dBodyRenderer.render(world, camera.combined);
-    }
-
-    private void drawMobsRoutes() {
-        mobs.forEach(m -> uiShapeRenderer.drawRoute(m));
-    }
-
-    private void drawMobsBoundingRects() {
-        mobs.forEach(m -> uiShapeRenderer.drawBoundingRect(m));
-    }
-
-    private void drawMobId() {
-        batch.setProjectionMatrix(debugCamera.combined);
-        Vector3 fontPos = new Vector3();
-        for (Mob mob : mobs) {
-            fontPos.set(mob.getPosition(), 0);
-            camera.project(fontPos,0,0, debugCamera.viewportWidth, debugCamera.viewportHeight);
-            font.draw(batch, Integer.toString(mob.getId()), fontPos.x, fontPos.y);
-        }
     }
 
     private void cleanMobsFromDead() {
@@ -238,11 +159,6 @@ public class Game extends ApplicationAdapter {
         //player2.draw();
     }
 
-    private void drawMobs() {
-        deadMobs.forEach(m -> m.getSprite().draw(batch));
-        mobs.forEach(m -> m.getSprite().draw(batch));
-    }
-
     @Override
     public void resize(int width, int height) {
         camera.viewportWidth = VIEWPORT;
@@ -256,7 +172,7 @@ public class Game extends ApplicationAdapter {
 
     @Override
     public void dispose() {
-        uiStage.dispose();
+        inputStage.dispose();
         batch.dispose();
     }
 }
