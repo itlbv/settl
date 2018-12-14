@@ -15,14 +15,14 @@ public class UiShapeRenderer extends ShapeRenderer {
         this.projectionMatrix = projectionMatrix;
     }
 
-    public void drawBoundingRect(Mob mob) {
+    public void drawSelectingRect(Mob mob) {
         setProjectionMatrix(projectionMatrix);
         setColor(Color.WHITE);
         begin(ShapeType.Line);
-        rect(mob.getSprite().getBoundingRectangle().x,
-                mob.getSprite().getBoundingRectangle().y,
-                mob.getSprite().getBoundingRectangle().width,
-                mob.getSprite().getBoundingRectangle().height);
+        rect(mob.getSelectingRectangle().x,
+                mob.getSelectingRectangle().y,
+                mob.getSelectingRectangle().width,
+                mob.getSelectingRectangle().height);
         end();
     }
 
