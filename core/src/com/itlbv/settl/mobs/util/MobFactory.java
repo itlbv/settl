@@ -55,10 +55,6 @@ public class MobFactory {
     private static void setSprite(int x, int y, Mob mob) {
         Sprite sprite = mob.getSprite();
         sprite.setSize(MOB_RENDER_WIDTH, MOB_RENDER_HEIGHT);
-        /*
-        Rectangle rect = sprite.getBoundingRectangle();
-        Vector2 centerPos = rect.getCenter();
-        */
         mob.setSprite(sprite);
         mob.updateRenderPosition();
     }
