@@ -167,7 +167,11 @@ public class Game extends ApplicationAdapter {
     }
 
     private void updateDeltaTime() {
-        DELTA_TIME = Gdx.graphics.getDeltaTime();
+        if (inputStage.gameSpeed == 0) {
+            DELTA_TIME = 0;
+        } else {
+            DELTA_TIME = Gdx.graphics.getDeltaTime() / inputStage.gameSpeed;
+        }
     }
 
     @Override

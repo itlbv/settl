@@ -23,11 +23,11 @@ public class InputStage extends Stage {
     private Mob selectedMob;
 
     private Label labelSelectedMob;
+    private Label labelGameSpeed;
     private BitmapFont font;
 
     private boolean debugMode = true;
     private boolean routeDrawing = true;
-
     public InputStage(OrthographicCamera camera) {
         this.camera = camera;
         uiShapeRenderer = new UiShapeRenderer(camera.combined);
@@ -54,20 +54,38 @@ public class InputStage extends Stage {
         labelStyle.font = font;
         labelStyle.fontColor = Color.WHITE;
 
-        labelSelectedMob = new Label("selected mob", labelStyle);
+        labelSelectedMob = new Label("no selected mob", labelStyle);
         labelSelectedMob.setPosition(0, 0);
         labelSelectedMob.setSize(100,100);
         addActor(labelSelectedMob);
+
+        labelGameSpeed = new Label("game speed", labelStyle);
+        labelGameSpeed.setPosition(0, 50);
+        labelGameSpeed.setSize(100,100);
+        addActor(labelGameSpeed);
     }
 
     public void drawAdditionalInfo() {
         drawMobSelection();
+        drawGameSpeed();
         drawDebugInfo();
     }
 
     private void drawMobSelection() {
         if (selectedMob == null) return;
         uiShapeRenderer.drawSelectingRect(selectedMob);
+    }
+
+    private void drawGameSpeed() {
+        if (gameSpeed == 0) {
+            labelGameSpeed.setText("PAUSE");
+        } else if (gameSpeed == 1) {
+            labelGameSpeed.setText("NORMAL");
+        } else if (gameSpeed == 2) {
+            labelGameSpeed.setText("SLOW");
+        } else if (gameSpeed == 3) {
+            labelGameSpeed.setText("VERY SLOW");
+        }
     }
 
     private void drawDebugInfo() {
@@ -98,10 +116,42 @@ public class InputStage extends Stage {
     @Override
     public boolean keyTyped(char character) {
         switch (character) {
-            case '\b': debugMode = !debugMode; // BACKSPACE
-            case 't': routeDrawing =! routeDrawing;
+            case '\b': debugMode = !debugMode; break;// BACKSPACE
+            case 't': routeDrawing =! routeDrawing; break;
+            case 'x': increaseGameSpeed(); break;
+            case 'z': decreaseGameSpeed(); break;
+            case ' ': changePauseState(); break;// SPACEBAR
         }
         return true;
+    }
+
+    private void increaseGameSpeed() {
+        switch (gameSpeed) {
+            case 0: gameSpeed = 3; break;
+            case 1: gameSpeed = 1; break;
+            case 2: gameSpeed = 1; break;
+            case 3: gameSpeed = 2; break;
+        }
+    }
+
+    private void decreaseGameSpeed() {
+        switch (gameSpeed) {
+            case 0: gameSpeed = 0; break;
+            case 1: gameSpeed = 2; break;
+            case 2: gameSpeed = 3; break;
+            case 3: gameSpeed = 3; break;
+        }
+    }
+
+    public int gameSpeed = 1;
+    private int previousGameSpeed = 1;
+    private void changePauseState() {
+        if (gameSpeed == 0) {
+            gameSpeed = previousGameSpeed;
+        } else {
+            previousGameSpeed = gameSpeed;
+            gameSpeed = 0;
+        }
     }
 
     @Override
