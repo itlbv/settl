@@ -44,7 +44,7 @@ public class InputStage extends Stage {
     }
 
     private void setStage() {
-        font = new BitmapFont(Gdx.files.internal("font26.fnt"));
+        font = new BitmapFont(Gdx.files.internal("font.fnt"));
 
         Table table = new Table();
         table.setFillParent(true);
