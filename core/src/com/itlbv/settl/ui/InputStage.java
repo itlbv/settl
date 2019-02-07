@@ -2,7 +2,6 @@ package com.itlbv.settl.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
@@ -10,9 +9,11 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.mobs.Mob;
+import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.widget.VisLabel;
+import com.kotcrab.vis.ui.widget.VisWindow;
 
 public class InputStage extends Stage {
     private OrthographicCamera camera;
@@ -22,12 +23,13 @@ public class InputStage extends Stage {
 
     private Mob selectedMob;
 
-    private Label labelSelectedMob;
-    private Label labelGameSpeed;
+    private VisLabel labelSelectedMob;
+    private VisLabel labelGameSpeed;
     private BitmapFont font;
 
     private boolean debugMode = true;
     private boolean routeDrawing = true;
+
     public InputStage(OrthographicCamera camera) {
         this.camera = camera;
         uiShapeRenderer = new UiShapeRenderer(camera.combined);
@@ -46,6 +48,18 @@ public class InputStage extends Stage {
     private void setStage() {
         font = new BitmapFont(Gdx.files.internal("font.fnt"));
 
+        VisUI.load(VisUI.SkinScale.X2);
+
+        VisWindow windowMobInfo = new VisWindow("mobInfo");
+        labelGameSpeed = new VisLabel();
+        windowMobInfo.add(labelGameSpeed);
+        labelSelectedMob = new VisLabel();
+        windowMobInfo.add(labelSelectedMob);
+
+        addActor(windowMobInfo);
+        windowMobInfo.pack();
+
+        /*
         Table table = new Table();
         table.setFillParent(true);
         addActor(table);
@@ -63,6 +77,7 @@ public class InputStage extends Stage {
         labelGameSpeed.setPosition(0, 50);
         labelGameSpeed.setSize(100,100);
         addActor(labelGameSpeed);
+        */
     }
 
     public void drawAdditionalInfo() {
