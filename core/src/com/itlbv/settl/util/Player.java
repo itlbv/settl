@@ -16,6 +16,7 @@ import com.itlbv.settl.Game;
 import com.itlbv.settl.GameObject;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
 import com.itlbv.settl.mobs.Mob;
+import com.itlbv.settl.mobs.util.MobConstants;
 
 public class Player extends GameObject {
     private Vector2 UP, DOWN, LEFT, RIGHT;
@@ -30,7 +31,7 @@ public class Player extends GameObject {
         RIGHT = new Vector2(0, 0);
         linearVelocity = new Vector2();
 
-        setTexture(new TextureRegion(new Texture(Gdx.files.internal("black_dot.png"))));
+        setTexture(new TextureRegion(new Texture(Gdx.files.internal("white_dot.png"))));
         getSprite().setSize(1,1);
         createBodyAndSensor(x,y);
 
@@ -75,30 +76,30 @@ public class Player extends GameObject {
     }
 
     public void update() {
-        if (Gdx.input.isKeyPressed(Input.Keys.T)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             UP.set(0, 3);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.G)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             DOWN.set(0, -3);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.F)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             LEFT.set(-3, 0);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.H)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             RIGHT.set(3, 0);
         }
 
 
-        if (!Gdx.input.isKeyPressed(Input.Keys.T)) {
+        if (!Gdx.input.isKeyPressed(Input.Keys.UP)) {
             UP.set(0, 0);
         }
-        if (!Gdx.input.isKeyPressed(Input.Keys.G)) {
+        if (!Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             DOWN.set(0, 0);
         }
-        if (!Gdx.input.isKeyPressed(Input.Keys.F)) {
+        if (!Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             LEFT.set(0, 0);
         }
-        if (!Gdx.input.isKeyPressed(Input.Keys.H)) {
+        if (!Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             RIGHT.set(0, 0);
         }
         float x = UP.x + DOWN.x + LEFT.x + RIGHT.x;
@@ -107,7 +108,10 @@ public class Player extends GameObject {
         getBody().setLinearVelocity(linearVelocity);
         getSensor().setLinearVelocity(linearVelocity);
         checkSensorAlignment();
-        updateRenderPosition();
+
+        float xPos = getBody().getPosition().x - .5f;
+        float yPos = getBody().getPosition().y - .5f;
+        getSprite().setPosition(xPos, yPos);
     }
 
     private void checkSensorAlignment() {
