@@ -1,9 +1,6 @@
 package com.itlbv.settl.mobs.util;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
@@ -39,9 +36,10 @@ public class MobFactory {
     private static void createMob(int x, int y, MobObjectType type) {
         Mob mob = new Mob(type, "bhvTrees/humanKnight.btree", MOB_SPEED);
         setBodyAndSensor(x, y, mob);
-        setSprite(x, y, mob);
+        mob.getSprite().setSize(MOB_RENDER_WIDTH, MOB_RENDER_HEIGHT);
         Game.mobs.add(mob);
         mob.setId(Game.mobs.size());
+        mob.updateRenderPosition();
         log.info(mob + " created");
     }
 
@@ -50,12 +48,5 @@ public class MobFactory {
         Body mobSensor = BodyFactory.createAndGetMobBody(x, y, mob, true);
         mob.setBody(mobBody);
         mob.setSensor(mobSensor);
-    }
-
-    private static void setSprite(int x, int y, Mob mob) {
-        Sprite sprite = mob.getSprite();
-        sprite.setSize(MOB_RENDER_WIDTH, MOB_RENDER_HEIGHT);
-        mob.setSprite(sprite);
-        mob.updateRenderPosition();
     }
 }
