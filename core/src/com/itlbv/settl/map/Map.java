@@ -18,6 +18,7 @@ public class Map implements IndexedGraph<Node> {
     private TiledMapTileLayer tileLayer;
     private int mapWidth, mapHeight;
     private Array<Node> nodes;
+    public Body mapSensor;
 
     public Map(String path) {
         map = new TmxMapLoader().load(path);
@@ -29,9 +30,8 @@ public class Map implements IndexedGraph<Node> {
         nodes = new Array<>();
     }
 
-    public Body mapSensor;
     public void init() {
-        mapSensor = BodyFactory.createSensorForMap();
+        mapSensor = BodyFactory.createAndGetMapSensorForObjectsFrictionJoints();
         for (int x = 0; x < mapWidth; x++) {
             for (int y = 0; y < mapHeight; y++) {
                 Cell cell = tileLayer.getCell(x, y);
