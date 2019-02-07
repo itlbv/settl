@@ -2,29 +2,72 @@ package com.itlbv.settl.util;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.joints.FrictionJoint;
 import com.badlogic.gdx.physics.box2d.joints.FrictionJointDef;
 import com.itlbv.settl.Game;
+import com.itlbv.settl.GameObject;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
 import com.itlbv.settl.mobs.Mob;
 
-public class Player extends Mob {
+public class Player extends GameObject {
     private Vector2 UP, DOWN, LEFT, RIGHT;
+    private Vector2 linearVelocity;
     FrictionJoint joint;
 
-    public Player(float x, float y) {
-        super(MobObjectType.PEASANT, "", 1f);
-        //super.setTexture(new TextureRegion(new Texture("black_dot.png")));
+    public Player(int x, int y) {
+        super(MobObjectType.PEASANT);
         UP = new Vector2(0, 0);
         DOWN = new Vector2(0, 0);
         LEFT = new Vector2(0, 0);
         RIGHT = new Vector2(0, 0);
-        createFrictionJoint();
+        linearVelocity = new Vector2();
+
+        setTexture(new TextureRegion(new Texture(Gdx.files.internal("black_dot.png"))));
+        getSprite().setSize(1,1);
+        createBodyAndSensor(x,y);
+
+        //createFrictionJoint();
+    }
+
+    private void createBodyAndSensor(int x, int y) {
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(x, y);
+        Body body = Game.world.createBody(bodyDef);
+        CircleShape circleShape = new CircleShape();
+        circleShape.setRadius(.3f);
+        FixtureDef bodyFixtureDef = new FixtureDef();
+        bodyFixtureDef.shape = circleShape;
+        bodyFixtureDef.isSensor = false;
+        body.createFixture(bodyFixtureDef);
+        body.setUserData(this);
+        setBody(body);
+        bodyFixtureDef.filter.categoryBits = CollisionBits.MOB_BODY;
+        bodyFixtureDef.filter.maskBits = CollisionBits.MAP_TILE | CollisionBits.MOB_BODY | CollisionBits.MOB_SENSOR;
+
+        Body sensor = Game.world.createBody(bodyDef);
+        circleShape.setRadius(1f);
+        FixtureDef sensorFixtureDef = new FixtureDef();
+        sensorFixtureDef.shape = circleShape;
+        sensorFixtureDef.isSensor = true;
+        sensor.createFixture(sensorFixtureDef);
+        sensor.setUserData(this);
+        setSensor(sensor);
+        sensorFixtureDef.filter.categoryBits = CollisionBits.MOB_SENSOR;
+        sensorFixtureDef.filter.maskBits = CollisionBits.MOB_BODY;
+
+        circleShape.dispose();
     }
 
     private void createFrictionJoint() {
-
         FrictionJointDef jointDef = new FrictionJointDef();
         jointDef.initialize(getBody(), Game.map.mapSensor, getBody().getPosition());
         jointDef.maxForce = 25;
@@ -32,7 +75,6 @@ public class Player extends Mob {
     }
 
     public void update() {
-
         if (Gdx.input.isKeyPressed(Input.Keys.T)) {
             UP.set(0, 3);
         }
@@ -61,7 +103,20 @@ public class Player extends Mob {
         }
         float x = UP.x + DOWN.x + LEFT.x + RIGHT.x;
         float y = UP.y + DOWN.y + LEFT.y + RIGHT.y;
-        getBody().setLinearVelocity(new Vector2(x, y));
+        linearVelocity.set(x, y);
+        getBody().setLinearVelocity(linearVelocity);
+        getSensor().setLinearVelocity(linearVelocity);
+        checkSensorAlignment();
         updateRenderPosition();
+    }
+
+    private void checkSensorAlignment() {
+        Vector2 bodyPosition = getBody().getPosition();
+        Vector2 sensorPosition = getSensor().getPosition();
+        if (bodyPosition.epsilonEquals(sensorPosition, MathUtils.FLOAT_ROUNDING_ERROR)) {
+            return;
+        }
+        Vector2 vectorToBody = bodyPosition.sub(sensorPosition);
+        getSensor().setLinearVelocity(getBody().getLinearVelocity().cpy().mulAdd(vectorToBody,10));
     }
 }

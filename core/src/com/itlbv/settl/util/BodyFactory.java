@@ -80,7 +80,7 @@ public class BodyFactory {
         Game.world.createJoint(jointDef);
     }
 
-    public static Body createAndGetMobBody(int x, int y, Mob owner, boolean isSensor) {
+    public static Body createAndGetMobBody(int x, int y, Mob owner, boolean isSensor) { //TODO rewrite method like in Player class
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyType.DynamicBody;
         bodyDef.position.set(x, y);

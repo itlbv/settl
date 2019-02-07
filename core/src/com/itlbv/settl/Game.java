@@ -42,8 +42,8 @@ public class Game extends ApplicationAdapter {
     private static Player player;
     private static Player player2;
     private static void createPlayers() {
-        player = new Player(3,3);
-        player2 = new Player(6,6);
+        player = new Player(5,5);
+        //player2 = new Player(6,6);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class Game extends ApplicationAdapter {
         setMapRenderer();
         createMobs();
 
-        //createPlayers();
+        createPlayers();
     }
 
     private void initializeClassFields() {
@@ -139,6 +139,7 @@ public class Game extends ApplicationAdapter {
         batch.begin();
         deadMobs.forEach(m -> m.getSprite().draw(batch));
         mobs.forEach(m -> m.getSprite().draw(batch));
+        drawPlayer();
         batch.end();
     }
 
@@ -155,7 +156,8 @@ public class Game extends ApplicationAdapter {
     }
 
     private void drawPlayer() {
-        //player.draw();
+        player.update();
+        player.getSprite().draw(batch);
         //player2.draw();
     }
 
