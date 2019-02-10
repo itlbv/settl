@@ -143,7 +143,6 @@ public class InputStage extends Stage {
     private void increaseGameSpeed() {
         switch (gameSpeed) {
             case 0: gameSpeed = 3; break;
-            case 1: gameSpeed = 1; break;
             case 2: gameSpeed = 1; break;
             case 3: gameSpeed = 2; break;
         }
@@ -151,10 +150,9 @@ public class InputStage extends Stage {
 
     private void decreaseGameSpeed() {
         switch (gameSpeed) {
-            case 0: gameSpeed = 0; break;
             case 1: gameSpeed = 2; break;
             case 2: gameSpeed = 3; break;
-            case 3: gameSpeed = 3; break;
+            case 3: gameSpeed = 0; break;
         }
     }
 
