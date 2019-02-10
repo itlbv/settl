@@ -4,8 +4,8 @@ public class MobConstants {
     public static final float MOB_SPEED = 4f;
     public static final float MOB_RENDER_WIDTH = 2.5f;
     public static final float MOB_RENDER_HEIGHT = 2.5f;
-    public static final float MOB_BODY_RADIUS = .2f;
-    public static final float MOB_SENSOR_RADIUS = 2f;
+    public static final float MOB_BODY_RADIUS = .3f;
+    public static final float MOB_SENSOR_RADIUS = 1f;
 
     /*
     public static final float HUMAN_SPEED = 4f;

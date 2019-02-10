@@ -6,31 +6,37 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.joints.FrictionJointDef;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.mobs.Mob;
+import com.itlbv.settl.mobs.util.MobConstants;
 
 public class BodyFactory {
 
-    public static Body createAndGetMobBody(int x, int y, Mob owner, boolean isSensor) { //TODO rewrite method like in Player class
+    public static void createBodyAndSensorForMob(int x, int y, Mob mob) {
         BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyType.DynamicBody;
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(x, y);
         Body body = Game.world.createBody(bodyDef);
         CircleShape circleShape = new CircleShape();
-        if (isSensor) {
-            circleShape.setRadius(1f);
-        } else {
-            circleShape.setRadius(.3f);
-        }
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = circleShape;
-        fixtureDef.isSensor = isSensor;
-        body.createFixture(fixtureDef);
-        body.setUserData(owner);
+        circleShape.setRadius(MobConstants.MOB_BODY_RADIUS);
+        FixtureDef bodyFixtureDef = new FixtureDef();
+        bodyFixtureDef.shape = circleShape;
+        bodyFixtureDef.isSensor = false;
+        body.createFixture(bodyFixtureDef);
+        body.setUserData(mob);
+        mob.setBody(body);
+        setCollisionBits(bodyFixtureDef, mob);
+        createFrictionJoint(body);
+
+        Body sensor = Game.world.createBody(bodyDef);
+        circleShape.setRadius(MobConstants.MOB_SENSOR_RADIUS);
+        FixtureDef sensorFixtureDef = new FixtureDef();
+        sensorFixtureDef.shape = circleShape;
+        sensorFixtureDef.isSensor = true;
+        sensor.createFixture(sensorFixtureDef);
+        sensor.setUserData(mob);
+        mob.setSensor(sensor);
+        setCollisionBits(sensorFixtureDef, mob);
+
         circleShape.dispose();
-        if (!isSensor) {
-            createFrictionJoint(body);
-        }
-        setCollisionBits(fixtureDef, owner);
-        return body;
     }
 
     private static void createFrictionJoint(Body ownerBody) {

@@ -35,18 +35,11 @@ public class MobFactory {
 
     private static void createMob(int x, int y, MobObjectType type) {
         Mob mob = new Mob(type, "bhvTrees/humanKnight.btree", MOB_SPEED);
-        setBodyAndSensor(x, y, mob);
+        BodyFactory.createBodyAndSensorForMob(x, y, mob);
         mob.getSprite().setSize(MOB_RENDER_WIDTH, MOB_RENDER_HEIGHT);
         Game.mobs.add(mob);
         mob.setId(Game.mobs.size());
         mob.updateRenderPosition();
         log.info(mob + " created");
-    }
-
-    private static void setBodyAndSensor(int x, int y, Mob mob) {
-        Body mobBody = BodyFactory.createAndGetMobBody(x, y, mob, false);
-        Body mobSensor = BodyFactory.createAndGetMobBody(x, y, mob, true);
-        mob.setBody(mobBody);
-        mob.setSensor(mobSensor);
     }
 }

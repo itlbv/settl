@@ -125,7 +125,7 @@ public class Game extends ApplicationAdapter {
 
     private void updateMobs() {
         cleanMobsFromDead();
-        //mobs.forEach(Mob::update);
+        mobs.forEach(Mob::update);
         //mobs.get(0).update();
         //mobs.get(1).update();
     }
