@@ -1,7 +1,6 @@
 package com.itlbv.settl.mobs.util;
 
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
 import com.itlbv.settl.mobs.Mob;
