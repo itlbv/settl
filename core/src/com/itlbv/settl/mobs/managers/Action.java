@@ -10,10 +10,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ActionManager {
+public class Action {
     private final Mob owner;
     private ActionState actionState;
-    public ActionManager(Mob owner) {
+    public Action(Mob owner) {
         this.owner = owner;
         this.actionState = ActionState.READY_TO_ATTACK;
     }

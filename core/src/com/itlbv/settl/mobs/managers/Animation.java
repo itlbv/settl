@@ -7,19 +7,19 @@ import com.itlbv.settl.mobs.util.MobAnimationState;
 import com.itlbv.settl.mobs.Mob;
 import com.itlbv.settl.mobs.util.MobAnimationHelper;
 
-public class AnimationManager {
+public class Animation {
     private final Mob owner;
     private MobAnimationState currentState;
     private float animationTime;
-    private Animation<TextureRegion> currentAnimation;
+    private com.badlogic.gdx.graphics.g2d.Animation<TextureRegion> currentAnimation;
 
-    private Animation<TextureRegion> idle;
-    private Animation<TextureRegion> walking;
-    private Animation<TextureRegion> attack;
-    private Animation<TextureRegion> gotHit;
-    private Animation<TextureRegion> dead;
+    private com.badlogic.gdx.graphics.g2d.Animation<TextureRegion> idle;
+    private com.badlogic.gdx.graphics.g2d.Animation<TextureRegion> walking;
+    private com.badlogic.gdx.graphics.g2d.Animation<TextureRegion> attack;
+    private com.badlogic.gdx.graphics.g2d.Animation<TextureRegion> gotHit;
+    private com.badlogic.gdx.graphics.g2d.Animation<TextureRegion> dead;
 
-    public AnimationManager(Mob owner) {
+    public Animation(Mob owner) {
         this.owner = owner;
         initializeTextures();
         this.currentState = owner.getState();

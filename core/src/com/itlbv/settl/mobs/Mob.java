@@ -7,9 +7,9 @@ import com.itlbv.settl.Game;
 import com.itlbv.settl.GameObject;
 import com.itlbv.settl.mobs.util.MobAnimationState;
 import com.itlbv.settl.enumsObjectType.MobObjectType;
-import com.itlbv.settl.mobs.managers.AnimationManager;
-import com.itlbv.settl.mobs.managers.ActionManager;
-import com.itlbv.settl.mobs.managers.MovementManager;
+import com.itlbv.settl.mobs.managers.Animation;
+import com.itlbv.settl.mobs.managers.Action;
+import com.itlbv.settl.mobs.managers.Movement;
 import com.itlbv.settl.pathfinding.Path;
 import org.slf4j.Logger;
 
@@ -21,9 +21,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 
 public class Mob extends GameObject {
-    private final MovementManager movementManager;
-    private final AnimationManager animationManager;
-    private final ActionManager actionManager;
+    private final Movement movement;
+    private final Animation animation;
+    private final Action action;
     private BehaviorTree<Mob> bhvTree;
     private MobObjectType type;
     private MobAnimationState state;
@@ -42,57 +42,57 @@ public class Mob extends GameObject {
         this.alive = true;
         this.type = type;
         this.state = IDLE;
-        this.movementManager = new MovementManager(speed, this);
-        this.animationManager = new AnimationManager(this);
-        this.actionManager = new ActionManager(this);
+        this.movement = new Movement(speed, this);
+        this.animation = new Animation(this);
+        this.action = new Action(this);
         this.selectingRectangle = new Rectangle();
         setBhvTree(bhvTree);
     }
 
     public void update() {
         bhvTree.step();
-        animationManager.update();
+        animation.update();
         updateRenderPosition();
     }
 
     public void chooseEnemy() {
-        actionManager.chooseEnemy();
+        action.chooseEnemy();
     }
 
     public void startMoving() {
         Objects.requireNonNull(target);
         setState(WALK);
-        movementManager.initMoving();
+        movement.initMoving();
     }
 
     public void move() {
-        movementManager.update();
+        movement.update();
     }
 
     public void stopMoving() {
         setState(IDLE);
-        movementManager.stopMoving();
+        movement.stopMoving();
     }
 
     public void startFighting() {
-        actionManager.startFighting();
+        action.startFighting();
     }
 
     public void fight() {
-        actionManager.update();
+        action.update();
     }
 
     public void defend() {
-        actionManager.defend();
+        action.defend();
     }
 
     public void setFightingTimeCountToZero() {
-        actionManager.fightingTimeCount = 0;
+        action.fightingTimeCount = 0;
     }
 
     public void die() {
         setState(MobAnimationState.DEAD);
-        animationManager.update();
+        animation.update();
         log.info(this + " is dead");
         Game.world.destroyBody(getBody());
         Game.world.destroyBody(getSensor());
@@ -159,7 +159,7 @@ public class Mob extends GameObject {
     }
 
     public Path getPath() {
-        return movementManager.pathMovement.path; // TODO for path drawing in Game class
+        return movement.pathMovement.path; // TODO for path drawing in Game class
     }
 
     public Rectangle getSelectingRectangle() {

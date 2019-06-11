@@ -8,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.itlbv.settl.*;
 import com.itlbv.settl.mobs.Mob;
 
-public class MovementManager {
+public class Movement {
     private final Mob owner;
     private RayCastHelper collisionDetector;
     public PathMovement pathMovement; // TODO public is for path drawing in Game class
@@ -17,7 +17,7 @@ public class MovementManager {
     private boolean useSteering;
     private Vector2 linearVelocity;
 
-    public MovementManager(float speed, Mob owner) {
+    public Movement(float speed, Mob owner) {
         this.owner = owner;
         this.collisionDetector = new RayCastHelper(owner);
         this.linearVelocity = new Vector2();
