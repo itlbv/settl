@@ -8,14 +8,14 @@ import com.badlogic.gdx.utils.Array;
 import com.itlbv.settl.mobs.Mob;
 import com.itlbv.settl.mobs.util.MobAnimationState;
 
-public class UiShapeRenderer extends ShapeRenderer {
+class UiShapeRenderer extends ShapeRenderer {
     private Matrix4 projectionMatrix;
 
-    public UiShapeRenderer(Matrix4 projectionMatrix) {
+    UiShapeRenderer(Matrix4 projectionMatrix) {
         this.projectionMatrix = projectionMatrix;
     }
 
-    public void drawSelectingRect(Mob mob) {
+    void drawSelectingRect(Mob mob) {
         setProjectionMatrix(projectionMatrix);
         setColor(Color.WHITE);
         begin(ShapeType.Line);
@@ -26,7 +26,7 @@ public class UiShapeRenderer extends ShapeRenderer {
         end();
     }
 
-    public void drawRoute(Mob mob) {
+    void drawRoute(Mob mob) {
         if (mob.getState() != MobAnimationState.WALK) return; //TODO is it safe enough?
         setProjectionMatrix(projectionMatrix);
         begin(ShapeType.Filled);
