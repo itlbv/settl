@@ -1,36 +1,34 @@
 package com.itlbv.settl.ui;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.mobs.Mob;
+import com.itlbv.settl.util.GameUtil;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
-public class InputStage extends Stage {
+public class UiStage extends Stage {
     private OrthographicCamera camera;
     private static OrthographicCamera debugCamera;
     private static Box2DDebugRenderer box2dBodyRenderer;
     private UiShapeRenderer uiShapeRenderer;
 
-    private Mob selectedMob;
+    Mob selectedObject;
 
-    private VisLabel labelSelectedMob;
+    VisLabel labelSelectedMob;
     private VisLabel labelGameSpeed;
     private BitmapFont font;
 
-    private boolean debugMode = true;
-    private boolean routeDrawing = true;
+    boolean debugMode = true;
+    boolean routeDrawing = true;
 
-    public InputStage(OrthographicCamera camera) {
+    public UiStage(OrthographicCamera camera) {
         this.camera = camera;
         uiShapeRenderer = new UiShapeRenderer(camera.combined);
         box2dBodyRenderer = new Box2DDebugRenderer();
@@ -87,18 +85,18 @@ public class InputStage extends Stage {
     }
 
     private void drawMobSelection() {
-        if (selectedMob == null) return;
-        uiShapeRenderer.drawSelectingRect(selectedMob);
+        if (selectedObject == null) return;
+        uiShapeRenderer.drawSelectingRect(selectedObject);
     }
 
     private void drawGameSpeed() {
-        if (gameSpeed == 0) {
+        if (GameUtil.gameSpeed == 0) {
             labelGameSpeed.setText("PAUSE");
-        } else if (gameSpeed == 1) {
+        } else if (GameUtil.gameSpeed == 1) {
             labelGameSpeed.setText("NORMAL");
-        } else if (gameSpeed == 2) {
+        } else if (GameUtil.gameSpeed == 2) {
             labelGameSpeed.setText("SLOW");
-        } else if (gameSpeed == 3) {
+        } else if (GameUtil.gameSpeed == 3) {
             labelGameSpeed.setText("VERY SLOW");
         }
     }
@@ -126,80 +124,5 @@ public class InputStage extends Stage {
     private void drawMobsRoutes() {
         if (!routeDrawing) return;
         Game.mobs.forEach(m -> uiShapeRenderer.drawRoute(m));
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        switch (character) {
-            case '\b': debugMode = !debugMode; break;// BACKSPACE
-            case 't': routeDrawing =! routeDrawing; break;
-            case 'x': increaseGameSpeed(); break;
-            case 'z': decreaseGameSpeed(); break;
-            case ' ': changePauseState(); break;// SPACEBAR
-        }
-        return true;
-    }
-
-    private void increaseGameSpeed() {
-        switch (gameSpeed) {
-            case 0: gameSpeed = 3; break;
-            case 2: gameSpeed = 1; break;
-            case 3: gameSpeed = 2; break;
-        }
-    }
-
-    private void decreaseGameSpeed() {
-        switch (gameSpeed) {
-            case 1: gameSpeed = 2; break;
-            case 2: gameSpeed = 3; break;
-            case 3: gameSpeed = 0; break;
-        }
-    }
-
-    public int gameSpeed = 1;
-    private int previousGameSpeed = 1;
-    private void changePauseState() {
-        if (gameSpeed == 0) {
-            gameSpeed = previousGameSpeed;
-        } else {
-            previousGameSpeed = gameSpeed;
-            gameSpeed = 0;
-        }
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        Vector3 clickCoord = new Vector3(screenX, screenY, 0);
-        camera.unproject(clickCoord);
-        for (Mob mob : Game.mobs) {
-            Rectangle selectingRect = mob.getSelectingRectangle();
-            if (selectingRect.contains(clickCoord.x, clickCoord.y)) {
-                selectedMob = mob;
-                labelSelectedMob.setText(mob.toString());
-                break;
-            }
-        }
-        return true;
-    }
-
-    public void updateCameraPosition() {
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            camera.translate(0, 1);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            camera.translate(-1, 0);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            camera.translate(0, -1);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            camera.translate(1, 0);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
-            camera.zoom += .02;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.E)) {
-            camera.zoom -= .02;
-        }
     }
 }

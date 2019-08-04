@@ -1,6 +1,6 @@
 package com.itlbv.settl.enumsObjectType;
 
-public enum MobObjectType implements GameObjectType {
+public enum MobType {
     PEASANT,
     KNIGHT,
     ORC

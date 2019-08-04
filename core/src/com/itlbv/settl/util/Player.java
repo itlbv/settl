@@ -14,9 +14,7 @@ import com.badlogic.gdx.physics.box2d.joints.FrictionJoint;
 import com.badlogic.gdx.physics.box2d.joints.FrictionJointDef;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.GameObject;
-import com.itlbv.settl.enumsObjectType.MobObjectType;
-import com.itlbv.settl.mobs.Mob;
-import com.itlbv.settl.mobs.util.MobConstants;
+import com.itlbv.settl.enumsObjectType.MobType;
 
 public class Player extends GameObject {
     private Vector2 UP, DOWN, LEFT, RIGHT;
@@ -24,7 +22,6 @@ public class Player extends GameObject {
     FrictionJoint joint;
 
     public Player(int x, int y) {
-        super(MobObjectType.PEASANT);
         UP = new Vector2(0, 0);
         DOWN = new Vector2(0, 0);
         LEFT = new Vector2(0, 0);

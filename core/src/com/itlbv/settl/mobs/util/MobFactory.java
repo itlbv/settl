@@ -2,7 +2,7 @@ package com.itlbv.settl.mobs.util;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.itlbv.settl.Game;
-import com.itlbv.settl.enumsObjectType.MobObjectType;
+import com.itlbv.settl.enumsObjectType.MobType;
 import com.itlbv.settl.mobs.Mob;
 import com.itlbv.settl.util.BodyFactory;
 import org.slf4j.Logger;
@@ -16,14 +16,16 @@ public class MobFactory {
 
     private static final Logger log = getLogger(MobFactory.class);
 
-    public static void createMobAtRandomPosition(boolean rightMapSide, MobObjectType type) {
+    public static void createMobAtRandomPosition(boolean rightMapSide, MobType type) {
         int mapWidth = Game.map.getWidth();
         int mapHeight = Game.map.getHeight();
         int randX, randY;
         do {
             randX = MathUtils.random(mapWidth/2 - 1);
             randY = MathUtils.random(mapHeight - 1);
-            if (rightMapSide) randX += mapWidth/2;
+            if (rightMapSide){
+                randX += mapWidth/2;
+            }
         } while (mapTileIsNotPassable(randX, randY));
         createMob(randX, randY, type);
     }
@@ -32,7 +34,7 @@ public class MobFactory {
         return !Game.map.getNode(x, y).isPassable();
     }
 
-    private static void createMob(int x, int y, MobObjectType type) {
+    private static void createMob(int x, int y, MobType type) {
         Mob mob = new Mob(type, "bhvTrees/humanKnight.btree", MOB_SPEED);
         BodyFactory.createBodyAndSensorForMob(x, y, mob);
         mob.getSprite().setSize(MOB_RENDER_WIDTH, MOB_RENDER_HEIGHT);

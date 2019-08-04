@@ -6,8 +6,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.GameObject;
 import com.itlbv.settl.mobs.util.MobAnimationState;
-import com.itlbv.settl.enumsObjectType.MobObjectType;
-import com.itlbv.settl.mobs.managers.Animation;
+import com.itlbv.settl.enumsObjectType.MobType;
+import com.itlbv.settl.mobs.managers.AnimationManager;
 import com.itlbv.settl.mobs.managers.Action;
 import com.itlbv.settl.mobs.managers.Movement;
 import com.itlbv.settl.pathfinding.Path;
@@ -22,10 +22,10 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class Mob extends GameObject {
     private final Movement movement;
-    private final Animation animation;
+    private final AnimationManager animationManager;
     private final Action action;
     private BehaviorTree<Mob> bhvTree;
-    private MobObjectType type;
+    private MobType type;
     private MobAnimationState state;
     private static final Logger log = getLogger(Mob.class);
 
@@ -37,13 +37,12 @@ public class Mob extends GameObject {
 
     private int id;
 
-    public Mob(MobObjectType type, String bhvTree, float speed) {
-        super(type);
+    public Mob(MobType type, String bhvTree, float speed) {
         this.alive = true;
         this.type = type;
         this.state = IDLE;
         this.movement = new Movement(speed, this);
-        this.animation = new Animation(this);
+        this.animationManager = new AnimationManager(this);
         this.action = new Action(this);
         this.selectingRectangle = new Rectangle();
         setBhvTree(bhvTree);
@@ -51,7 +50,7 @@ public class Mob extends GameObject {
 
     public void update() {
         bhvTree.step();
-        animation.update();
+        animationManager.update();
         updateRenderPosition();
     }
 
@@ -92,7 +91,7 @@ public class Mob extends GameObject {
 
     public void die() {
         setState(MobAnimationState.DEAD);
-        animation.update();
+        animationManager.update();
         log.info(this + " is dead");
         Game.world.destroyBody(getBody());
         Game.world.destroyBody(getSensor());
@@ -106,7 +105,7 @@ public class Mob extends GameObject {
     /*
     **Getters & setters
      */
-    public MobObjectType getType() {
+    public MobType getType() {
         return this.type;
     }
 

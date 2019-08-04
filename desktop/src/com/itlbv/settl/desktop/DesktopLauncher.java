@@ -5,8 +5,8 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.itlbv.settl.Game;
 
 public class DesktopLauncher {
-	private static final int INITIAL_SCREEN_WIDTH_PXL = 1600;
-	private static final int INITIAL_SCREEN_HEIGHT_PXL = 1200;
+	private static final int INITIAL_SCREEN_WIDTH_PXL = 2000;
+	private static final int INITIAL_SCREEN_HEIGHT_PXL = 1500;
 
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();

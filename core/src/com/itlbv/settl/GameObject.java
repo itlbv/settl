@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.itlbv.settl.enumsObjectType.GameObjectType;
 import com.itlbv.settl.mobs.util.MobConstants;
 
 import static com.itlbv.settl.GameConstants.MOB_TEXTURE_SIZE_PXL;
@@ -15,11 +14,8 @@ public abstract class GameObject extends SteerableAdapter<Vector2> {
     private Body body;
     private Body sensor;
     private Sprite sprite;
-    private GameObjectType type;
 
-    public GameObject(GameObjectType type) {
-        this.type = type;
-        //this.renderPosition = new Vector2();
+    public GameObject() {
         sprite = new Sprite();
     }
 

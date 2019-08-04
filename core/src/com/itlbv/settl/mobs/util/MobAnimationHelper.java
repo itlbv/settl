@@ -3,7 +3,7 @@ package com.itlbv.settl.mobs.util;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.itlbv.settl.enumsObjectType.MobObjectType;
+import com.itlbv.settl.enumsObjectType.MobType;
 
 import static com.itlbv.settl.GameConstants.MOB_TEXTURE_SIZE_PXL;
 
@@ -16,12 +16,12 @@ public class MobAnimationHelper {
     private static Texture orcShaman01 = new Texture("textures/mobs/orcShaman01.png");
     private static Texture orcShaman02 = new Texture("textures/mobs/orcShaman02.png");
 
-    public static Animation<TextureRegion> getAnimation(MobObjectType type, MobAnimationState state) {
+    public static Animation<TextureRegion> getAnimation(MobType type, MobAnimationState state) {
         Texture textureOfType = getTextureOfType(type);
         return getAnimationOfState(textureOfType, state);
     }
 
-    private static Texture getTextureOfType(MobObjectType type) {
+    private static Texture getTextureOfType(MobType type) {
         switch (type) {
             case PEASANT:
                 return man01;
