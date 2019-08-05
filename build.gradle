@@ -73,6 +73,9 @@ project(":core") {
 
         // Ui
         compile "com.kotcrab.vis:vis-ui:$visuiVersion"
+
+        compileOnly 'org.projectlombok:lombok:1.18.8'
+        annotationProcessor 'org.projectlombok:lombok:1.18.8'
     }
 }
 
