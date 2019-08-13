@@ -1,19 +1,20 @@
 package com.itlbv.settl.util;
 
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.joints.FrictionJointDef;
 import com.itlbv.settl.Game;
-import com.itlbv.settl.mobs.Mob;
-import com.itlbv.settl.mobs.util.MobConstants;
+import com.itlbv.settl.mob.Mob;
+import com.itlbv.settl.mob.util.MobConstants;
 
 public class BodyFactory {
 
-    public static void createBodyAndSensorForMob(int x, int y, Mob mob) {
+    public static void createBodyAndSensorForMob(Vector2 position, Mob mob) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(x, y);
+        bodyDef.position.set(position);
         Body body = Game.world.createBody(bodyDef);
         CircleShape circleShape = new CircleShape();
         circleShape.setRadius(MobConstants.MOB_BODY_RADIUS);

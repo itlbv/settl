@@ -4,7 +4,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.itlbv.settl.mobs.Mob;
+import com.itlbv.settl.mob.Mob;
 
 public class CollisionHandler implements ContactListener {
 
@@ -39,7 +39,7 @@ public class CollisionHandler implements ContactListener {
         Mob sensorOwner = (Mob) sensorOwnerObj;
         Mob mobOfCollision = (Mob) mobOfCollisionObj;
         if (sensorOwner.getTarget() != mobOfCollision) return;
-        sensorOwner.setTargetWithinReach(beginContact);
+        sensorOwner.setTargetReached(beginContact);
     }
 
     @Override

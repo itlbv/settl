@@ -14,7 +14,6 @@ import com.badlogic.gdx.physics.box2d.joints.FrictionJoint;
 import com.badlogic.gdx.physics.box2d.joints.FrictionJointDef;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.GameObject;
-import com.itlbv.settl.enumsObjectType.MobType;
 
 public class Player extends GameObject {
     private Vector2 UP, DOWN, LEFT, RIGHT;

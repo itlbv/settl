@@ -2,53 +2,33 @@ package com.itlbv.settl.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.Vector2;
 import com.itlbv.settl.Game;
-import com.itlbv.settl.mobs.Mob;
+import com.itlbv.settl.ui.util.UiUtil;
 import com.itlbv.settl.util.GameUtil;
 
 public class Input extends InputAdapter {
 
-    private OrthographicCamera camera;
     private UiStage uiStage;
 
-    public Input(OrthographicCamera camera, UiStage uiStage) {
-        this.camera = camera;
+    public Input(UiStage uiStage) {
         this.uiStage = uiStage;
     }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        Vector2 clickWorldCoord = UiUtil.screenToWorldCoord(screenX, screenY);
         switch (button) {
             case 0:         //LEFT BUTTON
-                selectObject(screenX, screenY);
+                uiStage.leftMouseClick(clickWorldCoord);
                 break;
             case 1:         //RIGHT BUTTON
-                doAction();
+                uiStage.rightMouseClick(clickWorldCoord);
                 break;
             default:
                 return false;
         }
         return true;
-    }
-
-    private void selectObject(int screenX, int screenY) {
-        Vector3 clickCoord = new Vector3(screenX, screenY, 0);
-        camera.unproject(clickCoord);
-        for (Mob mob : Game.mobs) {
-            Rectangle selectingRect = mob.getSelectingRectangle();
-            if (selectingRect.contains(clickCoord.x, clickCoord.y)) {
-                uiStage.selectedObject = mob;
-                uiStage.labelSelectedMob.setText(mob.toString());
-                break;
-            }
-        }
-    }
-
-    private void doAction() {
-
     }
 
     @Override
@@ -65,22 +45,22 @@ public class Input extends InputAdapter {
 
     public void updateCameraPosition() {
         if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.W)) {
-            camera.translate(0, 1);
+            Game.camera.translate(0, 1);
         }
         if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.A)) {
-            camera.translate(-1, 0);
+            Game.camera.translate(-1, 0);
         }
         if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.S)) {
-            camera.translate(0, -1);
+            Game.camera.translate(0, -1);
         }
         if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.D)) {
-            camera.translate(1, 0);
+            Game.camera.translate(1, 0);
         }
         if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.Q)) {
-            camera.zoom += .02;
+            Game.camera.zoom += .02;
         }
         if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.E)) {
-            camera.zoom -= .02;
+            Game.camera.zoom -= .02;
         }
     }
 }

@@ -3,23 +3,25 @@ package com.itlbv.settl.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.itlbv.settl.Game;
-import com.itlbv.settl.mobs.Mob;
-import com.itlbv.settl.util.GameUtil;
+import com.itlbv.settl.mob.Mob;
+import com.itlbv.settl.mob.action.util.ActionUtil;
+import com.itlbv.settl.ui.util.UiShapeRenderer;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
 public class UiStage extends Stage {
-    private OrthographicCamera camera;
     private static OrthographicCamera debugCamera;
     private static Box2DDebugRenderer box2dBodyRenderer;
     private UiShapeRenderer uiShapeRenderer;
 
-    Mob selectedObject;
+    Mob selectedMob;
+    private Rectangle selectionIndicator;
 
     VisLabel labelSelectedMob;
     private VisLabel labelGameSpeed;
@@ -28,10 +30,10 @@ public class UiStage extends Stage {
     boolean debugMode = true;
     boolean routeDrawing = true;
 
-    public UiStage(OrthographicCamera camera) {
-        this.camera = camera;
-        uiShapeRenderer = new UiShapeRenderer(camera.combined);
+    public UiStage() {
+        uiShapeRenderer = new UiShapeRenderer();
         box2dBodyRenderer = new Box2DDebugRenderer();
+        selectionIndicator = new Rectangle();
         setDebugCamera();
         setStage();
     }
@@ -78,15 +80,61 @@ public class UiStage extends Stage {
         */
     }
 
+    void leftMouseClick(Vector2 clickPosition) {
+        for (Mob mob : Game.mobs) {
+            selectionIndicator.set(mob.getPosition().x - 0.5f,
+                    mob.getPosition().y,
+                    1f, 1.5f);
+            if (selectionIndicator.contains(clickPosition.x, clickPosition.y)) {
+                selectedMob = mob;
+                labelSelectedMob.setText(mob.toString());
+                break;
+            }
+        }
+    }
+
+    void rightMouseClick(Vector2 clickPosition) {
+        if (selectedMob == null) return;
+        Mob clickedMob = null;
+        for (Mob mob : Game.mobs) {
+            selectionIndicator.set(mob.getPosition().x - 0.5f,
+                    mob.getPosition().y,
+                    1f, 1.5f);
+            if (selectionIndicator.contains(clickPosition.x, clickPosition.y)) {
+                clickedMob = mob;
+                break;
+            }
+        }
+        if (clickedMob == null) {
+            ActionUtil.setMove(selectedMob, clickPosition);
+        } else if (clickedMob == selectedMob) {
+            //TODO move selected mob to click position instead
+        } else {
+            ActionUtil.setApproachAndFight(selectedMob, clickedMob);
+        }
+    }
+
     public void drawAdditionalInfo() {
-        drawMobSelection();
+        /*
+        drawSelectionIndicator();
         drawGameSpeed();
+        */
         drawDebugInfo();
     }
 
-    private void drawMobSelection() {
-        if (selectedObject == null) return;
-        uiShapeRenderer.drawSelectingRect(selectedObject);
+    private void drawDebugInfo() {
+        if (!debugMode) return;
+        //drawMobsRoutes();
+        box2dBodyRenderer.render(Game.world, Game.camera.combined);
+        debugCamera.update();
+        Game.batch.begin();
+        //drawMobId();
+        Game.batch.end();
+    }
+/*
+    private void drawSelectionIndicator() {
+        if (selectedMob == null) return;
+        uiShapeRenderer.drawSelectionIndicator(selectionIndicator);
     }
 
     private void drawGameSpeed() {
@@ -101,22 +149,15 @@ public class UiStage extends Stage {
         }
     }
 
-    private void drawDebugInfo() {
-        if (!debugMode) return;
-        drawMobsRoutes();
-        box2dBodyRenderer.render(Game.world, camera.combined);
-        debugCamera.update();
-        Game.batch.begin();
-        drawMobId();
-        Game.batch.end();
-    }
+
 
     private void drawMobId() {
         Game.batch.setProjectionMatrix(debugCamera.combined);
         Vector3 fontPos = new Vector3();
         for (Mob mob : Game.mobs) {
             fontPos.set(mob.getPosition(), 0);
-            camera.project(fontPos,0,0, debugCamera.viewportWidth, debugCamera.viewportHeight);
+            //TODO move to UIUtil
+            Game.camera.project(fontPos,0,0, debugCamera.viewportWidth, debugCamera.viewportHeight);
             font.draw(Game.batch, Integer.toString(mob.getId()), fontPos.x, fontPos.y);
         }
     }
@@ -125,4 +166,5 @@ public class UiStage extends Stage {
         if (!routeDrawing) return;
         Game.mobs.forEach(m -> uiShapeRenderer.drawRoute(m));
     }
+    */
 }

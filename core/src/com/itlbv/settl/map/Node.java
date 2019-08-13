@@ -11,7 +11,7 @@ public class Node {
     private Array<Connection<Node>> connections;
     private boolean passable;
 
-    public Node(int x, int y, boolean passable) {
+    Node(int x, int y, boolean passable) {
         this.x = x;
         this.y = y;
         connections = new Array<>();
@@ -31,11 +31,11 @@ public class Node {
         return code;
     }
 
-    public void setCode(String code) {
+    void setCode(String code) {
         this.code = code;
     }
 
-    public Array<Connection<Node>> getConnections() {
+    Array<Connection<Node>> getConnections() {
         return connections;
     }
 

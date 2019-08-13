@@ -1,0 +1,16 @@
+import isEnemyAround?:"com.itlbv.settl.behaviorTasks.conditions.IsEnemyAround"
+import chooseEnemy:"com.itlbv.settl.behaviorTasks.ChooseEnemy"
+import approachAndFight:"com.itlbv.settl.behaviorTasks.ApproachAndFight"
+import doNothing:"com.itlbv.settl.behaviorTasks.DoNothing"
+
+subtree name: "killEnemy"
+    sequence
+        approachAndFight
+
+subtree name: "todoNothing"
+    doNothing
+
+root
+     dynamicGuardSelector
+      (isEnemyAround?) (chooseEnemy) $killEnemy
+      () $todoNothing

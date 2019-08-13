@@ -8,31 +8,34 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
-import com.itlbv.settl.enumsObjectType.MobType;
+import com.itlbv.settl.mob.util.MobType;
 import com.itlbv.settl.map.Map;
-import com.itlbv.settl.mobs.Mob;
-import com.itlbv.settl.mobs.util.MobFactory;
+import com.itlbv.settl.mob.Mob;
+import com.itlbv.settl.mob.util.MobFactory;
 import com.itlbv.settl.ui.Input;
 import com.itlbv.settl.ui.UiStage;
 import com.itlbv.settl.util.CollisionHandler;
+import com.itlbv.settl.util.GameConstants;
 import com.itlbv.settl.util.GameUtil;
 import com.itlbv.settl.util.Player;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class Game extends ApplicationAdapter {
     public static World world;
     public static Map map;
+    public static OrthographicCamera camera;
 
     private static OrthogonalTiledMapRenderer mapRenderer;
-    private static OrthographicCamera camera;
     private static UiStage uiStage;
     private static Input input;
     public static SpriteBatch batch;
 
     public static ArrayList<Mob> mobs;
+    public static ArrayList<Mob> deadMobs;
 
-    private static final float VIEWPORT = 40;
+    private static final float VIEWPORT = 60;
     public static float DELTA_TIME = 0;
     //private static long RENDER_ITERATION = 0;
 
@@ -61,6 +64,7 @@ public class Game extends ApplicationAdapter {
         world.setContactListener(new CollisionHandler());
         batch = new SpriteBatch();
         mobs = new ArrayList<>();
+        deadMobs = new ArrayList<>();
     }
 
     private void setCamera() {
@@ -71,11 +75,11 @@ public class Game extends ApplicationAdapter {
     }
 
     private void setUiStage() {
-        uiStage = new UiStage(camera);
+        uiStage = new UiStage();
     }
 
     private void setInput() {
-        input = new Input(camera, uiStage);
+        input = new Input(uiStage);
         Gdx.input.setInputProcessor(input);
     }
 
@@ -85,20 +89,19 @@ public class Game extends ApplicationAdapter {
     }
 
     private void setMapRenderer() {
-        float unitScale = (float) 1/GameConstants.TILE_TEXTURE_SIZE_PXL;
+        float unitScale = (float) 1/ GameConstants.TILE_TEXTURE_SIZE_PXL;
         mapRenderer = new OrthogonalTiledMapRenderer(map.getMap(), unitScale);
         mapRenderer.setView(camera);
     }
 
     private void createMobs() {
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 5; i++) {
             MobFactory.createMobAtRandomPosition(false, MobType.KNIGHT);
         }
-        /*
-        for (int i = 0; i < 0; i++) {
+
+        for (int i = 0; i < 5; i++) {
             MobFactory.createMobAtRandomPosition(true, MobType.ORC);
         }
-        */
     }
 
     @Override
@@ -128,9 +131,19 @@ public class Game extends ApplicationAdapter {
     }
 
     private void updateMobs() {
+        separateDeadMobs();
         mobs.forEach(Mob::update);
-        //mobs.get(0).update();
-        //mobs.get(1).update();
+    }
+
+    private void separateDeadMobs() {
+        for (int i = 0; i < mobs.size(); i++) {
+            Mob mob = mobs.get(i);
+            if (!mob.isAlive()) {
+                deadMobs.add(mob);
+                mobs.remove(mob);
+                i--;
+            }
+        }
     }
 
     private void drawMap() {
@@ -140,6 +153,7 @@ public class Game extends ApplicationAdapter {
 
     private void drawMobs() {
         batch.begin();
+        deadMobs.forEach(m -> m.getSprite().draw(batch));
         mobs.forEach(m -> m.getSprite().draw(batch));
         drawPlayer();
         batch.end();

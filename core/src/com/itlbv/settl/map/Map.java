@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.itlbv.settl.util.BodyFactory;
-import com.itlbv.settl.GameConstants;
+import com.itlbv.settl.util.GameConstants;
 
 public class Map implements IndexedGraph<Node> {
     private TiledMap map;
@@ -58,7 +58,7 @@ public class Map implements IndexedGraph<Node> {
     }
 
     private void addConnection (Node node, int xOffset, int yOffset) {
-        Node targetNode = getNode(node.getX() + xOffset, node.getY() + yOffset);
+        Node targetNode = getNodeFromCoord(node.getX() + xOffset, node.getY() + yOffset);
         boolean targetNodePassable = (boolean) tileLayer.getCell(targetNode.getX(), targetNode.getY())
                                                 .getTile()
                                                 .getProperties().get("passable");
@@ -84,7 +84,7 @@ public class Map implements IndexedGraph<Node> {
         if (x < 0 || y < 0 || x == mapWidth || y == mapHeight) {
             return '0';
         }
-        if (getNode(x, y).isPassable()) {
+        if (getNodeFromCoord(x, y).isPassable()) {
             return '0';
         } else {
             return '1';
@@ -95,12 +95,12 @@ public class Map implements IndexedGraph<Node> {
         nodes.add(new Node(x, y, passable));
     }
 
-    public Node getNode(int x, int y) {
+    public Node getNodeFromCoord(int x, int y) {
         return nodes.get(x * mapHeight + y);
     }
 
-    public Node getNodeFromPosition(Vector2 position) {
-        return getNode((int)position.x, (int)position.y);
+    public Node getNodeFromCoord(Vector2 position) {
+        return getNodeFromCoord((int)position.x, (int)position.y);
     }
 
     public Vector2 getNodePosition(int index) {
