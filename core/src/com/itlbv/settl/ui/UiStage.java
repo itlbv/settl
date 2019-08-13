@@ -1,170 +1,154 @@
 package com.itlbv.settl.ui;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.mob.Mob;
 import com.itlbv.settl.mob.action.util.ActionUtil;
-import com.itlbv.settl.ui.util.UiShapeRenderer;
+import com.itlbv.settl.ui.util.DebugRenderer;
+import com.itlbv.settl.ui.util.UiUtil;
+import com.itlbv.settl.util.GameUtil;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
 public class UiStage extends Stage {
-    private static OrthographicCamera debugCamera;
-    private static Box2DDebugRenderer box2dBodyRenderer;
-    private UiShapeRenderer uiShapeRenderer;
 
-    Mob selectedMob;
+    private Table rootTable;
+
+    private Mob selectedMob;
     private Rectangle selectionIndicator;
 
-    VisLabel labelSelectedMob;
-    private VisLabel labelGameSpeed;
-    private BitmapFont font;
-
     boolean debugMode = true;
-    boolean routeDrawing = true;
+    public boolean routeDrawing = true;
+    private static DebugRenderer debugRenderer;
 
     public UiStage() {
-        uiShapeRenderer = new UiShapeRenderer();
-        box2dBodyRenderer = new Box2DDebugRenderer();
+        debugRenderer = new DebugRenderer(this);
         selectionIndicator = new Rectangle();
-        setDebugCamera();
         setStage();
     }
 
-    private void setDebugCamera() {
-        float w = Gdx.graphics.getWidth();
-        float h = Gdx.graphics.getHeight();
-        debugCamera = new OrthographicCamera();
-        debugCamera.setToOrtho(false, w, h);
+    private void setStage() {
+        VisUI.load(VisUI.SkinScale.X2); // scaling ui for hi-res displays
+
+        rootTable = new Table();
+        rootTable.setFillParent(true);
+
+        VisWindow winMobInfo = setupWinMobInfo();
+        VisWindow winGameInfo = setupWinGameInfo();
+
+        rootTable.add(winMobInfo).width(400).expand().bottom().left();
+        rootTable.add(winGameInfo).width(350).expand().bottom().right();
+        addActor(rootTable);
     }
 
-    private void setStage() {
-        font = new BitmapFont(Gdx.files.internal("font.fnt"));
+    private VisWindow setupWinMobInfo() {
+        VisWindow window = new VisWindow("mobInfo");
+        createLabelsAndAddToWindow("selectedMob", "Mob:", window);
+        createLabelsAndAddToWindow("target", "target:", window);
+        createLabelsAndAddToWindow("action", "action:", window);
+        createLabelsAndAddToWindow("bodyPos", "body pos:", window);
+        createLabelsAndAddToWindow("sensorPos", "sensor pos:", window);
+        return window;
+    }
 
-        VisUI.load(VisUI.SkinScale.X2);
+    private VisWindow setupWinGameInfo() {
+        VisWindow window = new VisWindow("gameInfo");
+        createLabelsAndAddToWindow("gameSpeed", "Game speed:", window);
+        return window;
+    }
 
-        VisWindow windowMobInfo = new VisWindow("mobInfo");
-        labelGameSpeed = new VisLabel();
-        windowMobInfo.add(labelGameSpeed);
-        labelSelectedMob = new VisLabel();
-        windowMobInfo.add(labelSelectedMob);
+    private void createLabelsAndAddToWindow(String name, String text, VisWindow window) {
+        VisLabel txt = new VisLabel(text);
+        VisLabel label = new VisLabel();
+        label.setName(name);
+        window.add(txt).right();
+        window.add(label).expandX();
+        window.row();
+    }
 
-        addActor(windowMobInfo);
-        windowMobInfo.pack();
+    public void update() {
+        updateSelectedMobInfo();
+        updateGameInfo();
+        drawSelectionIndicator();
+    }
 
-        /*
-        Table table = new Table();
-        table.setFillParent(true);
-        addActor(table);
+    public void drawDebug() {
+        if (debugMode) {
+            debugRenderer.draw();
+        }
+    }
 
-        Label.LabelStyle labelStyle = new Label.LabelStyle();
-        labelStyle.font = font;
-        labelStyle.fontColor = Color.WHITE;
+    private void updateSelectedMobInfo() {
+        if (selectedMob == null) {
+            setTextToLabel("selectedMob", "-");
+            setTextToLabel("target", "-");
+            setTextToLabel("action", "-");
+            setTextToLabel("bodyPos", "-");
+            setTextToLabel("sensorPos", "-");
+        } else {
+            setTextToLabel("selectedMob", selectedMob.toString());
+            setTextToLabel("target", selectedMob.getTarget() == null ? "" : selectedMob.getTarget().toString());
+            setTextToLabel("action", selectedMob.getActions().size() == 0 ? "" : selectedMob.getActions().get(0).getType().toString());
+            setTextToLabel("bodyPos", UiUtil.vectorToString(selectedMob.getPosition()));
+            setTextToLabel("sensorPos", UiUtil.vectorToString(selectedMob.getSensor().getPosition()));
+        }
+    }
 
-        labelSelectedMob = new Label("no selected mob", labelStyle);
-        labelSelectedMob.setPosition(0, 0);
-        labelSelectedMob.setSize(100,100);
-        addActor(labelSelectedMob);
+    private void updateGameInfo() {
+        String gameSpeed = "";
+        if (GameUtil.gameSpeed == 0) {
+            gameSpeed = "PAUSE";
+        } else if (GameUtil.gameSpeed == 1) {
+            gameSpeed = "NORMAL";
+        } else if (GameUtil.gameSpeed == 2) {
+            gameSpeed = "SLOW";
+        } else if (GameUtil.gameSpeed == 3) {
+            gameSpeed = "VERY SLOW";
+        }
+        setTextToLabel("gameSpeed", gameSpeed);
+    }
 
-        labelGameSpeed = new Label("game speed", labelStyle);
-        labelGameSpeed.setPosition(0, 50);
-        labelGameSpeed.setSize(100,100);
-        addActor(labelGameSpeed);
-        */
+    private void setTextToLabel(String labelName, String text) {
+        Actor actor = rootTable.findActor(labelName);
+        if (actor instanceof VisLabel) {
+            ((VisLabel) actor).setText(text);
+        }
     }
 
     void leftMouseClick(Vector2 clickPosition) {
-        for (Mob mob : Game.mobs) {
-            selectionIndicator.set(mob.getPosition().x - 0.5f,
-                    mob.getPosition().y,
-                    1f, 1.5f);
-            if (selectionIndicator.contains(clickPosition.x, clickPosition.y)) {
-                selectedMob = mob;
-                labelSelectedMob.setText(mob.toString());
-                break;
-            }
-        }
+        selectedMob = getMobFromPosition(clickPosition);
     }
 
     void rightMouseClick(Vector2 clickPosition) {
         if (selectedMob == null) return;
-        Mob clickedMob = null;
-        for (Mob mob : Game.mobs) {
-            selectionIndicator.set(mob.getPosition().x - 0.5f,
-                    mob.getPosition().y,
-                    1f, 1.5f);
-            if (selectionIndicator.contains(clickPosition.x, clickPosition.y)) {
-                clickedMob = mob;
-                break;
-            }
-        }
-        if (clickedMob == null) {
+
+        Mob clickedMob = getMobFromPosition(clickPosition);
+        if (clickedMob == null || clickedMob == selectedMob) {
             ActionUtil.setMove(selectedMob, clickPosition);
-        } else if (clickedMob == selectedMob) {
-            //TODO move selected mob to click position instead
         } else {
             ActionUtil.setApproachAndFight(selectedMob, clickedMob);
         }
     }
 
-    public void drawAdditionalInfo() {
-        /*
-        drawSelectionIndicator();
-        drawGameSpeed();
-        */
-        drawDebugInfo();
+    private Mob getMobFromPosition(Vector2 position) {
+        for (Mob mob : Game.mobs) {
+            selectionIndicator.set(mob.getPosition().x - 0.5f,
+                    mob.getPosition().y,
+                    1f, 1.5f);
+            if (selectionIndicator.contains(position.x, position.y)) {
+                return mob;
+            }
+        }
+        return null;
     }
 
-    private void drawDebugInfo() {
-        if (!debugMode) return;
-        //drawMobsRoutes();
-        box2dBodyRenderer.render(Game.world, Game.camera.combined);
-        debugCamera.update();
-        Game.batch.begin();
-        //drawMobId();
-        Game.batch.end();
-    }
-/*
     private void drawSelectionIndicator() {
         if (selectedMob == null) return;
-        uiShapeRenderer.drawSelectionIndicator(selectionIndicator);
+        debugRenderer.drawSelectionIndicator(selectionIndicator);
     }
-
-    private void drawGameSpeed() {
-        if (GameUtil.gameSpeed == 0) {
-            labelGameSpeed.setText("PAUSE");
-        } else if (GameUtil.gameSpeed == 1) {
-            labelGameSpeed.setText("NORMAL");
-        } else if (GameUtil.gameSpeed == 2) {
-            labelGameSpeed.setText("SLOW");
-        } else if (GameUtil.gameSpeed == 3) {
-            labelGameSpeed.setText("VERY SLOW");
-        }
-    }
-
-
-
-    private void drawMobId() {
-        Game.batch.setProjectionMatrix(debugCamera.combined);
-        Vector3 fontPos = new Vector3();
-        for (Mob mob : Game.mobs) {
-            fontPos.set(mob.getPosition(), 0);
-            //TODO move to UIUtil
-            Game.camera.project(fontPos,0,0, debugCamera.viewportWidth, debugCamera.viewportHeight);
-            font.draw(Game.batch, Integer.toString(mob.getId()), fontPos.x, fontPos.y);
-        }
-    }
-
-    private void drawMobsRoutes() {
-        if (!routeDrawing) return;
-        Game.mobs.forEach(m -> uiShapeRenderer.drawRoute(m));
-    }
-    */
 }

@@ -11,6 +11,7 @@ import java.util.Objects;
 import static com.itlbv.settl.mob.action.util.ActionUtil.*;
 import static com.itlbv.settl.mob.animation.util.MobAnimationType.ATTACK;
 import static com.itlbv.settl.mob.animation.util.MobAnimationType.GET_HIT;
+import static com.itlbv.settl.mob.util.MobUtil.getTargetMob;
 
 public class ActionProcessor {
     private final Mob owner;
@@ -45,7 +46,7 @@ public class ActionProcessor {
             return;
         }
         if (targetIsNotReached()) {
-            setApproachAndFight(owner, getTargetMob());
+            setApproachAndFight(owner, getTargetMob(owner));
             return;
         }
         if (fightingTimer > 1) {
@@ -58,7 +59,7 @@ public class ActionProcessor {
     private void attack() {
         if (MathUtils.randomBoolean(.1f)) {
             setIncomingAnimation(ATTACK);
-            setDefend(getTargetMob(), owner);
+            setDefend(getTargetMob(owner), owner);
             fightingTimer = 0;
         }
     }
@@ -110,15 +111,11 @@ public class ActionProcessor {
     }
 
     private boolean targetIsDead() {
-        return !getTargetMob().isAlive();
+        return !getTargetMob(owner).isAlive();
     }
 
-    private Mob getTargetMob() {
-        /*
-        TODO check if target is MOB
-          If owner is under attack while running and its target is not a Mob
-          (Mob)owner.getTarget() causes exception
-         */
-        return (Mob) owner.getTarget();
+    public Movement getMovement() {
+        //TODO only for path drawing in DebugRenderer
+        return movement;
     }
 }

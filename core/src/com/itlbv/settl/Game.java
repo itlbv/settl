@@ -33,7 +33,7 @@ public class Game extends ApplicationAdapter {
     public static SpriteBatch batch;
 
     public static ArrayList<Mob> mobs;
-    public static ArrayList<Mob> deadMobs;
+    private static ArrayList<Mob> deadMobs;
 
     private static final float VIEWPORT = 60;
     public static float DELTA_TIME = 0;
@@ -111,14 +111,14 @@ public class Game extends ApplicationAdapter {
         //RENDER_ITERATION++;
 
         uiStage.act(DELTA_TIME);
+        uiStage.update();
         updateCamera();
         updateMobs();
 
         drawMap();
         drawMobs();
-
         uiStage.draw();
-        uiStage.drawAdditionalInfo();
+        uiStage.drawDebug();
 
         world.step(DELTA_TIME, 6, 2);
         world.clearForces(); //TODO should it be here?
@@ -133,6 +133,13 @@ public class Game extends ApplicationAdapter {
     private void updateMobs() {
         separateDeadMobs();
         mobs.forEach(Mob::update);
+        /*
+        for (Mob mob : mobs) {
+            if (mob.getType() == MobType.KNIGHT) {
+                mob.update();
+            }
+        }
+        */
     }
 
     private void separateDeadMobs() {

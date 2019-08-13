@@ -5,7 +5,7 @@ import com.itlbv.settl.mob.Mob;
 import com.itlbv.settl.mob.movement.util.Path;
 import com.itlbv.settl.mob.movement.util.PathUtil;
 
-class PathMovement {
+public class PathMovement {
     private Mob owner;
     private Path path;
     private float maxLinearSpeed;
@@ -50,5 +50,10 @@ class PathMovement {
 
     void clearPath() {
         path.clear();
+    }
+
+    public Path getPath() {
+        //TODO only for path drawing in DebugRenderer
+        return path;
     }
 }

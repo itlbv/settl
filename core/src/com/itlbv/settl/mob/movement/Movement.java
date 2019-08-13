@@ -84,10 +84,10 @@ public class Movement {
 
         if (MobUtil.isTargetCloseAndVisible(owner)) {
             switchToSteering();
-            System.out.println("steering");
+            System.out.println(owner.toString() + " steering");
         } else {
             switchToPath();
-            System.out.println("path");
+            System.out.println(owner.toString() + " path");
         }
 
         timer = 0;
@@ -132,5 +132,10 @@ public class Movement {
         ActionUtil.removeCurrentAction(owner);
 
         timer = 2;
+    }
+
+    public PathMovement getPathMovement() {
+        //TODO only for path drawing in DebugRenderer
+        return pathMovement;
     }
 }

@@ -9,6 +9,15 @@ import com.itlbv.settl.mob.Mob;
 
 public class MobUtil {
 
+    public static Mob getTargetMob(Mob mob) {
+        /*
+        TODO check if target is MOB
+          If owner is under attack while running and its target is not a Mob
+          (Mob)owner.getTarget() causes exception
+         */
+        return (Mob) mob.getTarget();
+    }
+
     public static boolean isTargetCloseAndVisible(Mob owner) {
         if (getDistanceToTarget(owner) > 20) {
             return false;
