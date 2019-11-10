@@ -2,13 +2,12 @@ package com.itlbv.settl.mob;
 
 import com.badlogic.gdx.ai.btree.BehaviorTree;
 import com.badlogic.gdx.ai.btree.utils.BehaviorTreeLibraryManager;
-import com.itlbv.settl.Game;
 import com.itlbv.settl.GameObject;
-import com.itlbv.settl.mob.action.ActionProcessor;
+import com.itlbv.settl.mob.action.Action;
 import com.itlbv.settl.mob.animation.AnimationProcessor;
+import com.itlbv.settl.mob.movement.Movement;
 import com.itlbv.settl.mob.movement.util.Target;
 import com.itlbv.settl.mob.util.MobType;
-import com.itlbv.settl.mob.action.Action;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -25,9 +24,10 @@ public class Mob extends GameObject {
     private boolean alive;
 
     private BehaviorTree<Mob> behavior;
-    private List<Action> actions;
-    private ActionProcessor actionProcessor;
-    private AnimationProcessor animationProcessor;
+    public Movement movement;
+    public List<Action> actions;
+    //private ActionProcessor actionProcessor;
+    public AnimationProcessor animation;
 
     private Target target;
     private boolean targetReached;
@@ -37,17 +37,21 @@ public class Mob extends GameObject {
         this.hitpoints = type.getHitpoints();
         this.alive = true;
         setBehavior(behavior);
+        movement = new Movement(this);
         actions = new LinkedList<>();
-        actionProcessor = new ActionProcessor(this);
-        animationProcessor = new AnimationProcessor(this);
+        //actionProcessor = new ActionProcessor(this);
+        animation = new AnimationProcessor(this);
     }
 
     public void update() {
         if (hasNoActions()) {
             behavior.step();
         }
-        actionProcessor.update();
-        animationProcessor.update();
+        if (!actions.isEmpty()) {
+            actions.get(0).run();
+        }
+        // actionProcessor.update();
+        animation.update();
     }
 
     private void setBehavior(String behavior) {
