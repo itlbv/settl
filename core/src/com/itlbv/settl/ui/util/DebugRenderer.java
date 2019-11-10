@@ -49,7 +49,7 @@ public class DebugRenderer extends ShapeRenderer {
 
     public void drawSelectionIndicator(Rectangle selectionIndicator) {
         setProjectionMatrix(Game.camera.combined);
-        setColor(Color.WHITE);
+        setColor(Color.RED);
         begin(ShapeType.Line);
         rect(selectionIndicator.x,
                 selectionIndicator.y,

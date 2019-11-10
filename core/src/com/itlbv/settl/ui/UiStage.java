@@ -74,10 +74,10 @@ public class UiStage extends Stage {
     public void update() {
         updateSelectedMobInfo();
         updateGameInfo();
-        drawSelectionIndicator();
     }
 
     public void drawDebug() {
+        drawSelectionIndicator();
         if (debugMode) {
             debugRenderer.draw();
         }
