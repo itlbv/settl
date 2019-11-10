@@ -1,9 +1,8 @@
-package com.itlbv.settl.mob.action.actions;
+package com.itlbv.settl.mob.action;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.mob.Mob;
-import com.itlbv.settl.mob.action.Action;
 import com.itlbv.settl.mob.movement.util.Target;
 
 import static com.itlbv.settl.mob.action.util.ActionUtil.setApproachAndFight;

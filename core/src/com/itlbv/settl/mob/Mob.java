@@ -18,17 +18,14 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 public class Mob extends GameObject {
 
+    public Movement movement;
+    public List<Action> actions;
+    public AnimationProcessor animation;
+    private BehaviorTree<Mob> behavior;
     private int id;
     private MobType type;
     private int hitpoints;
     private boolean alive;
-
-    private BehaviorTree<Mob> behavior;
-    public Movement movement;
-    public List<Action> actions;
-    //private ActionProcessor actionProcessor;
-    public AnimationProcessor animation;
-
     private Target target;
     private boolean targetReached;
 
@@ -36,21 +33,18 @@ public class Mob extends GameObject {
         this.type = type;
         this.hitpoints = type.getHitpoints();
         this.alive = true;
-        setBehavior(behavior);
         movement = new Movement(this);
         actions = new LinkedList<>();
-        //actionProcessor = new ActionProcessor(this);
         animation = new AnimationProcessor(this);
+        setBehavior(behavior);
     }
 
     public void update() {
         if (hasNoActions()) {
             behavior.step();
-        }
-        if (!actions.isEmpty()) {
+        } else {
             actions.get(0).run();
         }
-        // actionProcessor.update();
         animation.update();
     }
 

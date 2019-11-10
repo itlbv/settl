@@ -3,9 +3,9 @@ package com.itlbv.settl.mob.action.util;
 import com.badlogic.gdx.math.Vector2;
 import com.itlbv.settl.mob.Mob;
 import com.itlbv.settl.mob.action.Action;
-import com.itlbv.settl.mob.action.actions.Defend;
-import com.itlbv.settl.mob.action.actions.Fight;
-import com.itlbv.settl.mob.action.actions.Move;
+import com.itlbv.settl.mob.action.Defend;
+import com.itlbv.settl.mob.action.Fight;
+import com.itlbv.settl.mob.action.Move;
 import com.itlbv.settl.mob.movement.util.Destination;
 
 public class ActionUtil {

@@ -1,7 +1,6 @@
-package com.itlbv.settl.mob.action.actions;
+package com.itlbv.settl.mob.action;
 
 import com.itlbv.settl.mob.Mob;
-import com.itlbv.settl.mob.action.Action;
 import com.itlbv.settl.mob.movement.util.Target;
 
 public class Move extends Action {
