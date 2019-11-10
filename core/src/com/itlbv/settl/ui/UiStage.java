@@ -99,6 +99,13 @@ public class UiStage extends Stage {
         }
     }
 
+    private void setTextToLabel(String labelName, String text) {
+        Actor actor = rootTable.findActor(labelName);
+        if (actor instanceof VisLabel) {
+            ((VisLabel) actor).setText(text);
+        }
+    }
+
     private void updateGameInfo() {
         String gameSpeed = "";
         if (GameUtil.gameSpeed == 0) {
@@ -111,13 +118,6 @@ public class UiStage extends Stage {
             gameSpeed = "VERY SLOW";
         }
         setTextToLabel("gameSpeed", gameSpeed);
-    }
-
-    private void setTextToLabel(String labelName, String text) {
-        Actor actor = rootTable.findActor(labelName);
-        if (actor instanceof VisLabel) {
-            ((VisLabel) actor).setText(text);
-        }
     }
 
     void leftMouseClick(Vector2 clickPosition) {
