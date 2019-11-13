@@ -1,5 +1,4 @@
 # Setll
 
-Hobby project, humans vs. orcs simulation: pathfinding, decision making, animation.
-
-WIP. A game without actual gameplay. Based on LibGdx.
+Hobby project, topdown strategy game engine: pathfinding, decision making, animation.
+Based on LibGdx.
