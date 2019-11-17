@@ -4,9 +4,11 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.mob.Mob;
-import com.itlbv.settl.mob.action.util.ActionUtil;
 import com.itlbv.settl.mob.movement.util.Destination;
-import com.itlbv.settl.mob.util.MobUtil;
+import com.itlbv.settl.mob.movement.util.NoTargetException;
+import com.itlbv.settl.mob.util.MobTargetUtil;
+
+import static com.itlbv.settl.mob.action.util.ActionUtil.removeCurrentAction;
 
 public class Movement {
     private final Mob owner;
@@ -49,6 +51,10 @@ public class Movement {
          * Check if destination is different and change movement straight away
          * or else owner change movement only every 2 seconds
          */
+        if (owner.getTarget() == null)
+            throw new NoTargetException(owner.toString() + " has no target while trying to move!");
+
+
         checkIfTargetReached();
         if (owner.isTargetReached()){
             stop();
@@ -62,6 +68,7 @@ public class Movement {
     }
 
     private void checkIfTargetReached() {
+        // TODO review this mess
         if (owner.getTarget() instanceof Destination) {
             Vector2 ownerPos = owner.getPosition();
             Vector2 destPos = ((Destination) owner.getTarget()).getPosition();
@@ -82,7 +89,7 @@ public class Movement {
             return;
         }
 
-        if (MobUtil.isTargetCloseAndVisible(owner)) {
+        if (MobTargetUtil.isTargetCloseAndVisible(owner)) {
             switchToSteering();
             System.out.println(owner.toString() + " steering");
         } else {
@@ -129,7 +136,7 @@ public class Movement {
         steeringMovement.disable();
         pathMovement.clearPath();
         setLinearVelocity(new Vector2(0,0));
-        ActionUtil.removeCurrentAction(owner);
+        removeCurrentAction(owner);
 
         timer = 2;
     }

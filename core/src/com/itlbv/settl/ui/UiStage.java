@@ -7,13 +7,15 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.mob.Mob;
-import com.itlbv.settl.mob.action.util.ActionUtil;
 import com.itlbv.settl.ui.util.DebugRenderer;
 import com.itlbv.settl.ui.util.UiUtil;
 import com.itlbv.settl.util.GameUtil;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisWindow;
+
+import static com.itlbv.settl.mob.action.util.ActionUtil.approachMobAndFight;
+import static com.itlbv.settl.mob.action.util.ActionUtil.moveToPosition;
 
 public class UiStage extends Stage {
 
@@ -93,9 +95,9 @@ public class UiStage extends Stage {
         } else {
             setTextToLabel("selectedMob", selectedMob.toString());
             setTextToLabel("target", selectedMob.getTarget() == null ? "" : selectedMob.getTarget().toString());
-            setTextToLabel("action", selectedMob.getActions().size() == 0 ? "" : selectedMob.getActions().get(0).getType().toString());
+            setTextToLabel("action", selectedMob.hasNoActions() ? "" : selectedMob.getAction().toString());
             setTextToLabel("bodyPos", UiUtil.vectorToString(selectedMob.getPosition()));
-            setTextToLabel("sensorPos", UiUtil.vectorToString(selectedMob.getSensor().getPosition()));
+            setTextToLabel("sensorPos", UiUtil.vectorToString(selectedMob.getSensorPosition()));
         }
     }
 
@@ -125,13 +127,14 @@ public class UiStage extends Stage {
     }
 
     void rightMouseClick(Vector2 clickPosition) {
-        if (selectedMob == null) return;
+        if (selectedMob == null)
+            return;
 
         Mob clickedMob = getMobFromPosition(clickPosition);
         if (clickedMob == null || clickedMob == selectedMob) {
-            ActionUtil.setMove(selectedMob, clickPosition);
+            moveToPosition(selectedMob, clickPosition);
         } else {
-            ActionUtil.setApproachAndFight(selectedMob, clickedMob);
+            approachMobAndFight(selectedMob, clickedMob);
         }
     }
 

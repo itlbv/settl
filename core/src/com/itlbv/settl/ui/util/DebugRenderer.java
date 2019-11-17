@@ -11,11 +11,10 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.mob.Mob;
-import com.itlbv.settl.mob.action.util.ActionType;
-import com.itlbv.settl.mob.action.util.ActionUtil;
 import com.itlbv.settl.ui.UiStage;
 
-import static com.itlbv.settl.mob.util.MobUtil.getTargetMob;
+import static com.itlbv.settl.mob.action.Action.ActionType.MOVE;
+import static com.itlbv.settl.mob.util.MobTargetUtil.getTargetMob;
 
 public class DebugRenderer extends ShapeRenderer {
 
@@ -72,11 +71,12 @@ public class DebugRenderer extends ShapeRenderer {
     }
 
     private void drawRoute(Mob mob) {
-        if (ActionUtil.getTypeOfCurrentAction(mob) != ActionType.MOVE) return;
+        if (mob.getActionType() != MOVE)
+            return;
 
         setProjectionMatrix(Game.camera.combined);
         begin(ShapeType.Filled);
-        if (mob.getActionProcessor().getMovement().getPathMovement().getPath().size() == 0) {
+        if (mob.movement.getPathMovement().getPath().size() == 0) {
             drawSteering(mob);
         } else {
             drawPath(mob);
@@ -93,9 +93,9 @@ public class DebugRenderer extends ShapeRenderer {
 
     private void drawPath(Mob mob) {
         setColor(Color.WHITE);
-        Array<Vector2> waypoints = new Array<>(mob.getActionProcessor().getMovement().getPathMovement().getPath().nodes.size + 1);
+        Array<Vector2> waypoints = new Array<>(mob.movement.getPathMovement().getPath().nodes.size + 1);
         waypoints.add(mob.getPosition());
-        mob.getActionProcessor().getMovement().getPathMovement().getPath().nodes.forEach(n -> waypoints.add(n.getPosition()));
+        mob.movement.getPathMovement().getPath().nodes.forEach(n -> waypoints.add(n.getPosition()));
         for (int i = 0; i < waypoints.size - 1; i++) {
             Vector2 currWaypoint = waypoints.get(i);
             Vector2 nextWaypoint = waypoints.get(i + 1);

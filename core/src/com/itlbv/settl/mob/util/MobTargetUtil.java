@@ -6,26 +6,35 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.mob.Mob;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class MobUtil {
+public class MobTargetUtil {
+
+    private static final Logger log = LoggerFactory.getLogger(MobTargetUtil.class);
 
     public static Mob getTargetMob(Mob mob) {
         /*
         TODO check if target is MOB
           If owner is under attack while running and its target is not a Mob
-          (Mob)owner.getTarget() causes exception
+          (Mob)owner.getTarget() causes cast exception
          */
-        return (Mob) mob.getTarget();
+        try {
+            return (Mob) mob.getTarget();
+        } catch (NullPointerException | ClassCastException e) {
+            log.error(e.getMessage());
+            return null;
+        }
     }
 
     public static boolean isTargetCloseAndVisible(Mob owner) {
         if (getDistanceToTarget(owner) > 20) {
             return false;
         }
-        Ray<Vector2> rayToTarget = new Ray<>(owner.getPosition(), owner.getTarget().getPosition());
+        Ray<Vector2> rayToTargetPos = new Ray<Vector2>(owner.getPosition(), owner.getTarget().getPosition());
 
         RayCastToTarget collisionDetector = new RayCastToTarget(owner);
-        Game.world.rayCast(collisionDetector, rayToTarget.start, rayToTarget.end);
+        Game.world.rayCast(collisionDetector, rayToTargetPos.start, rayToTargetPos.end);
         return !collisionDetector.collided;
     }
 
