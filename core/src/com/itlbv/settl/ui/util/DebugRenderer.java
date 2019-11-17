@@ -49,6 +49,7 @@ public class DebugRenderer extends ShapeRenderer {
     private void drawSelection() {
         if (selectedMob == null)
             return;
+        selection.setToMob(selectedMob);
         setProjectionMatrix(Game.camera.combined);
         setColor(Color.RED);
         begin(ShapeType.Line);
