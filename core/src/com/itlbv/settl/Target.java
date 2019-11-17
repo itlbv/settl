@@ -1,8 +1,11 @@
-package com.itlbv.settl.mob.movement.util;
+package com.itlbv.settl;
 
 import com.badlogic.gdx.ai.steer.SteerableAdapter;
 import com.badlogic.gdx.math.Vector2;
 
+/**
+ * extends SteerableAdapter in order to be a target for LibGdx Steering Behavior
+ */
 public abstract class Target extends SteerableAdapter<Vector2> {
     /**
      * Override from SteerableAdapter.

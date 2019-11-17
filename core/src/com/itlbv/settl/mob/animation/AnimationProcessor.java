@@ -3,12 +3,11 @@ package com.itlbv.settl.mob.animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.mob.Mob;
-import com.itlbv.settl.mob.action.Action;
 import com.itlbv.settl.mob.animation.util.MobAnimationType;
 import com.itlbv.settl.mob.util.MobConstants;
 import com.itlbv.settl.mob.util.MobType;
 
-import static com.itlbv.settl.mob.action.util.ActionUtil.getTypeOfCurrentAction;
+import static com.itlbv.settl.mob.action.Action.ActionType.MOVE;
 import static com.itlbv.settl.mob.animation.util.MobAnimationType.*;
 
 public class AnimationProcessor {
@@ -63,10 +62,7 @@ public class AnimationProcessor {
     }
 
     private boolean isCurrentMobActionMove() {
-        if (owner.hasNoActions()) {
-            return false;
-        }
-        return getTypeOfCurrentAction(owner) == Action.ActionType.MOVE;
+        return owner.getActionType() == MOVE;
     }
 
     private void setAnimationIfChanged(MobAnimation animationToSet) {

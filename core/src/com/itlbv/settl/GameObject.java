@@ -1,23 +1,21 @@
 package com.itlbv.settl;
 
-import com.badlogic.gdx.ai.steer.SteerableAdapter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.itlbv.settl.mob.movement.util.Target;
-import com.itlbv.settl.mob.util.MobConstants;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static com.itlbv.settl.util.GameConstants.MOB_TEXTURE_SIZE_PXL;
 
-/**
- * GameObject extends SteerableAdapter in order to be a target for Steering Behavior
- */
 @Data
 @EqualsAndHashCode(callSuper = false)
 public abstract class GameObject extends Target {
+
+    private static final Logger log = LoggerFactory.getLogger(GameObject.class);
 
     private Body body;
     private Body sensor;
@@ -27,11 +25,21 @@ public abstract class GameObject extends Target {
         this.sprite = new Sprite();
     }
 
-   public Vector2 getPosition() {
+    public void setTexture(TextureRegion texture) {
+        sprite.setRegion(texture, 0, 0, MOB_TEXTURE_SIZE_PXL, MOB_TEXTURE_SIZE_PXL);
+    }
+
+    @Override
+    public Vector2 getPosition() {
         return body.getPosition();
     }
 
-    public void setTexture(TextureRegion texture) {
-        sprite.setRegion(texture, 0, 0, MOB_TEXTURE_SIZE_PXL, MOB_TEXTURE_SIZE_PXL);
+    public Vector2 getSensorPosition() {
+        try {
+            return getSensor().getPosition();
+        } catch (NullPointerException e) {
+            log.error(this.toString() + " has no sensor!");
+            return null;
+        }
     }
 }

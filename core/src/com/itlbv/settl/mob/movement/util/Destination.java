@@ -1,6 +1,7 @@
 package com.itlbv.settl.mob.movement.util;
 
 import com.badlogic.gdx.math.Vector2;
+import com.itlbv.settl.Target;
 import com.itlbv.settl.ui.util.UiUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;

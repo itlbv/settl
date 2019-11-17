@@ -6,10 +6,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.itlbv.settl.mob.Mob;
 
 class SteeringMovement {
-    private Mob owner;
-    private float maxLinearSpeed;
     private final SteeringAcceleration<Vector2> steeringOutput;
     private final Seek<Vector2> steeringBehavior;
+    private Mob owner;
+    private float maxLinearSpeed;
 
     SteeringMovement(Mob owner, float maxLinearSpeed) {
         this.owner = owner;
@@ -19,11 +19,11 @@ class SteeringMovement {
     }
 
     void init() {
-        steeringBehavior.setTarget(owner.getTarget());
-        steeringBehavior.setEnabled(true);
+        steeringBehavior.setTarget(owner.getTarget())
+                .setEnabled(true);
     }
 
-   Vector2 getVelocity() {
+    Vector2 getVelocity() {
         steeringBehavior.calculateSteering(steeringOutput);
         return steeringOutput.linear.limit(maxLinearSpeed);
     }

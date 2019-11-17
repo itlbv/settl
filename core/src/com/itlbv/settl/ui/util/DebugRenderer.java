@@ -11,11 +11,10 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.mob.Mob;
-import com.itlbv.settl.mob.action.Action;
-import com.itlbv.settl.mob.action.util.ActionUtil;
 import com.itlbv.settl.ui.UiStage;
 
-import static com.itlbv.settl.mob.util.MobUtil.getTargetMob;
+import static com.itlbv.settl.mob.action.Action.ActionType.MOVE;
+import static com.itlbv.settl.mob.util.MobTargetUtil.getTargetMob;
 
 public class DebugRenderer extends ShapeRenderer {
 
@@ -72,7 +71,8 @@ public class DebugRenderer extends ShapeRenderer {
     }
 
     private void drawRoute(Mob mob) {
-        if (ActionUtil.getTypeOfCurrentAction(mob) != Action.ActionType.MOVE) return;
+        if (mob.getActionType() != MOVE)
+            return;
 
         setProjectionMatrix(Game.camera.combined);
         begin(ShapeType.Filled);
