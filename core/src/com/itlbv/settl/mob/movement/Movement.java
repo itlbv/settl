@@ -8,7 +8,7 @@ import com.itlbv.settl.mob.movement.util.Destination;
 import com.itlbv.settl.mob.movement.util.NoTargetException;
 import com.itlbv.settl.mob.util.MobTargetUtil;
 
-import static com.itlbv.settl.mob.action.util.ActionUtil.removeCurrentAction;
+import static com.itlbv.settl.mob.action.ActionUtil.removeCurrentAction;
 
 public class Movement {
     private final Mob owner;
@@ -75,6 +75,8 @@ public class Movement {
             if (ownerPos.epsilonEquals(destPos, 0.1f)) {
                 owner.setTargetReached(true);
                 System.out.println("dest reached");
+            } else {
+                owner.setTargetReached(false);
             }
         }
     }
