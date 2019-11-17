@@ -1,16 +1,22 @@
-package com.itlbv.settl.behaviorTasks;
+package com.itlbv.settl.behavior;
 
 import com.badlogic.gdx.ai.btree.LeafTask;
 import com.badlogic.gdx.ai.btree.Task;
 import com.itlbv.settl.mob.Mob;
-import com.itlbv.settl.mob.action.util.ActionUtil;
 
-import static com.itlbv.settl.mob.util.MobUtil.getTargetMob;
+import static com.itlbv.settl.mob.action.util.ActionUtil.approachMobAndFight;
 
 public class ApproachAndFight extends LeafTask<Mob> {
     @Override
     public Status execute() {
-        ActionUtil.setApproachAndFight(getObject(), getTargetMob(getObject()));
+        Mob owner = getObject();
+        Mob targetMob = BehaviorUtil.chooseEnemy(owner);
+
+        if (targetMob == null) {
+            return Status.FAILED;
+        }
+
+        approachMobAndFight(getObject(), targetMob);
         return Status.SUCCEEDED;
     }
 

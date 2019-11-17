@@ -1,7 +1,7 @@
-import isEnemyAround?:"com.itlbv.settl.behaviorTasks.conditions.IsEnemyAround"
-import chooseEnemy:"com.itlbv.settl.behaviorTasks.ChooseEnemy"
-import approachAndFight:"com.itlbv.settl.behaviorTasks.ApproachAndFight"
-import doNothing:"com.itlbv.settl.behaviorTasks.DoNothing"
+import isEnemyAround?:"com.itlbv.settl.behavior.conditions.IsEnemyAround"
+import chooseEnemy:"com.itlbv.settl.behavior.ChooseEnemy"
+import approachAndFight:"com.itlbv.settl.behavior.ApproachAndFight"
+import doNothing:"com.itlbv.settl.behavior.DoNothing"
 
 subtree name: "killEnemy"
     sequence

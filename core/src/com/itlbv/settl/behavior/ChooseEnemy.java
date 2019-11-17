@@ -1,17 +1,17 @@
-package com.itlbv.settl.behaviorTasks;
+package com.itlbv.settl.behavior;
 
 import com.badlogic.gdx.ai.btree.LeafTask;
 import com.badlogic.gdx.ai.btree.Task;
 import com.itlbv.settl.mob.Mob;
 
-public class DoNothing extends LeafTask<Mob> {
+public class ChooseEnemy extends LeafTask<Mob> {
     @Override
     public Status execute() {
         return Status.SUCCEEDED;
     }
 
     @Override
-    protected Task<Mob> copyTo(Task<Mob> task) {
+    protected Task copyTo(Task task) {
         return task;
     }
 }
