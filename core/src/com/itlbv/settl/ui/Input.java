@@ -7,6 +7,9 @@ import com.itlbv.settl.Game;
 import com.itlbv.settl.ui.util.UiUtil;
 import com.itlbv.settl.util.GameUtil;
 
+import static com.itlbv.settl.ui.UiStage.debugMode;
+import static com.itlbv.settl.ui.UiStage.routeDrawing;
+
 public class Input extends InputAdapter {
 
     private UiStage uiStage;
@@ -34,8 +37,12 @@ public class Input extends InputAdapter {
     @Override
     public boolean keyTyped(char character) {
         switch (character) {
-            case '\b': uiStage.debugMode = !uiStage.debugMode; break;// BACKSPACE
-            case 't': uiStage.routeDrawing =! uiStage.routeDrawing; break;
+            case '\b':
+                debugMode = !debugMode;
+                break;// BACKSPACE
+            case 't':
+                routeDrawing = !routeDrawing;
+                break;
             case 'x': GameUtil.increaseGameSpeed(); break;
             case 'z': GameUtil.decreaseGameSpeed(); break;
             case ' ': GameUtil.changePauseState(); break;// SPACEBAR

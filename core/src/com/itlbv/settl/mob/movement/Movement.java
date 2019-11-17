@@ -145,4 +145,8 @@ public class Movement {
         //TODO only for path drawing in DebugRenderer
         return pathMovement;
     }
+
+    public boolean isUnderSteering() {
+        return useSteering;
+    }
 }

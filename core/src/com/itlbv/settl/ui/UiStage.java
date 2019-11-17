@@ -37,59 +37,21 @@ public class UiStage extends Stage {
         rootTable.update();
     }
 
-    public void drawDebug() {
-        drawSelectionIndicator();
-        if (debugMode) {
-            debugRenderer.draw();
-        }
-    }
-
-    private void updateSelectedMobInfo() {
-        if (selectedMob == null) {
-            setTextToLabel("selectedMob", "-");
-            setTextToLabel("target", "-");
-            setTextToLabel("action", "-");
-            setTextToLabel("bodyPos", "-");
-            setTextToLabel("sensorPos", "-");
-        } else {
-            setTextToLabel("selectedMob", selectedMob.toString());
-            setTextToLabel("target", selectedMob.getTarget() == null ? "" : selectedMob.getTarget().toString());
-            setTextToLabel("action", selectedMob.hasNoActions() ? "" : selectedMob.getAction().toString());
-            setTextToLabel("bodyPos", UiUtil.vectorToString(selectedMob.getPosition()));
-            setTextToLabel("sensorPos", UiUtil.vectorToString(selectedMob.getSensorPosition()));
-        }
-    }
-
-    private void setTextToLabel(String labelName, String text) {
-        Actor actor = rootTable.findActor(labelName);
-        if (actor instanceof VisLabel) {
-            ((VisLabel) actor).setText(text);
-        }
-    }
-
-    private void updateGameInfo() {
-        String gameSpeed = "";
-        if (GameUtil.gameSpeed == 0) {
-            gameSpeed = "PAUSE";
-        } else if (GameUtil.gameSpeed == 1) {
-            gameSpeed = "NORMAL";
-        } else if (GameUtil.gameSpeed == 2) {
-            gameSpeed = "SLOW";
-        } else if (GameUtil.gameSpeed == 3) {
-            gameSpeed = "VERY SLOW";
-        }
-        setTextToLabel("gameSpeed", gameSpeed);
+    @Override
+    public void draw() {
+        super.draw();
+        debugRenderer.draw();
     }
 
     void leftMouseClick(Vector2 clickPosition) {
-        selectedMob = getMobFromPosition(clickPosition);
+        selectedMob = getMobAtPosition(clickPosition);
     }
 
     void rightMouseClick(Vector2 clickPosition) {
         if (selectedMob == null)
             return;
 
-        Mob clickedMob = getMobFromPosition(clickPosition);
+        Mob clickedMob = getMobAtPosition(clickPosition);
         if (clickedMob == null || clickedMob == selectedMob) {
             moveToPosition(selectedMob, clickPosition);
         } else {
@@ -97,20 +59,12 @@ public class UiStage extends Stage {
         }
     }
 
-    private Mob getMobFromPosition(Vector2 position) {
+    private Mob getMobAtPosition(Vector2 position) {
         for (Mob mob : Game.mobs) {
-            selectionIndicator.set(mob.getPosition().x - 0.5f,
-                    mob.getPosition().y,
-                    1f, 1.5f);
-            if (selectionIndicator.contains(position.x, position.y)) {
+            selection.setToMob(mob);
+            if (selection.contains(position.x, position.y))
                 return mob;
-            }
         }
         return null;
-    }
-
-    private void drawSelectionIndicator() {
-        if (selectedMob == null) return;
-        debugRenderer.drawSelectionIndicator(selectionIndicator);
     }
 }
