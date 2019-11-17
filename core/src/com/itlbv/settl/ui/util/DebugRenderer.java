@@ -9,10 +9,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.itlbv.settl.Game;
+import com.itlbv.settl.Target;
 import com.itlbv.settl.mob.Mob;
 
 import static com.itlbv.settl.mob.action.Action.ActionType.MOVE;
-import static com.itlbv.settl.mob.util.MobTargetUtil.getTargetMob;
 import static com.itlbv.settl.ui.UiStage.*;
 
 public class DebugRenderer extends ShapeRenderer {
@@ -90,8 +90,7 @@ public class DebugRenderer extends ShapeRenderer {
 
     private void drawSteering(Mob mob) {
         setColor(Color.YELLOW);
-        Mob target = getTargetMob(mob); //TODO throws exception when target is Destination
-        if (target == null) return; // TODO deal with target system
+        Target target = mob.getTarget();
         rectLine(mob.getPosition().x, mob.getPosition().y, target.getPosition().x, target.getPosition().y, .1f);
     }
 

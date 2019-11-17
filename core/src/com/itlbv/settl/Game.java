@@ -8,10 +8,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
-import com.itlbv.settl.mob.util.MobType;
 import com.itlbv.settl.map.Map;
 import com.itlbv.settl.mob.Mob;
 import com.itlbv.settl.mob.util.MobFactory;
+import com.itlbv.settl.mob.util.MobType;
 import com.itlbv.settl.ui.Input;
 import com.itlbv.settl.ui.UiStage;
 import com.itlbv.settl.util.CollisionHandler;
@@ -20,7 +20,6 @@ import com.itlbv.settl.util.GameUtil;
 import com.itlbv.settl.util.Player;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public class Game extends ApplicationAdapter {
     public static World world;
@@ -95,11 +94,11 @@ public class Game extends ApplicationAdapter {
     }
 
     private void createMobs() {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 1; i++) {
             MobFactory.createMobAtRandomPosition(false, MobType.KNIGHT);
         }
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 0; i++) {
             MobFactory.createMobAtRandomPosition(true, MobType.ORC);
         }
     }
@@ -118,7 +117,6 @@ public class Game extends ApplicationAdapter {
         drawMap();
         drawMobs();
         uiStage.draw();
-        uiStage.drawDebug();
 
         world.step(DELTA_TIME, 6, 2);
         world.clearForces(); //TODO should it be here?
