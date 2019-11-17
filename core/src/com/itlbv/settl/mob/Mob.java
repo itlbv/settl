@@ -6,7 +6,6 @@ import com.itlbv.settl.GameObject;
 import com.itlbv.settl.Target;
 import com.itlbv.settl.mob.action.Action;
 import com.itlbv.settl.mob.animation.AnimationProcessor;
-import com.itlbv.settl.mob.movement.Movement;
 import com.itlbv.settl.mob.util.MobType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,7 +20,6 @@ public class Mob extends GameObject {
 
     private static final Logger log = LoggerFactory.getLogger(Mob.class);
 
-    public Movement movement;
     private Stack<Action> actions;
     private AnimationProcessor animation;
     private BehaviorTree<Mob> behavior;
@@ -35,7 +33,6 @@ public class Mob extends GameObject {
         this.type = type;
         this.hitpoints = type.getHitpoints();
         this.alive = true;
-        movement = new Movement(this);
         actions = new Stack<>();
         animation = new AnimationProcessor(this);
         setBehavior(behavior);

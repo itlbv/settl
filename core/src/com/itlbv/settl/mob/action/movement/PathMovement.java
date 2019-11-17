@@ -1,4 +1,4 @@
-package com.itlbv.settl.mob.movement;
+package com.itlbv.settl.mob.action.movement;
 
 import com.badlogic.gdx.math.Vector2;
 import com.itlbv.settl.mob.Mob;
@@ -10,19 +10,19 @@ public class PathMovement {
     private Path path;
     private float maxLinearSpeed;
 
-    PathMovement(Mob owner, float maxLinearSpeed) {
+    public PathMovement(Mob owner, float maxLinearSpeed) {
         this.owner = owner;
         this.maxLinearSpeed = maxLinearSpeed;
         this.path = new Path();
     }
 
-    void init() {
+    public void init() {
         Vector2 startPosition = owner.getPosition();
         Vector2 targetPosition = owner.getTarget().getPosition();
         path = PathUtil.getPath(startPosition, targetPosition);
     }
 
-    Vector2 getVelocity() {
+    public Vector2 getVelocity() {
         if (path.isEmpty()) {
             System.out.println("PATH IS EMPTY; MOB " + owner.toString()); //TODO throw an exception
             return new Vector2(0, 0);
@@ -48,7 +48,7 @@ public class PathMovement {
         return nextWaypoint.cpy().sub(owner.getPosition()).nor().scl(maxLinearSpeed);
     }
 
-    void clearPath() {
+    public void clearPath() {
         path.clear();
     }
 

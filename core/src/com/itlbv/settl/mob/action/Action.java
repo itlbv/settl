@@ -10,7 +10,7 @@ import lombok.Getter;
 public abstract class Action {
     protected Mob owner;
     private ActionType type;
-    private Target target;
+    Target target;
 
     public abstract void run();
 

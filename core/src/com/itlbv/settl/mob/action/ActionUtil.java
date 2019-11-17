@@ -24,6 +24,7 @@ public class ActionUtil {
 
     private static void pushActionOnTop(Mob owner, Action action) {
         owner.getActions().push(action);
+        System.out.println("new action added");
         //owner.setTargetReached(false); //TODO set checkTargetReached() instead
     }
 
@@ -35,5 +36,6 @@ public class ActionUtil {
 
     public static void clearActions(Mob owner) {
         owner.getActions().clear();
+        System.out.println("actions cleared");
     }
 }

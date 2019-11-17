@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.Target;
 import com.itlbv.settl.mob.Mob;
+import com.itlbv.settl.mob.action.Move;
 
 import static com.itlbv.settl.mob.action.Action.ActionType.MOVE;
 import static com.itlbv.settl.ui.UiStage.*;
@@ -82,7 +83,8 @@ public class DebugRenderer extends ShapeRenderer {
         if (mob.getActionType() != MOVE)
             return;
 
-        if (mob.movement.isUnderSteering()) {
+        Move moveAction = (Move) mob.getAction();
+        if (moveAction.isUnderSteering()) {
             drawSteering(mob);
         } else {
             drawPath(mob);
@@ -96,10 +98,11 @@ public class DebugRenderer extends ShapeRenderer {
     }
 
     private void drawPath(Mob mob) {
+        Move moveAction = (Move) mob.getAction();
         setColor(Color.WHITE);
-        Array<Vector2> waypoints = new Array<>(mob.movement.getPathMovement().getPath().nodes.size + 1);
+        Array<Vector2> waypoints = new Array<>(moveAction.getPathMovement().getPath().nodes.size + 1);
         waypoints.add(mob.getPosition());
-        mob.movement.getPathMovement().getPath().nodes.forEach(n -> waypoints.add(n.getPosition()));
+        moveAction.getPathMovement().getPath().nodes.forEach(n -> waypoints.add(n.getPosition()));
         for (int i = 0; i < waypoints.size - 1; i++) {
             Vector2 currWaypoint = waypoints.get(i);
             Vector2 nextWaypoint = waypoints.get(i + 1);
