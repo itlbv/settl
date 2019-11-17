@@ -1,81 +1,40 @@
 package com.itlbv.settl.ui;
 
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.mob.Mob;
+import com.itlbv.settl.ui.elements.RootTable;
+import com.itlbv.settl.ui.elements.Selection;
 import com.itlbv.settl.ui.util.DebugRenderer;
-import com.itlbv.settl.ui.util.UiUtil;
-import com.itlbv.settl.util.GameUtil;
 import com.kotcrab.vis.ui.VisUI;
-import com.kotcrab.vis.ui.widget.VisLabel;
-import com.kotcrab.vis.ui.widget.VisWindow;
 
 import static com.itlbv.settl.mob.action.util.ActionUtil.approachMobAndFight;
 import static com.itlbv.settl.mob.action.util.ActionUtil.moveToPosition;
 
 public class UiStage extends Stage {
 
-    private Table rootTable;
-
-    private Mob selectedMob;
-    private Rectangle selectionIndicator;
-
-    boolean debugMode = true;
-    public boolean routeDrawing = true;
+    public static Mob selectedMob;
+    public static Selection selection;
+    public static boolean debugMode = true;
+    public static boolean routeDrawing = true;
+    private RootTable rootTable;
     private static DebugRenderer debugRenderer;
 
     public UiStage() {
-        debugRenderer = new DebugRenderer(this);
-        selectionIndicator = new Rectangle();
+        debugRenderer = new DebugRenderer();
+        selection = new Selection();
         setStage();
     }
 
     private void setStage() {
         VisUI.load(VisUI.SkinScale.X2); // scaling ui for hi-res displays
-
-        rootTable = new Table();
-        rootTable.setFillParent(true);
-
-        VisWindow winMobInfo = setupWinMobInfo();
-        VisWindow winGameInfo = setupWinGameInfo();
-
-        rootTable.add(winMobInfo).width(400).expand().bottom().left();
-        rootTable.add(winGameInfo).width(350).expand().bottom().right();
+        rootTable = new RootTable();
         addActor(rootTable);
     }
 
-    private VisWindow setupWinMobInfo() {
-        VisWindow window = new VisWindow("mobInfo");
-        createLabelsAndAddToWindow("selectedMob", "Mob:", window);
-        createLabelsAndAddToWindow("target", "target:", window);
-        createLabelsAndAddToWindow("action", "action:", window);
-        createLabelsAndAddToWindow("bodyPos", "body pos:", window);
-        createLabelsAndAddToWindow("sensorPos", "sensor pos:", window);
-        return window;
-    }
-
-    private VisWindow setupWinGameInfo() {
-        VisWindow window = new VisWindow("gameInfo");
-        createLabelsAndAddToWindow("gameSpeed", "Game speed:", window);
-        return window;
-    }
-
-    private void createLabelsAndAddToWindow(String name, String text, VisWindow window) {
-        VisLabel txt = new VisLabel(text);
-        VisLabel label = new VisLabel();
-        label.setName(name);
-        window.add(txt).right();
-        window.add(label).expandX();
-        window.row();
-    }
-
     public void update() {
-        updateSelectedMobInfo();
-        updateGameInfo();
+        rootTable.update();
     }
 
     public void drawDebug() {
