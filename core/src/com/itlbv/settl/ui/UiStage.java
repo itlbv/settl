@@ -9,8 +9,8 @@ import com.itlbv.settl.ui.elements.Selection;
 import com.itlbv.settl.ui.util.DebugRenderer;
 import com.kotcrab.vis.ui.VisUI;
 
-import static com.itlbv.settl.mob.action.util.ActionUtil.approachMobAndFight;
-import static com.itlbv.settl.mob.action.util.ActionUtil.moveToPosition;
+import static com.itlbv.settl.mob.action.ActionUtil.approachMobAndFight;
+import static com.itlbv.settl.mob.action.ActionUtil.moveToPosition;
 
 public class UiStage extends Stage {
 

@@ -4,7 +4,7 @@ import com.badlogic.gdx.ai.btree.LeafTask;
 import com.badlogic.gdx.ai.btree.Task;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.mob.Mob;
-import com.itlbv.settl.mob.action.util.ActionUtil;
+import com.itlbv.settl.mob.action.ActionUtil;
 
 public class IsEnemyAround extends LeafTask<Mob> {
     @Override

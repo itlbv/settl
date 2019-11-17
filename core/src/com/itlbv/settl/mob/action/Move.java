@@ -5,7 +5,7 @@ import com.itlbv.settl.mob.Mob;
 
 public class Move extends Action {
 
-    public Move(Mob owner, Target target) {
+    Move(Mob owner, Target target) {
         super(owner, ActionType.MOVE, target);
     }
 

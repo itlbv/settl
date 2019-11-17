@@ -4,7 +4,7 @@ import com.badlogic.gdx.ai.btree.LeafTask;
 import com.badlogic.gdx.ai.btree.Task;
 import com.itlbv.settl.mob.Mob;
 
-import static com.itlbv.settl.mob.action.util.ActionUtil.approachMobAndFight;
+import static com.itlbv.settl.mob.action.ActionUtil.approachMobAndFight;
 
 public class ApproachAndFight extends LeafTask<Mob> {
     @Override

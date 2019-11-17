@@ -4,14 +4,14 @@ import com.badlogic.gdx.math.MathUtils;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.mob.Mob;
 
-import static com.itlbv.settl.mob.action.util.ActionUtil.removeCurrentAction;
+import static com.itlbv.settl.mob.action.ActionUtil.removeCurrentAction;
 import static com.itlbv.settl.mob.animation.util.MobAnimationType.GET_HIT;
 
 public class Defend extends Action {
 
     private float holdTimer;
 
-    public Defend(Mob owner, Mob attacker) {
+    Defend(Mob owner, Mob attacker) {
         super(owner, ActionType.DEFEND, attacker);
     }
 

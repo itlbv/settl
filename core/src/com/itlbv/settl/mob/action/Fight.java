@@ -4,8 +4,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.mob.Mob;
 
-import static com.itlbv.settl.mob.action.util.ActionUtil.approachMobAndFight;
-import static com.itlbv.settl.mob.action.util.ActionUtil.setDefend;
+import static com.itlbv.settl.mob.action.ActionUtil.approachMobAndFight;
+import static com.itlbv.settl.mob.action.ActionUtil.setDefend;
 import static com.itlbv.settl.mob.animation.util.MobAnimationType.ATTACK;
 import static com.itlbv.settl.mob.util.MobTargetUtil.getTargetMob;
 
@@ -13,7 +13,7 @@ public class Fight extends Action {
 
     private float fightingTimer;
 
-    public Fight(Mob owner, Mob target) {
+    Fight(Mob owner, Mob target) {
         super(owner, ActionType.FIGHT, target);
     }
 
