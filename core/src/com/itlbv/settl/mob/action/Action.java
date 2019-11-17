@@ -1,7 +1,7 @@
 package com.itlbv.settl.mob.action;
 
+import com.itlbv.settl.Target;
 import com.itlbv.settl.mob.Mob;
-import com.itlbv.settl.mob.movement.util.Target;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -18,5 +18,9 @@ public abstract class Action {
         MOVE,
         FIGHT,
         DEFEND
+    }
+
+    public String toString() {
+        return type.name();
     }
 }

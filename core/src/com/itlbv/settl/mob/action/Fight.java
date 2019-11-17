@@ -3,18 +3,17 @@ package com.itlbv.settl.mob.action;
 import com.badlogic.gdx.math.MathUtils;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.mob.Mob;
-import com.itlbv.settl.mob.movement.util.Target;
 
-import static com.itlbv.settl.mob.action.util.ActionUtil.setApproachAndFight;
+import static com.itlbv.settl.mob.action.util.ActionUtil.approachMobAndFight;
 import static com.itlbv.settl.mob.action.util.ActionUtil.setDefend;
 import static com.itlbv.settl.mob.animation.util.MobAnimationType.ATTACK;
-import static com.itlbv.settl.mob.util.MobUtil.getTargetMob;
+import static com.itlbv.settl.mob.util.MobTargetUtil.getTargetMob;
 
 public class Fight extends Action {
 
     private float fightingTimer;
 
-    public Fight(Mob owner, Target target) {
+    public Fight(Mob owner, Mob target) {
         super(owner, ActionType.FIGHT, target);
     }
 
@@ -24,7 +23,7 @@ public class Fight extends Action {
             return;
         }
         if (targetIsNotReached()) {
-            setApproachAndFight(owner, getTargetMob(owner));
+            approachMobAndFight(owner, getTargetMob(owner));
             return;
         }
         if (fightingTimer > 1) {
@@ -36,7 +35,7 @@ public class Fight extends Action {
 
     private void attack() {
         if (MathUtils.randomBoolean(.1f)) {
-            owner.animation.setIncoming(ATTACK);
+            owner.getAnimation().setIncoming(ATTACK);
             setDefend(getTargetMob(owner), owner);
             fightingTimer = 0;
         }

@@ -3,7 +3,6 @@ package com.itlbv.settl.mob.action;
 import com.badlogic.gdx.math.MathUtils;
 import com.itlbv.settl.Game;
 import com.itlbv.settl.mob.Mob;
-import com.itlbv.settl.mob.movement.util.Target;
 
 import static com.itlbv.settl.mob.action.util.ActionUtil.removeCurrentAction;
 import static com.itlbv.settl.mob.animation.util.MobAnimationType.GET_HIT;
@@ -12,8 +11,8 @@ public class Defend extends Action {
 
     private float holdTimer;
 
-    public Defend(Mob owner, Target target) {
-        super(owner, ActionType.DEFEND, target);
+    public Defend(Mob owner, Mob attacker) {
+        super(owner, ActionType.DEFEND, attacker);
     }
 
     @Override
@@ -26,7 +25,7 @@ public class Defend extends Action {
 
         if (MathUtils.randomBoolean(.5f)) {
             //System.out.println(owner.toString() + " GET HIT");
-            owner.animation.setIncoming(GET_HIT);
+            owner.getAnimation().setIncoming(GET_HIT);
             removeCurrentAction(owner);
             minusHitpoint();
         } else {
